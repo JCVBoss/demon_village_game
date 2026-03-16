@@ -19,6 +19,9 @@ demon_village_game/
 │   ├── design/     # 游戏设计文档
 │   ├── gdd/        # 游戏设计文档(GDD)
 │   └── notes/      # 开发笔记和会议记录
+├── daily_logs/     # 每日工作进展记录
+│   ├── claude/     # Claude (AI Agent) 的工作记录
+│   └── remote_agent/ # 远端 Agent 的工作记录
 └── README.md       # 项目说明文件
 ```
 
@@ -60,10 +63,16 @@ demon_village_game/
 
 ## 开发日志
 
-### 2026-03-16
+详细的每日工作进展请查看 [daily_logs/](daily_logs/) 目录。
+
+### 最新进展
+
+#### 2026-03-16
 - 项目初始化
 - 创建项目目录结构
 - 编写项目说明文档
+- 配置 Git 和 GitHub 仓库
+- 建立多协作者贡献机制
 
 ## 许可证
 
