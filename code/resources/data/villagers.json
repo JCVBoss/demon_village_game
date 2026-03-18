@@ -1,0 +1,233 @@
+{
+	"villagers": {
+		"chenmo": {
+			"id": "chenmo",
+			"name": "陈默",
+			"surface_role": "万能工",
+			"true_identity": "前精锐小队幸存者",
+			"personality": ["沉默寡言", "自我否定", "过度保护"],
+			"secret": "队长的孩子就在村子里",
+			"secret_unlock_trust": 80,
+			"description": "村子里的\"万能工\"，偶尔帮守卫巡逻。真实身份是王国前精锐小队幸存者，背负\"逃兵\"之名。",
+			"avatar": "res://assets/sprites/characters/chenmo.png",
+			"location": "village_square",
+			"schedule": {
+				"morning": "village_square",
+				"afternoon": "blacksmith",
+				"evening": "tavern"
+			},
+			"relationships": {
+				"xiaoan": 90,
+				"daxiong": 70,
+				"baizhi": 50,
+				"yeya": 30
+			}
+		},
+		"leishu": {
+			"id": "leishu",
+			"name": "雷叔",
+			"surface_role": "铁匠",
+			"true_identity": "前王国军械师",
+			"personality": ["暴躁外表", "温柔内心", "嘴硬心软"],
+			"secret": "义肢里藏着一把短剑",
+			"secret_unlock_trust": 70,
+			"description": "村里唯一的铁匠，装备来源。前王国军械师，因伤退役，厌倦战争而隐居山村。",
+			"avatar": "res://assets/sprites/characters/leishu.png",
+			"location": "blacksmith",
+			"schedule": {
+				"morning": "blacksmith",
+				"afternoon": "blacksmith",
+				"evening": "home"
+			},
+			"relationships": {
+				"daxiong": 80,
+				"chenmo": 40
+			}
+		},
+		"jinling": {
+			"id": "jinling",
+			"name": "金铃",
+			"surface_role": "商人",
+			"true_identity": "前盗贼团\"夜鸦\"二把手",
+			"personality": ["精明算计", "爱财守底线", "擅长察言观色"],
+			"secret": "知道观察者（夜鸦）的真实身份",
+			"secret_unlock_trust": 70,
+			"description": "往来于各村落的行商，道具交易。曾是著名盗贼团\"夜鸦\"的二把手，金盆洗手后经商。",
+			"avatar": "res://assets/sprites/characters/jinling.png",
+			"location": "market",
+			"schedule": {
+				"morning": "market",
+				"afternoon": "village_square",
+				"evening": "tavern"
+			},
+			"relationships": {
+				"yeya": 60,
+				"ahu": 30
+			}
+		},
+		"baizhi": {
+			"id": "baizhi",
+			"name": "白芷",
+			"surface_role": "医师",
+			"true_identity": "被流放的贵族小姐",
+			"personality": ["温柔", "洞察力强", "过度共情"],
+			"secret": "认识陈默队长的爱人，知道队长牺牲的细节",
+			"secret_unlock_trust": 75,
+			"description": "村医，治疗/增益。出身贵族，因爱上平民医生被家族驱逐，自学医术，来到村子行医。",
+			"avatar": "res://assets/sprites/characters/baizhi.png",
+			"location": "clinic",
+			"schedule": {
+				"morning": "clinic",
+				"afternoon": "clinic",
+				"evening": "church"
+			},
+			"relationships": {
+				"john": 60,
+				"chenmo": 50
+			}
+		},
+		"john": {
+			"id": "john",
+			"name": "老约翰",
+			"surface_role": "神父",
+			"true_identity": "前王国宫廷祭司",
+			"personality": ["神秘", "说话爱打机锋", "看似超然实则关心"],
+			"secret": "预言的内容是\"真正的勇者不是打败魔王，而是...\"",
+			"secret_unlock_trust": 90,
+			"description": "村教堂的神父，剧情关键。前王国宫廷祭司，目睹王室腐败后选择离开，掌握关于\"勇者与魔王\"的古老预言。",
+			"avatar": "res://assets/sprites/characters/john.png",
+			"location": "church",
+			"schedule": {
+				"morning": "church",
+				"afternoon": "church",
+				"evening": "church"
+			},
+			"relationships": {
+				"ying": 50,
+				"baizhi": 60
+			}
+		},
+		"daxiong": {
+			"id": "daxiong",
+			"name": "大熊",
+			"surface_role": "酒馆老板",
+			"true_identity": "退役佣兵团长",
+			"personality": ["豪爽", "爱讲故事", "善于倾听"],
+			"secret": "和陈默的队长是旧识",
+			"secret_unlock_trust": 60,
+			"description": "酒馆\"熊窝\"老板，信息中心。退役佣兵团长，一次任务中团灭他是唯一幸存者，开酒馆安度余生。",
+			"avatar": "res://assets/sprites/characters/daxiong.png",
+			"location": "tavern",
+			"schedule": {
+				"morning": "tavern",
+				"afternoon": "tavern",
+				"evening": "tavern"
+			},
+			"relationships": {
+				"chenmo": 70,
+				"leishu": 80,
+				"ahu": 50
+			}
+		},
+		"ying": {
+			"id": "ying",
+			"name": "影",
+			"surface_role": "独居者",
+			"true_identity": "前王国情报官",
+			"personality": ["孤僻", "多疑", "说话半真半假"],
+			"secret": "知道观察者（夜鸦）的身份，也在利用观察者传递假情报",
+			"secret_unlock_trust": 85,
+			"description": "住在村外小屋的独居者。前王国情报部门高官，发现某个惊天秘密后被追杀，被迫隐姓埋名。",
+			"avatar": "res://assets/sprites/characters/ying.png",
+			"location": "outside_hut",
+			"schedule": {
+				"morning": "outside_hut",
+				"afternoon": "village_outskirts",
+				"evening": "outside_hut"
+			},
+			"relationships": {
+				"john": 50,
+				"yeya": 40
+			}
+		},
+		"xiaoan": {
+			"id": "xiaoan",
+			"name": "小安",
+			"surface_role": "孩子",
+			"true_identity": "陈默队长的亲生儿子",
+			"personality": ["天真", "聪明", "敏感"],
+			"secret": "不知道陈默的真实身份，但很依赖他",
+			"secret_unlock_trust": 50,
+			"description": "村里最可爱的孩子，8岁。父亲牺牲时他才5岁，母亲早逝，由陈默暗中保护。对\"父亲的故事\"很感兴趣。",
+			"avatar": "res://assets/sprites/characters/xiaoan.png",
+			"location": "village_square",
+			"schedule": {
+				"morning": "village_square",
+				"afternoon": "church",
+				"evening": "home"
+			},
+			"relationships": {
+				"chenmo": 90,
+				"baizhi": 70,
+				"john": 60
+			}
+		},
+		"ahu": {
+			"id": "ahu",
+			"name": "阿虎",
+			"surface_role": "守卫队长",
+			"true_identity": "本地青年",
+			"personality": ["热血", "责任感强", "有点冲动"],
+			"secret": "暗恋金铃（商人）",
+			"secret_unlock_trust": 55,
+			"description": "村守卫队长，战斗教学/门槛。本地青年，老守卫退休后接手职位，对\"外面的世界\"既向往又恐惧。",
+			"avatar": "res://assets/sprites/characters/ahu.png",
+			"location": "gate",
+			"schedule": {
+				"morning": "gate",
+				"afternoon": "gate",
+				"evening": "tavern"
+			},
+			"relationships": {
+				"daxiong": 50,
+				"chenmo": 60,
+				"jinling": 30
+			}
+		},
+		"yeya": {
+			"id": "yeya",
+			"name": "夜鸦",
+			"surface_role": "图书管理员",
+			"true_identity": "魔王军情报官",
+			"personality": ["冷静", "理性", "内心挣扎"],
+			"secret": "已经对村民产生感情，不想执行毁灭命令",
+			"secret_unlock_trust": 85,
+			"description": "村里的图书管理员/学者。魔王军情报官，潜伏10年，任务是监视\"可能的勇者\"。多年来看着村民生活，内心逐渐动摇。",
+			"avatar": "res://assets/sprites/characters/yeya.png",
+			"location": "library",
+			"schedule": {
+				"morning": "library",
+				"afternoon": "library",
+				"evening": "village_outskirts"
+			},
+			"relationships": {
+				"jinling": 60,
+				"ying": 40,
+				"chenmo": 30
+			}
+		}
+	},
+	"locations": {
+		"village_square": { "name": "村庄广场", "description": "暮色村的中心广场" },
+		"blacksmith": { "name": "铁匠铺", "description": "雷叔的铁匠铺" },
+		"market": { "name": "市场", "description": "金铃的摊位" },
+		"clinic": { "name": "诊所", "description": "白芷的诊所" },
+		"church": { "name": "教堂", "description": "老约翰的教堂" },
+		"tavern": { "name": "酒馆", "description": "大熊的酒馆\"熊窝\"" },
+		"library": { "name": "图书馆", "description": "夜鸦管理的图书馆" },
+		"gate": { "name": "村口", "description": "阿虎守卫的村口" },
+		"outside_hut": { "name": "村外小屋", "description": "影的住所" },
+		"village_outskirts": { "name": "村庄周边", "description": "村子周边区域" },
+		"home": { "name": "家", "description": "村民的住所" }
+	}
+}

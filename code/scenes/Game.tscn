@@ -1,0 +1,87 @@
+[gd_scene load_steps=3 format=3 uid="uid://game_scene"]
+
+[ext_resource type="Script" path="res://scripts/ui/GameScene.gd" id="1_game"]
+[ext_resource type="PackedScene" uid="uid://dialogue_box" path="res://scenes/ui/DialogueBox.tscn" id="2_dialogue"]
+
+[node name="Game" type="Node2D"]
+script = ExtResource("1_game")
+
+[node name="UIRoot" type="CanvasLayer" parent="."]
+
+[node name="TopBar" type="PanelContainer" parent="UIRoot"]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 60.0
+grow_horizontal = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="UIRoot/TopBar"]
+layout_mode = 2
+
+[node name="DayLabel" type="Label" parent="UIRoot/TopBar/HBoxContainer"]
+layout_mode = 2
+text = "第 1 天"
+
+[node name="Spacer" type="Control" parent="UIRoot/TopBar/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="ActionPointsLabel" type="Label" parent="UIRoot/TopBar/HBoxContainer"]
+layout_mode = 2
+text = "行动点: 4/4"
+
+[node name="VillageView" type="Control" parent="UIRoot"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 60.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="BgColor" type="ColorRect" parent="UIRoot/VillageView"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.15, 0.15, 0.2, 1)
+
+[node name="PlaceholderLabel" type="Label" parent="UIRoot/VillageView"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+grow_horizontal = 2
+grow_vertical = 2
+text = "暮色村
+(村庄场景待实现)"
+horizontal_alignment = 1
+
+[node name="DialogueBox" parent="UIRoot" instance=ExtResource("2_dialogue")]
+visible = false
+layout_mode = 1
+
+[node name="BottomBar" type="PanelContainer" parent="UIRoot"]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -60.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="MenuButton" type="Button" parent="UIRoot/BottomBar"]
+layout_mode = 1
+anchors_preset = 9
+anchor_bottom = 1.0
+offset_left = 10.0
+offset_top = 10.0
+offset_right = 80.0
+offset_bottom = -10.0
+grow_vertical = 2
+text = "菜单"
