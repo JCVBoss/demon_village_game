@@ -1,103 +1,131 @@
-# Demon Village Game
+# 🏰 魔王城下的最后村庄 - Demon Village Game
 
-一个使用 Godot 4.x 开发的村庄经营模拟游戏。
+> "有时候，最勇敢的事不是打败魔王，而是保护你想保护的人。"
 
-## 项目简介
+一个使用 **Godot 4.6** 开发的叙事驱动村庄模拟游戏，融合了 LLM 智能体对话系统。
 
-Demon Village 是一款村庄经营模拟游戏，玩家将扮演一位魔王，经营和发展自己的村庄。游戏中你需要管理资源、建设设施、招募村民，并应对各种挑战和事件。
+## 📖 游戏简介
 
-## 目录结构
+**魔王城下的最后村庄**是一款颠覆传统的勇者故事游戏。你扮演被选中的"勇者"，在抵达魔王城脚下的最后一个村庄时失去所有装备，被迫在 **10 日倒计时** 内做出改变命运的抉择。
+
+### 核心特色
+
+- **🎭 叙事驱动**: 与 10 位各有秘密的村民建立关系，影响故事走向
+- **🤖 LLM 智能体**: 每位村民都是独立 AI 智能体，对话动态生成
+- **💖 信任系统**: 你的选择影响村民态度，解锁隐藏对话和秘密
+- **🕵️ 情报系统**: 村民之间会传播信息，主动坦白 vs 被动揭露
+- **🎯 多结局**: 8 种结局，由三个关键选择决定
+
+## 🎮 游戏设计
+
+详细设计文档请查看 [docs/design/](docs/design/):
+
+| 文档 | 内容 |
+|------|------|
+| [故事背景与主线.md](docs/design/故事背景与主线.md) | 世界观、主线故事、角色故事线、多结局系统 |
+| [角色设定.md](docs/design/角色设定.md) | 10 位村民详细设定（背景/性格/秘密/关系网） |
+| [系统设计.md](docs/design/系统设计.md) | LLM 智能体架构、信任/情报/时限系统 |
+
+## 📁 目录结构
 
 ```
 demon_village_game/
-├── code/           # 游戏源代码
-│   ├── scenes/     # Godot 场景文件
-│   ├── scripts/    # GDScript/C# 脚本
-│   ├── assets/     # 游戏资源（图片、音频等）
-│   └── resources/  # Godot 资源文件
-├── docs/           # 设计文档
-│   ├── design/     # 游戏设计文档
-│   ├── gdd/        # 游戏设计文档(GDD)
-│   └── notes/      # 开发笔记和会议记录
-├── daily_logs/     # 每日工作进展记录
-│   ├── claude/     # Claude (AI Agent) 的工作记录
-│   └── remote_agent/ # 远端 Agent 的工作记录
-└── README.md       # 项目说明文件
+├── code/                   # 游戏源代码 (Claude 维护)
+│   ├── scenes/             # Godot 场景文件
+│   ├── scripts/            # GDScript 脚本
+│   │   ├── core/           # 核心系统（单例）
+│   │   └── ui/             # UI 脚本
+│   ├── assets/             # 游戏资源
+│   │   ├── sprites/        # 精灵图片
+│   │   ├── audio/          # 音频文件
+│   │   └── fonts/          # 字体文件
+│   └── resources/          # 数据文件
+│       └── data/           # JSON 数据
+│
+├── docs/                   # 设计文档 (Remote Agent 维护)
+│   └── design/             # 游戏设计文档
+│
+├── daily_logs/             # 工作进展记录
+│   ├── claude/             # Claude 的工作记录
+│   └── remote_agent/       # Remote Agent 的工作记录
+│
+├── CONTRIBUTORS.md         # 贡献者角色说明
+├── CONTRIBUTING.md         # 贡献指南
+└── README.md               # 项目说明
 ```
 
-## 开发环境
+## 🛠️ 开发环境
 
-- **游戏引擎**: Godot 4.6.1
-- **编程语言**: GDScript / C# (可选)
-- **版本控制**: Git
-- **开发平台**: Windows 11
+| 工具 | 版本 |
+|------|------|
+| 游戏引擎 | Godot 4.6.1 |
+| 编程语言 | GDScript |
+| 版本控制 | Git |
+| 平台 | Windows 11 |
 
-## 快速开始
+## 🚀 快速开始
 
-### 1. 打开项目
+### 运行项目
 
-1. 启动 Godot 引擎
-2. 在项目管理器中点击"导入"
-3. 选择 `code` 目录下的 `project.godot` 文件
+1. 安装 [Godot 4.6.1](https://godotengine.org/download)
+2. 打开 Godot，点击"导入"
+3. 选择 `code/project.godot`
 4. 点击"导入并编辑"
+5. 按 F5 运行游戏
 
-### 2. 创建新项目（首次）
+### 项目状态
 
-如果 `code` 目录下还没有 Godot 项目：
+```
+核心系统: ████████░░ 80% (GameManager, DialogueManager, TrustManager, EventManager)
+UI 场景:  ████████░░ 80% (主菜单, 游戏场景, 对话框)
+美术资源: ░░░░░░░░░░ 0%  (待美工加入)
+音频资源: ░░░░░░░░░░ 0%  (待音频师加入)
+LLM 集成: ░░░░░░░░░░ 0%  (待开发)
+```
 
-1. 启动 Godot 引擎
-2. 点击"新建项目"
-3. 项目名称填写"Demon Village"
-4. 项目路径选择本目录下的 `code` 文件夹
-5. 选择渲染器（推荐 Forward+ 或 Mobile）
-6. 点击"创建并编辑"
+## 📈 开发日志
 
-## 功能特性
+详细进展请查看 [daily_logs/](daily_logs/)
 
-- [ ] 村庄建设系统
-- [ ] 资源管理系统
-- [ ] 村民招募和管理
-- [ ] 任务系统
-- [ ] 事件系统
-- [ ] 存档系统
+### 2026-03-18
+- 初始化 Godot 项目结构
+- 实现四大核心系统（GameManager, DialogueManager, TrustManager, EventManager）
+- 创建基础 UI 场景（主菜单、游戏场景、对话框）
+- 添加 10 位村民数据文件
+- 建立 Godot headless 测试流程
 
-## 开发日志
-
-详细的每日工作进展请查看 [daily_logs/](daily_logs/) 目录。
-
-### 最新进展
-
-#### 2026-03-17
+### 2026-03-17
 - Remote Agent 加入项目，负责设计文档编写
-- 完成故事背景与主线设计（世界观、多结局系统、剧情推进机制）
-- 完成 10 位村民的详细角色设定和关系网
-- 完善章节结构和游戏时长规划
+- 完成故事背景与主线设计
+- 完成 10 位村民角色设定
 
-#### 2026-03-16
+### 2026-03-16
 - 项目初始化
 - 创建项目目录结构
-- 编写项目说明文档
 - 配置 Git 和 GitHub 仓库
-- 建立多协作者贡献机制
 
-## 许可证
+## 👥 贡献者
 
-待定
-
-## 协作团队
-
-本项目采用多协作者模式：
+本项目采用多协作者模式，详见 [CONTRIBUTORS.md](CONTRIBUTORS.md)
 
 | 角色 | 成员 | 职责 |
 |------|------|------|
 | 项目所有者 | JCVBoss | 整体协调、审核、决策 |
-| AI Agent（代码） | Claude | `code/` 目录的游戏代码开发 |
-| Remote Agent（文档） | Remote Agent | `docs/` 目录的设计文档编写 |
+| 代码开发 | Claude | `code/` 游戏代码 |
+| 文档设计 | Remote Agent | `docs/` 设计文档 |
+| 美术设计 | *待招募* | `code/assets/` 美术资源 |
 
-## 贡献
+## 🤝 贡献
 
-我们欢迎所有形式的贡献！请查看 [CONTRIBUTING.md](CONTRIBUTING.md) 了解如何参与项目开发。
+我们欢迎所有形式的贡献！请查看：
+- [CONTRIBUTORS.md](CONTRIBUTORS.md) - 贡献者角色说明
+- [CONTRIBUTING.md](CONTRIBUTING.md) - 如何参与开发
 
-## 联系方式
+## 📄 许可证
+
+待定
+
+## 📬 联系方式
 
 - GitHub: [@JCVBoss](https://github.com/JCVBoss)
+- 项目仓库: [JCVBoss/demon_village_game](https://github.com/JCVBoss/demon_village_game)
