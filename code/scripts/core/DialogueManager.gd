@@ -1,6 +1,5 @@
 ## Dialogue Manager - 对话管理器
 ## 负责处理玩家与村民的对话系统
-class_name DialogueManager
 extends Node
 
 # ==================== 信号 ====================

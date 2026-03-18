@@ -1,6 +1,5 @@
 ## Event Manager - 事件管理器
 ## 负责管理游戏事件、触发条件和情报传播
-class_name EventManager
 extends Node
 
 # ==================== 信号 ====================

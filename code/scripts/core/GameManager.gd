@@ -1,6 +1,5 @@
 ## Game Manager - 游戏全局管理器
 ## 负责游戏状态、存档、场景切换等核心功能
-class_name GameManager
 extends Node
 
 # ==================== 信号 ====================

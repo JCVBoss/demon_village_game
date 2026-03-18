@@ -1,6 +1,5 @@
 ## Trust Manager - 信任系统管理器
 ## 负责管理玩家与村民之间的信任关系
-class_name TrustManager
 extends Node
 
 # ==================== 信号 ====================
