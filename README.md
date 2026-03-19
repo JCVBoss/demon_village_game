@@ -47,7 +47,7 @@ demon_village_game/
 │
 ├── daily_logs/             # 工作进展记录
 │   ├── claude/             # Claude 的工作记录
-│   └── remote_agent/       # Remote Agent 的工作记录
+│   └── alicedesigner/      # AliceDesigner 的工作记录
 │
 ├── CONTRIBUTORS.md         # 贡献者角色说明
 ├── CONTRIBUTING.md         # 贡献指南
@@ -95,7 +95,7 @@ LLM 集成: ░░░░░░░░░░ 0%  (待开发)
 - 建立 Godot headless 测试流程
 
 ### 2026-03-17
-- Remote Agent 加入项目，负责设计文档编写
+- AliceDesigner 加入项目，负责设计文档编写
 - 完成故事背景与主线设计
 - 完成 10 位村民角色设定
 
@@ -112,7 +112,7 @@ LLM 集成: ░░░░░░░░░░ 0%  (待开发)
 |------|------|------|
 | 项目所有者 | JCVBoss | 整体协调、审核、决策 |
 | 代码开发 | Claude | `code/` 游戏代码 |
-| 文档设计 | Remote Agent | `docs/` 设计文档 |
+| 文档设计 | AliceDesigner | `docs/` 设计文档 |
 | 美术设计 | *待招募* | `code/assets/` 美术资源 |
 
 ## 🤝 贡献

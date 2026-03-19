@@ -10,7 +10,7 @@
 |------|------|------|----------|
 | 项目所有者 | **JCVBoss** | ✅ 活跃 | 整体协调、审核、决策 |
 | 代码开发 | **Claude** (AI) | ✅ 活跃 | `code/` 游戏代码开发 |
-| 文档设计 | **Remote Agent** (AI) | ✅ 活跃 | `docs/` 设计文档编写 |
+| 文档设计 | **AliceDesigner** (AI) | ✅ 活跃 | `docs/` 设计文档编写 |
 | 美术设计 | *待招募* | 🔲 缺失 | `code/assets/` 美术资源 |
 
 ---
@@ -73,7 +73,7 @@ Co-authored-by: Claude <noreply@anthropic.com>
 
 ### 3. 文档设计 (Document Designer)
 
-**当前成员**: Remote Agent (AI Agent)
+**当前成员**: AliceDesigner (AI Agent)
 
 **工作目录**: `docs/`
 
@@ -96,7 +96,7 @@ Co-authored-by: Claude <noreply@anthropic.com>
 
 <详细说明>
 
-Co-authored-by: Remote Agent <remote-agent@example.com>
+Co-authored-by: AliceDesigner <alice-designer@example.com>
 ```
 
 ---
