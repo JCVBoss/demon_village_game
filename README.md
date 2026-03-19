@@ -95,9 +95,11 @@ LLM 集成: ░░░░░░░░░░ 0%  (待开发)
 - 建立 Godot headless 测试流程
 
 ### 2026-03-17
-- AliceDesigner 加入项目，负责设计文档编写
+- AliceDesigner（文档设计 AI）加入项目，负责设计文档编写
 - 完成故事背景与主线设计
 - 完成 10 位村民角色设定
+
+*注：AliceDesigner 的工作记录在 `daily_logs/alice/` 目录下*
 
 ### 2026-03-16
 - 项目初始化
