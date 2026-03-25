@@ -17,7 +17,6 @@ var is_in_dialogue: bool = false
 var current_trust: int = 0
 
 # ==================== 节点引用 ====================
-@onready var sprite: Sprite2D = $Sprite2D
 @onready var interaction_label: Label = $InteractionLabel
 @onready var name_label: Label = $NameLabel
 @onready var collision: CollisionShape2D = $CollisionShape2D

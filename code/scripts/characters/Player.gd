@@ -14,7 +14,8 @@ var current_target: Node2D = null
 var is_in_dialogue: bool = false
 
 # ==================== 节点引用 ====================
-@onready var sprite: Sprite2D = $Sprite2D
+@onready var player_body: Polygon2D = $PlayerBody
+@onready var player_head: Polygon2D = $PlayerHead
 @onready var interaction_area: Area2D = $InteractionArea
 @onready var interaction_label: Label = $InteractionLabel
 
@@ -70,9 +71,13 @@ func _handle_movement() -> void:
 		direction = direction.normalized()
 		velocity = direction * speed
 
-		# 翻转精灵朝向
-		if sprite:
-			sprite.flip_h = direction.x < 0
+		# 翻转玩家朝向
+		if direction.x < 0:
+			player_body.scale.x = -1
+			player_head.scale.x = -1
+		elif direction.x > 0:
+			player_body.scale.x = 1
+			player_head.scale.x = 1
 	else:
 		velocity = Vector2.ZERO
 

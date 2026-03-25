@@ -16,9 +16,13 @@ script = ExtResource("1_player")
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_collision")
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
-modulate = Color(0.4, 0.6, 1, 1)
-scale = Vector2(0.5, 0.5)
+[node name="PlayerBody" type="Polygon2D" parent="."]
+color = Color(0.4, 0.6, 1, 1)
+polygon = PackedVector2Array(-16, -16, 16, -16, 16, 16, -16, 16)
+
+[node name="PlayerHead" type="Polygon2D" parent="."]
+color = Color(0.3, 0.5, 0.9, 1)
+polygon = PackedVector2Array(-10, -24, 10, -24, 10, -8, -10, -8)
 
 [node name="InteractionArea" type="Area2D" parent="."]
 collision_layer = 0
