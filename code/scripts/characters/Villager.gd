@@ -26,6 +26,9 @@ var _villager_data: Dictionary = {}
 
 
 func _ready() -> void:
+	# 添加到 villagers 分组（关键！用于 Player 检测）
+	add_to_group("villagers")
+
 	# 连接信号
 	body_entered.connect(_on_body_entered)
 	body_exited.connect(_on_body_exited)
@@ -36,7 +39,7 @@ func _ready() -> void:
 	# 初始化 UI
 	_setup_ui()
 
-	print("[Villager] %s 初始化完成" % villager_name)
+	print("[Villager] %s 初始化完成，已加入 villagers 分组" % villager_name)
 
 
 func _process(_delta: float) -> void:

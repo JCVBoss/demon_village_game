@@ -2,9 +2,6 @@
 ## 处理玩家移动、交互检测
 extends CharacterBody2D
 
-# ==================== 信号 ====================
-signal interacted_with(target: Node2D)
-
 # ==================== 导出变量 ====================
 @export var speed: float = 200.0  ## 移动速度
 @export var interaction_range: float = 60.0  ## 交互范围
@@ -27,8 +24,6 @@ func _ready() -> void:
 		interaction_area.area_exited.connect(_on_interaction_area_exited)
 
 	# 连接对话管理器信号
-	DialogueManager.dialogue_line_spoken.connect(_on_dialogue_line)
-	DialogueManager.choice_presented.connect(_on_choices_presented)
 	DialogueManager.dialogue_ended.connect(_on_dialogue_ended)
 
 	# 初始化交互提示
@@ -101,6 +96,7 @@ func _handle_interaction() -> void:
 
 func _on_interaction_area_entered(area: Area2D) -> void:
 	"""进入交互范围"""
+	print("[Player] 检测到 Area: %s, 分组: %s" % [area.name, area.get_groups()])
 	if area.is_in_group("villagers"):
 		current_target = area
 		if interaction_label:
@@ -119,18 +115,6 @@ func _on_interaction_area_exited(area: Area2D) -> void:
 
 
 # ==================== 对话系统回调 ====================
-
-func _on_dialogue_line(speaker: String, text: String) -> void:
-	"""接收到对话行"""
-	# 信号会被 Village 场景接收并更新 UI
-	pass
-
-
-func _on_choices_presented(choices: Array) -> void:
-	"""显示对话选项"""
-	# 信号会被 Village 场景接收并更新 UI
-	pass
-
 
 func _on_dialogue_ended(_villager_id: String) -> void:
 	"""对话结束"""
