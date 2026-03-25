@@ -19,6 +19,9 @@ var current_line_index: int = 0
 # 存储所有对话脚本数据
 var dialogue_scripts: Dictionary = {}
 
+# 当前对话节点
+var current_node_id: String = ""
+
 
 func _ready() -> void:
 	print("[DialogueManager] 对话管理器初始化完成")
@@ -29,53 +32,38 @@ func _ready() -> void:
 
 ## 加载所有对话脚本
 func _load_dialogue_scripts() -> void:
-	# TODO: 从 JSON 文件加载对话数据
-	# 目前使用测试数据
-	dialogue_scripts = {
-		"chenmo": {
-			"initial": {
-				"lines": [
-					{"speaker": "chenmo", "text": "......你是新来的？"},
-					{"speaker": "chenmo", "text": "我不认识你，也不想认识。"},
-					{"speaker": "player", "text": "（这个人看起来很警惕）"}
-				],
-				"choices": [
-					{"text": "友好地打招呼", "trust_change": 5, "next": "friendly_greeting"},
-					{"text": "直接询问村子情况", "trust_change": 0, "next": "ask_about_village"},
-					{"text": "保持沉默离开", "trust_change": -2, "next": "leave_silently"}
-				]
-			},
-			"friendly_greeting": {
-				"lines": [
-					{"speaker": "player", "text": "你好，我叫勇者。听说村子需要帮忙？"},
-					{"speaker": "chenmo", "text": "......帮忙？"},
-					{"speaker": "chenmo", "text": "（沉默片刻）如果你真的想帮忙，去找大熊吧。酒馆在东边。"}
-				],
-				"choices": []
-			},
-			"ask_about_village": {
-				"lines": [
-					{"speaker": "player", "text": "请问这个村子是什么情况？"},
-					{"speaker": "chenmo", "text": "......"},
-					{"speaker": "chenmo", "text": "自己去酒馆问。"}
-				],
-				"choices": []
-			},
-			"leave_silently": {
-				"lines": [
-					{"speaker": "player", "text": "......"},
-					{"speaker": "chenmo", "text": "（他看着你离开，没有说话）"}
-				],
-				"choices": []
-			}
-		}
-	}
+	"""从 JSON 文件加载对话数据"""
+	var file = FileAccess.open("res://resources/dialogues/dialogues.json", FileAccess.READ)
+	if file:
+		var json_string = file.get_as_text()
+		file.close()
+
+		var json = JSON.new()
+		if json.parse(json_string) == OK:
+			dialogue_scripts = json.data
+			print("[DialogueManager] 加载了 %d 个村民的对话数据" % dialogue_scripts.size())
+		else:
+			print("[DialogueManager] 对话数据解析失败: %s" % json.get_error_message())
+	else:
+		print("[DialogueManager] 无法打开对话数据文件")
+
+
+## 获取村民的信任等级
+func _get_trust_stage(villager_id: String, trust_value: int) -> String:
+	"""根据信任值返回信任阶段名称"""
+	if dialogue_scripts.has(villager_id):
+		var stages = dialogue_scripts[villager_id].get("trust_stages", {})
+		for stage_name in stages:
+			var stage = stages[stage_name]
+			if trust_value >= stage.min and trust_value <= stage.max:
+				return stage_name
+	return "wary"
 
 
 # ==================== 对话流程控制 ====================
 
 ## 开始对话
-func start_dialogue(villager_id: String, dialogue_key: String = "initial") -> void:
+func start_dialogue(villager_id: String, trust_value: int = 0, node_id: String = "initial") -> void:
 	if is_in_dialogue:
 		print("[DialogueManager] 已在对话中，无法开始新对话")
 		return
@@ -84,20 +72,56 @@ func start_dialogue(villager_id: String, dialogue_key: String = "initial") -> vo
 		print("[DialogueManager] 未找到村民 %s 的对话数据" % villager_id)
 		return
 
-	var villager_dialogues = dialogue_scripts[villager_id]
-	if not villager_dialogues.has(dialogue_key):
-		print("[DialogueManager] 未找到对话键: %s" % dialogue_key)
+	var villager_data = dialogue_scripts[villager_id]
+	var dialogue_nodes = villager_data.get("dialogue_nodes", {})
+
+	if not dialogue_nodes.has(node_id):
+		print("[DialogueManager] 未找到对话节点: %s" % node_id)
 		return
+
+	# 检查信任值要求
+	var node = dialogue_nodes[node_id]
+	var trust_required = node.get("trust_required", 0)
+	if trust_value < trust_required:
+		print("[DialogueManager] 信任值不足，需要 %d，当前 %d" % [trust_required, trust_value])
+		# 找到合适的对话节点
+		node_id = _find_suitable_node(villager_id, trust_value)
+		if node_id.is_empty():
+			print("[DialogueManager] 未找到合适的对话节点")
+			return
+		node = dialogue_nodes[node_id]
 
 	is_in_dialogue = true
 	current_villager_id = villager_id
-	current_dialogue_data = villager_dialogues[dialogue_key]
+	current_node_id = node_id
+	current_dialogue_data = node
 	current_line_index = 0
 
 	GameManager.enter_dialogue()
 	dialogue_started.emit(villager_id)
 
+	print("[DialogueManager] 开始与 %s 对话，节点: %s" % [villager_id, node_id])
 	_play_dialogue()
+
+
+## 查找适合当前信任值的对话节点
+func _find_suitable_node(villager_id: String, trust_value: int) -> String:
+	"""根据信任值找到最适合的对话节点"""
+	if not dialogue_scripts.has(villager_id):
+		return ""
+
+	var dialogue_nodes = dialogue_scripts[villager_id].get("dialogue_nodes", {})
+	var best_node = ""
+	var best_trust = -1
+
+	for node_id in dialogue_nodes:
+		var node = dialogue_nodes[node_id]
+		var trust_required = node.get("trust_required", 0)
+		if trust_value >= trust_required and trust_required > best_trust:
+			best_trust = trust_required
+			best_node = node_id
+
+	return best_node
 
 
 ## 播放对话内容
@@ -139,11 +163,14 @@ func select_choice(choice_index: int) -> void:
 		TrustManager.modify_trust(current_villager_id, choice.trust_change)
 
 	# 跳转到下一个对话节点
-	if choice.has("next"):
-		var next_key = choice.next
-		if dialogue_scripts[current_villager_id].has(next_key):
-			current_dialogue_data = dialogue_scripts[current_villager_id][next_key]
+	var next_node = choice.get("next_node")
+	if next_node and not next_node.is_empty():
+		var dialogue_nodes = dialogue_scripts[current_villager_id].get("dialogue_nodes", {})
+		if dialogue_nodes.has(next_node):
+			current_node_id = next_node
+			current_dialogue_data = dialogue_nodes[next_node]
 			current_line_index = 0
+			print("[DialogueManager] 跳转到对话节点: %s" % next_node)
 			_play_dialogue()
 			return
 

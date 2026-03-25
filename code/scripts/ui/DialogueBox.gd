@@ -44,6 +44,8 @@ func start_dialogue(villager_id: String) -> void:
 # ==================== 回调函数 ====================
 
 func _on_dialogue_line_spoken(speaker: String, text: String) -> void:
+	"""对话行显示"""
+	show()  # 确保对话框可见
 	_update_speaker_name(speaker)
 	dialogue_text.text = text
 	continue_hint.show()
@@ -73,9 +75,12 @@ func _on_continue_pressed() -> void:
 # ==================== 辅助方法 ====================
 
 func _update_speaker_name(speaker: String) -> void:
+	"""更新说话者名称"""
 	match speaker:
 		"player":
 			speaker_name.text = "勇者"
+		"narrator":
+			speaker_name.text = "——"
 		"chenmo":
 			speaker_name.text = "陈默"
 		"yeya":

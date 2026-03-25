@@ -1,0 +1,187 @@
+{
+	"chenmo": {
+		"villager_id": "chenmo",
+		"villager_name": "陈默",
+		"trust_stages": {
+			"wary": {"min": 0, "max": 20},
+			"neutral": {"min": 21, "max": 40},
+			"friendly": {"min": 41, "max": 60},
+			"trusted": {"min": 61, "max": 80},
+			"loyal": {"min": 81, "max": 100}
+		},
+		"dialogue_nodes": {
+			"initial": {
+				"node_id": "chenmo_initial",
+				"trust_required": 0,
+				"lines": [
+					{"speaker": "chenmo", "text": "......你是新来的？"},
+					{"speaker": "narrator", "text": "（他上下打量你，眼神警惕）"},
+					{"speaker": "chenmo", "text": "我不认识你，也不想认识。没事的话，让开。"}
+				],
+				"choices": [
+					{
+						"text": "友好地打招呼",
+						"trust_change": 5,
+						"next_node": "friendly_greeting"
+					},
+					{
+						"text": "直接询问村子情况",
+						"trust_change": 0,
+						"next_node": "ask_village"
+					},
+					{
+						"text": "保持沉默离开",
+						"trust_change": -2,
+						"next_node": null
+					}
+				]
+			},
+			"friendly_greeting": {
+				"node_id": "chenmo_friendly_greeting",
+				"trust_required": 0,
+				"lines": [
+					{"speaker": "player", "text": "你好，我叫勇者。听说村子需要帮忙？"},
+					{"speaker": "chenmo", "text": "......帮忙？"},
+					{"speaker": "chenmo", "text": "（沉默片刻）如果你真的想帮忙，去找大熊吧。"},
+					{"speaker": "chenmo", "text": "酒馆在东边。他比我...更会说话。"}
+				],
+				"choices": [
+					{
+						"text": "谢谢，我会去找他",
+						"trust_change": 3,
+						"next_node": null
+					},
+					{
+						"text": "你为什么不去帮忙？",
+						"trust_change": -3,
+						"next_node": "why_not_help"
+					}
+				]
+			},
+			"ask_village": {
+				"node_id": "chenmo_ask_village",
+				"trust_required": 0,
+				"lines": [
+					{"speaker": "player", "text": "这个村子情况怎么样？"},
+					{"speaker": "chenmo", "text": "......"},
+					{"speaker": "chenmo", "text": "和别的村子一样。没什么特别的。"},
+					{"speaker": "chenmo", "text": "想知道什么，去问别人。我只是个打杂的。"}
+				],
+				"choices": [
+					{
+						"text": "好的，谢谢",
+						"trust_change": 1,
+						"next_node": null
+					},
+					{
+						"text": "你好像有心事？",
+						"trust_change": 2,
+						"next_node": "notice_something"
+					}
+				]
+			},
+			"why_not_help": {
+				"node_id": "chenmo_why_not_help",
+				"trust_required": 0,
+				"lines": [
+					{"speaker": "chenmo", "text": "（眼神闪过一丝痛苦）"},
+					{"speaker": "chenmo", "text": "帮忙......我连自己都帮不了。"},
+					{"speaker": "chenmo", "text": "别问了。去做你该做的事吧。"}
+				],
+				"choices": [
+					{
+						"text": "好吧，告辞",
+						"trust_change": 0,
+						"next_node": null
+					}
+				]
+			},
+			"notice_something": {
+				"node_id": "chenmo_notice_something",
+				"trust_required": 0,
+				"lines": [
+					{"speaker": "chenmo", "text": "（身体微微僵硬）"},
+					{"speaker": "chenmo", "text": "......你看错了。"},
+					{"speaker": "chenmo", "text": "我只是累了。村子里的事...和你没关系。"}
+				],
+				"choices": [
+					{
+						"text": "如果需要帮助，可以找我",
+						"trust_change": 5,
+						"next_node": null
+					},
+					{
+						"text": "好吧，告辞",
+						"trust_change": 0,
+						"next_node": null
+					}
+				]
+			}
+		}
+	},
+	"baizhi": {
+		"villager_id": "baizhi",
+		"villager_name": "白芷",
+		"trust_stages": {
+			"wary": {"min": 0, "max": 20},
+			"neutral": {"min": 21, "max": 40},
+			"friendly": {"min": 41, "max": 60},
+			"trusted": {"min": 61, "max": 80},
+			"loyal": {"min": 81, "max": 100}
+		},
+		"dialogue_nodes": {
+			"initial": {
+				"node_id": "baizhi_initial",
+				"trust_required": 0,
+				"lines": [
+					{"speaker": "baizhi", "text": "......你受伤了？"},
+					{"speaker": "narrator", "text": "（她看着你，眼神里带着一丝关切）"},
+					{"speaker": "baizhi", "text": "来，坐吧。让我看看。"}
+				],
+				"choices": [
+					{
+						"text": "谢谢，我没有受伤",
+						"trust_change": 2,
+						"next_node": "no_injury"
+					},
+					{
+						"text": "我只是来看看",
+						"trust_change": 0,
+						"next_node": "just_visiting"
+					}
+				]
+			},
+			"no_injury": {
+				"node_id": "baizhi_no_injury",
+				"trust_required": 0,
+				"lines": [
+					{"speaker": "baizhi", "text": "（微微点头）"},
+					{"speaker": "baizhi", "text": "有些伤...不在身上。"},
+					{"speaker": "baizhi", "text": "如果你需要什么，我就在这里。"}
+				],
+				"choices": [
+					{
+						"text": "谢谢你的好意",
+						"trust_change": 3,
+						"next_node": null
+					}
+				]
+			},
+			"just_visiting": {
+				"node_id": "baizhi_just_visiting",
+				"trust_required": 0,
+				"lines": [
+					{"speaker": "baizhi", "text": "......好的。"},
+					{"speaker": "baizhi", "text": "有什么事随时来找我。"}
+				],
+				"choices": [
+					{
+						"text": "好的，告辞",
+						"trust_change": 0,
+						"next_node": null
+					}
+				]
+			}
+		}
+	}
+}

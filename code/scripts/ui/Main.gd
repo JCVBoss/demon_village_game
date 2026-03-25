@@ -7,7 +7,7 @@ extends Node
 @onready var main_menu: Control = $UIRoot/MainMenu
 
 # ==================== 场景路径 ====================
-const GAME_SCENE_PATH := "res://scenes/Game.tscn"
+const GAME_SCENE_PATH := "res://scenes/locations/Village.tscn"
 
 
 func _ready() -> void:

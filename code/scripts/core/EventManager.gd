@@ -105,7 +105,7 @@ func _init_villager_knowledge() -> void:
 # ==================== 事件触发 ====================
 
 ## 检查并触发事件
-func check_events(current_day: int) -> void:
+func check_events(_current_day: int) -> void:
 	for event_id in events:
 		var event = events[event_id]
 
