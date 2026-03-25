@@ -95,12 +95,12 @@ func _on_villager_dialogue_ended() -> void:
 		dialogue_box.hide()
 
 
-func _on_dialogue_line(speaker: String, text: String) -> void:
+func _on_dialogue_line(_speaker: String, _text: String) -> void:
 	"""对话行显示 - 由 DialogueBox 处理"""
 	pass
 
 
-func _on_choices_presented(choices: Array) -> void:
+func _on_choices_presented(_choices: Array) -> void:
 	"""选项显示 - 由 DialogueBox 处理"""
 	pass
 

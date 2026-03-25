@@ -21,10 +21,10 @@ var is_in_dialogue: bool = false
 
 
 func _ready() -> void:
-	# 连接交互区域信号
+	# 连接交互区域信号 - 使用 area_entered 检测其他 Area2D（村民）
 	if interaction_area:
-		interaction_area.body_entered.connect(_on_interaction_area_body_entered)
-		interaction_area.body_exited.connect(_on_interaction_area_body_exited)
+		interaction_area.area_entered.connect(_on_interaction_area_entered)
+		interaction_area.area_exited.connect(_on_interaction_area_exited)
 
 	# 连接对话管理器信号
 	DialogueManager.dialogue_line_spoken.connect(_on_dialogue_line)
@@ -38,7 +38,7 @@ func _ready() -> void:
 	print("[Player] 玩家初始化完成")
 
 
-func _physics_process(delta: float) -> void:
+func _physics_process(_delta: float) -> void:
 	# 对话中不能移动
 	if is_in_dialogue:
 		return
@@ -99,19 +99,19 @@ func _handle_interaction() -> void:
 				interaction_label.visible = false
 
 
-func _on_interaction_area_body_entered(body: Node2D) -> void:
+func _on_interaction_area_entered(area: Area2D) -> void:
 	"""进入交互范围"""
-	if body.is_in_group("villagers"):
-		current_target = body
+	if area.is_in_group("villagers"):
+		current_target = area
 		if interaction_label:
-			interaction_label.text = "按 E 与 %s 对话" % body.villager_name
+			interaction_label.text = "按 E 与 %s 对话" % area.villager_name
 			interaction_label.visible = true
-		print("[Player] 靠近村民: %s" % body.villager_name)
+		print("[Player] 靠近村民: %s" % area.villager_name)
 
 
-func _on_interaction_area_body_exited(body: Node2D) -> void:
+func _on_interaction_area_exited(area: Area2D) -> void:
 	"""离开交互范围"""
-	if body == current_target:
+	if area == current_target:
 		current_target = null
 		if interaction_label:
 			interaction_label.visible = false
