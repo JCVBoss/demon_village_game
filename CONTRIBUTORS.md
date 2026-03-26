@@ -11,7 +11,7 @@
 | 项目所有者 | **JCVBoss** | ✅ 活跃 | 整体协调、审核、决策 |
 | 代码开发 | **Claude** (AI) | ✅ 活跃 | `code/` 游戏代码开发 |
 | 文档设计 | **AliceDesigner** (AI) | ✅ 活跃 | `docs/` 设计文档编写 |
-| 美术设计 | *待招募* | 🔲 缺失 | `code/assets/` 美术资源 |
+| 美术设计 | **AliceBussiness** | ✅ 活跃 | `code/assets/` 美术资源 |
 
 ---
 
@@ -101,7 +101,9 @@ Co-authored-by: AliceDesigner <alice-designer@example.com>
 
 ---
 
-### 4. 美术设计 (Artist) 🔲 待招募
+### 4. 美术设计 (Artist)
+
+**当前成员**: **AliceBussiness**
 
 **工作目录**: `code/assets/`
 
@@ -150,7 +152,7 @@ art: 添加角色立绘 - 陈默
 - 添加 chenmo_normal.png (普通表情)
 - 添加 chenmo_sad.png (悲伤表情)
 
-Co-authored-by: Artist Name <artist@example.com>
+Co-authored-by: AliceBussiness <alice-bussiness@example.com>
 ```
 
 ---
@@ -224,7 +226,7 @@ daily_logs/
 │   └── ...
 ├── remote_agent/
 │   └── ...
-└── artist/           # 美工加入后
+└── alicebussiness/    # AliceBussiness (美术设计)
     └── ...
 ```
 

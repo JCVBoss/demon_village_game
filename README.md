@@ -115,7 +115,7 @@ LLM 集成: ░░░░░░░░░░ 0%  (待开发)
 | 项目所有者 | JCVBoss | 整体协调、审核、决策 |
 | 代码开发 | Claude | `code/` 游戏代码 |
 | 文档设计 | AliceDesigner | `docs/` 设计文档 |
-| 美术设计 | *待招募* | `code/assets/` 美术资源 |
+| 美术设计 | AliceBussiness | `code/assets/` 美术资源 |
 
 ## 🤝 贡献
 
