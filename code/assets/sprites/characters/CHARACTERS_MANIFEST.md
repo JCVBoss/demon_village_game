@@ -1,15 +1,24 @@
-# 🎭 角色立绘资源清单
+# 🎭 角色立绘资源清单 v2
 
-*自动生成 - Demon Village Game 美术资源*
+*星露谷物语级别精细度 - Demon Village Game 美术资源*
 
 ---
 
 ## 📊 总览
 
 - **角色数量**: 10
-- **立绘尺寸**: 64x64 像素
+- **基础设计**: 32x32 像素
+- **输出尺寸**: 128x128 像素
 - **表情数量**: 每个角色 3-5 个表情
 - **格式**: PNG (透明背景)
+- **色板颜色**: 127 种（含渐变）
+
+## 🎨 精细度对比
+
+| 版本 | 基础网格 | 输出尺寸 | 细节程度 |
+|------|----------|----------|----------|
+| v1 | 16x16 | 64x64 | 基础（我的世界级别） |
+| v2 | 32x32 | 128x128 | 精细（星露谷物语级别） |
 
 ## 👥 角色列表
 
@@ -18,7 +27,8 @@
 - **ID**: `chenmo`
 - **描述**: 沉默寡言的年轻旅人，眼神中藏着秘密
 - **表情**: normal, happy, sad, surprised, angry
-- **特征**: simple_hair, neutral_eyes
+- **特征**: simple_hair, neutral_eyes, slim_build
+- **尺寸**: (128, 128)
 
 **生成文件**:
 - `chenmo_normal.png`
@@ -35,7 +45,8 @@
 - **ID**: `leishu`
 - **描述**: 断臂的老匠人，暴躁外表下藏着温柔
 - **表情**: normal, angry, happy, tired
-- **特征**: gray_hair, beard, apron, strong_build
+- **特征**: gray_hair, full_beard, apron, strong_build, wrinkles
+- **尺寸**: (128, 128)
 
 **生成文件**:
 - `leishu_normal.png`
@@ -51,7 +62,8 @@
 - **ID**: `jinling`
 - **描述**: 精明的女商人，爱财但守底线
 - **表情**: normal, smile, calculating, surprised
-- **特征**: long_hair, elegant_clothes, accessories
+- **特征**: long_flowy_hair, elegant_clothes, gold_accessories, slim_build
+- **尺寸**: (128, 128)
 
 **生成文件**:
 - `jinling_normal.png`
@@ -67,7 +79,8 @@
 - **ID**: `baizhi`
 - **描述**: 温柔的女医师，洞察力强
 - **表情**: normal, gentle_smile, concerned, sad
-- **特征**: gentle_hair, kind_eyes, white_coat
+- **特征**: gentle_hair, kind_eyes, white_coat, slim_build, ponytail
+- **尺寸**: (128, 128)
 
 **生成文件**:
 - `baizhi_normal.png`
@@ -83,7 +96,8 @@
 - **ID**: `laojohn`
 - **描述**: 神秘的祭司，说话爱打机锋
 - **表情**: normal, wise, mysterious, serious
-- **特征**: white_robe, long_beard, mysterious
+- **特征**: white_hair, long_beard, hood, robe, wrinkles, wise_eyes
+- **尺寸**: (128, 128)
 
 **生成文件**:
 - `laojohn_normal.png`
@@ -99,7 +113,8 @@
 - **ID**: `daxiong`
 - **描述**: 豪爽的酒馆主人，善于倾听
 - **表情**: normal, laugh, serious, listening
-- **特征**: big_build, beard, apron, friendly
+- **特征**: short_hair, full_beard, apron, very_strong_build, friendly
+- **尺寸**: (128, 128)
 
 **生成文件**:
 - `daxiong_normal.png`
@@ -115,7 +130,8 @@
 - **ID**: `ying`
 - **描述**: 独居的怪人，说话半真半假
 - **表情**: normal, cold, thinking, warning
-- **特征**: hood, cloak, mysterious, hidden_face
+- **特征**: hood, cloak, mysterious, hidden_face, slim_build
+- **尺寸**: (128, 128)
 
 **生成文件**:
 - `ying_normal.png`
@@ -131,7 +147,8 @@
 - **ID**: `xiaoan`
 - **描述**: 8 岁的可爱孩子，队长的遗孤
 - **表情**: normal, happy, curious, sad, excited
-- **特征**: small_body, big_eyes, childlike, innocent
+- **特征**: small_body, big_eyes, childlike, innocent, messy_hair
+- **尺寸**: (128, 128)
 
 **生成文件**:
 - `xiaoan_normal.png`
@@ -148,7 +165,8 @@
 - **ID**: `xiaohu`
 - **描述**: 年轻的村守卫队长，热血有责任感
 - **表情**: normal, determined, excited, serious
-- **特征**: short_hair, armor, confident, young
+- **特征**: short_hair, armor, confident, young, strong_build
+- **尺寸**: (128, 128)
 
 **生成文件**:
 - `xiaohu_normal.png`
@@ -164,7 +182,8 @@
 - **ID**: `yeya`
 - **描述**: 图书管理员/魔王卧底，冷静理性
 - **表情**: normal, calm, thinking, conflicted
-- **特征**: glasses, scholar, calm, neat_hair
+- **特征**: glasses, scholar, calm, neat_hair, slim_build
+- **尺寸**: (128, 128)
 
 **生成文件**:
 - `yeya_normal.png`
@@ -203,43 +222,12 @@ sprites/characters/
 ├── yeya_spritesheet.png
 ```
 
-## 🎨 色板说明
+## 🎨 色板分类
 
-| 类别 | 颜色名称 | RGB 值 |
-|------|----------|--------|
-| skin_light | `(255, 224, 189)` |
-| skin_medium | `(234, 194, 155)` |
-| skin_dark | `(210, 160, 120)` |
-| skin_pale | `(245, 230, 200)` |
-| hair_black | `(30, 25, 20)` |
-| hair_dark_brown | `(60, 40, 25)` |
-| hair_brown | `(80, 50, 30)` |
-| hair_light_brown | `(120, 80, 50)` |
-| hair_blonde | `(200, 170, 100)` |
-| hair_gold | `(220, 180, 80)` |
-| hair_gray | `(128, 128, 128)` |
-| hair_white | `(230, 230, 230)` |
-| hair_silver | `(180, 180, 190)` |
-| cloth_white | `(240, 240, 240)` |
-| cloth_cream | `(245, 240, 230)` |
-| cloth_blue | `(60, 90, 140)` |
-| cloth_dark_blue | `(40, 50, 90)` |
-| cloth_red | `(140, 50, 50)` |
-| cloth_dark_red | `(100, 30, 30)` |
-| cloth_green | `(60, 100, 60)` |
-| cloth_dark_green | `(40, 70, 40)` |
-| cloth_brown | `(100, 70, 40)` |
-| cloth_dark_brown | `(70, 45, 25)` |
-| cloth_black | `(40, 35, 30)` |
-| cloth_purple | `(80, 50, 90)` |
-| cloth_gold | `(180, 140, 60)` |
-| cloth_orange | `(180, 100, 40)` |
-| metal_silver | `(180, 180, 190)` |
-| metal_gold | `(200, 170, 80)` |
-| leather | `(120, 80, 50)` |
-| apron | `(140, 100, 60)` |
-| bg_dark | `(30, 25, 35)` |
-| bg_twilight | `(60, 50, 80)` |
-| highlight | `(200, 180, 100)` |
-| outline | `(20, 15, 25)` |
-| outline_soft | `(60, 50, 55)` |
+| 类别 | 颜色数量 | 说明 |
+|------|----------|------|
+| 皮肤色 | 13 | 3 阶渐变 + 腮红 |
+| 头发色 | 24 | 4 阶渐变（基础/中/浅/高光） |
+| 衣服色 | 36 | 3 阶渐变 |
+| 眼睛色 | 12 | 基础 + 浅色 |
+| 特殊材质 | 12 | 金属/皮革/围裙等 |
