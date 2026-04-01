@@ -15,14 +15,30 @@ signal dialogue_ended()
 var is_player_nearby: bool = false
 var is_in_dialogue: bool = false
 var current_trust: int = 0
+var current_expression: String = "normal"  ## 当前表情
 
 # ==================== 节点引用 ====================
+@onready var sprite: Sprite2D = $Sprite2D
 @onready var interaction_label: Label = $InteractionLabel
 @onready var name_label: Label = $NameLabel
 @onready var collision: CollisionShape2D = $CollisionShape2D
 
 # ==================== 配置 ====================
 var _villager_data: Dictionary = {}
+
+# 村民 ID 到精灵文件名的映射
+const SPRITE_MAPPING: Dictionary = {
+	"chenmo": "chenmo",
+	"leishu": "leishu",
+	"jinling": "jinling",
+	"baizhi": "baizhi",
+	"john": "laojohn",  # 老约翰的文件名是 laojohn
+	"daxiong": "daxiong",
+	"ying": "ying",
+	"xiaoan": "xiaoan",
+	"ahu": "xiaohu",  # 阿虎的文件名是 xiaohu
+	"yeya": "yeya"
+}
 
 
 func _ready() -> void:
@@ -35,6 +51,9 @@ func _ready() -> void:
 
 	# 加载村民数据
 	_load_villager_data()
+
+	# 加载精灵图
+	_load_sprite()
 
 	# 初始化 UI
 	_setup_ui()
@@ -67,6 +86,31 @@ func _load_villager_data() -> void:
 				print("[Villager] 加载 %s 数据成功" % villager_name)
 
 
+func _load_sprite() -> void:
+	"""加载村民精灵图"""
+	if not sprite:
+		return
+
+	# 获取精灵文件名
+	var sprite_name = SPRITE_MAPPING.get(villager_id, villager_id)
+	var sprite_path = "res://assets/sprites/characters/%s_%s.png" % [sprite_name, current_expression]
+
+	# 尝试加载精灵
+	if ResourceLoader.exists(sprite_path):
+		var texture = load(sprite_path)
+		sprite.texture = texture
+		print("[Villager] 加载精灵: %s" % sprite_path)
+	else:
+		# 尝试加载 normal 表情作为默认
+		sprite_path = "res://assets/sprites/characters/%s_normal.png" % sprite_name
+		if ResourceLoader.exists(sprite_path):
+			var texture = load(sprite_path)
+			sprite.texture = texture
+			print("[Villager] 加载默认精灵: %s" % sprite_path)
+		else:
+			print("[Villager] 未找到精灵: %s" % sprite_name)
+
+
 func _setup_ui() -> void:
 	"""设置 UI 元素"""
 	if interaction_label:
@@ -79,6 +123,14 @@ func _setup_ui() -> void:
 
 	# 获取当前信任值
 	current_trust = GameManager.get_trust(villager_id)
+
+
+# ==================== 表情系统 ====================
+
+func set_expression(expression: String) -> void:
+	"""设置村民表情"""
+	current_expression = expression
+	_load_sprite()
 
 
 # ==================== 交互系统 ====================
@@ -105,6 +157,9 @@ func start_dialogue() -> void:
 	"""开始对话"""
 	is_in_dialogue = true
 
+	# 设置对话表情
+	set_expression("happy")
+
 	# 获取当前信任值
 	current_trust = GameManager.get_trust(villager_id)
 
@@ -127,6 +182,9 @@ func start_dialogue() -> void:
 func end_dialogue() -> void:
 	"""结束对话"""
 	is_in_dialogue = false
+
+	# 恢复普通表情
+	set_expression("normal")
 
 	# 通知游戏管理器退出对话状态
 	GameManager.exit_dialogue()
