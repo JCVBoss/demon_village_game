@@ -1,6 +1,6 @@
 ## DayTransition - 天数过渡提示
 ## 显示天数变化的动画效果
-extends CanvasLayer
+extends Control
 
 # ==================== 节点引用 ====================
 @onready var day_label: Label = $CenterContainer/PanelContainer/VBoxContainer/DayLabel
@@ -44,6 +44,9 @@ func _fade_out() -> void:
 	"""淡出动画"""
 	var tween = create_tween()
 	tween.tween_property(self, "modulate:a", 0.0, fade_duration)
-	tween.tween_callback(hide)
-	# 重置透明度
+	tween.tween_callback(_reset_and_hide)
+
+
+func _reset_and_hide() -> void:
+	hide()
 	modulate.a = 1.0

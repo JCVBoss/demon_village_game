@@ -86,7 +86,9 @@ layout_mode = 1
 visible = false
 layout_mode = 1
 
-[node name="DayTransition" parent="." instance=ExtResource("6_day")]
+[node name="DayTransition" parent="UIRoot" instance=ExtResource("6_day")]
+visible = false
+layout_mode = 1
 
 [node name="EventNotification" parent="." instance=ExtResource("7_event")]
 
