@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3]
+[gd_scene load_steps=9 format=3]
 
 [ext_resource type="Script" path="res://scripts/locations/Village.gd" id="1_village"]
 [ext_resource type="PackedScene" path="res://scenes/characters/Player.tscn" id="2_player"]
@@ -6,6 +6,7 @@
 [ext_resource type="PackedScene" path="res://scenes/ui/PauseMenu.tscn" id="4_pause"]
 [ext_resource type="PackedScene" path="res://scenes/ui/SaveLoadUI.tscn" id="5_saveload"]
 [ext_resource type="PackedScene" path="res://scenes/ui/DayTransition.tscn" id="6_day"]
+[ext_resource type="PackedScene" path="res://scenes/ui/EventNotification.tscn" id="7_event"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_bounds"]
 size = Vector2(1280, 720)
@@ -85,3 +86,5 @@ visible = false
 layout_mode = 1
 
 [node name="DayTransition" parent="." instance=ExtResource("6_day")]
+
+[node name="EventNotification" parent="." instance=ExtResource("7_event")]
