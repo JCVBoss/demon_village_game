@@ -125,9 +125,6 @@ func modify_trust(villager_id: String, amount: int, reason: String = "") -> void
 	# 检查信任阈值
 	_check_trust_thresholds(villager_id, old_value, new_value)
 
-	# 同步到 GameManager
-	GameManager.modify_trust(villager_id, amount)
-
 	print("[TrustManager] %s 信任值: %d -> %d (%+d) %s" % [
 		villager_id, old_value, new_value, amount, reason
 	])

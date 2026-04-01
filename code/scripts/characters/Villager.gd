@@ -125,8 +125,8 @@ func _setup_ui() -> void:
 		name_label.text = villager_name
 		name_label.visible = true
 
-	# 获取当前信任值
-	current_trust = GameManager.get_trust(villager_id)
+	# 从 TrustManager 获取当前信任值
+	current_trust = TrustManager.get_trust(villager_id)
 
 
 # ==================== 表情系统 ====================
@@ -164,8 +164,8 @@ func start_dialogue() -> void:
 	# 设置对话表情
 	set_expression("happy")
 
-	# 获取当前信任值
-	current_trust = GameManager.get_trust(villager_id)
+	# 从 TrustManager 获取当前信任值
+	current_trust = TrustManager.get_trust(villager_id)
 
 	# 通知游戏管理器进入对话状态
 	GameManager.enter_dialogue()

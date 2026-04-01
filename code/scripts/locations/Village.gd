@@ -41,8 +41,14 @@ const VILLAGER_POSITIONS: Dictionary = {
 func _ready() -> void:
 	print("[Village] 进入村庄: %s" % village_name)
 
+	# 连接游戏管理器信号
+	_connect_game_manager_signals()
+
 	# 连接对话管理器信号
 	_connect_dialogue_signals()
+
+	# 连接信任系统信号
+	_connect_trust_signals()
 
 	# 连接UI信号
 	_connect_ui_signals()
@@ -53,8 +59,22 @@ func _ready() -> void:
 	# 更新 UI
 	_update_ui()
 
+	# 检查每日事件
+	EventManager.check_events(GameManager.current_day)
+
 
 # ==================== 信号连接 ====================
+
+func _connect_game_manager_signals() -> void:
+	"""连接游戏管理器信号"""
+	GameManager.day_changed.connect(_on_day_changed)
+	GameManager.action_points_changed.connect(_on_action_points_changed)
+
+
+func _connect_trust_signals() -> void:
+	"""连接信任系统信号"""
+	TrustManager.trust_changed.connect(_on_trust_changed)
+	TrustManager.secret_unlocked.connect(_on_secret_unlocked)
 
 func _connect_dialogue_signals() -> void:
 	"""连接对话管理器信号"""
@@ -164,14 +184,47 @@ func _update_ui() -> void:
 
 # ==================== 游戏流程 ====================
 
-func advance_to_next_day() -> void:
-	"""进入下一天"""
-	# 更新 UI
+func _on_day_changed(new_day: int) -> void:
+	"""天数变化回调"""
+	print("[Village] 进入第 %d 天" % new_day)
 	_update_ui()
+	# 检查新一天的事件
+	EventManager.check_events(new_day)
+	# TODO: 显示天数过渡动画
 
-	# 触发每日事件
-	EventManager.trigger_daily_events(GameManager.current_day)
 
+func _on_action_points_changed(new_points: int) -> void:
+	"""行动点变化回调"""
+	_update_ui()
+	if new_points <= 0:
+		print("[Village] 行动点耗尽，即将进入下一天")
+
+
+func _on_trust_changed(villager_id: String, _old_value: int, new_value: int) -> void:
+	"""信任值变化回调"""
+	print("[Village] %s 信任值更新为 %d" % [villager_id, new_value])
+	# 更新对应村民的信任值显示（如果有的话）
+	_update_villager_trust_display(villager_id, new_value)
+
+
+func _on_secret_unlocked(villager_id: String, secret_id: String) -> void:
+	"""秘密解锁回调"""
+	print("[Village] 解锁 %s 的秘密: %s" % [villager_id, secret_id])
+	# TODO: 显示秘密解锁提示
+
+
+func _update_villager_trust_display(villager_id: String, trust_value: int) -> void:
+	"""更新村民信任值显示"""
+	if villagers_container:
+		for child in villagers_container.get_children():
+			if child.villager_id == villager_id:
+				child.current_trust = trust_value
+
+
+func advance_to_next_day() -> void:
+	"""进入下一天（已由 GameManager 自动处理）"""
+	_update_ui()
+	EventManager.check_events(GameManager.current_day)
 	print("[Village] 进入第 %d 天" % GameManager.current_day)
 
 

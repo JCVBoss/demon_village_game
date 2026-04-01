@@ -102,7 +102,9 @@ func _save_game(slot_index: int) -> bool:
 		"game_state": {
 			"current_state": GameManager.current_state,
 			"is_first_play": GameManager.is_first_play
-		}
+		},
+		"trust_data": TrustManager.get_save_data(),
+		"event_data": EventManager.get_save_data()
 	}
 
 	var file_path = "user://save_%d.json" % slot_index
@@ -132,6 +134,16 @@ func _load_game(slot_index: int) -> bool:
 	GameManager.player_data = save_data.get("player_data", {})
 	GameManager.current_state = save_data.get("game_state", {}).get("current_state", 0)
 	GameManager.is_first_play = save_data.get("game_state", {}).get("is_first_play", false)
+
+	# 恢复信任系统数据
+	var trust_data = save_data.get("trust_data", {})
+	if not trust_data.is_empty():
+		TrustManager.load_save_data(trust_data)
+
+	# 恢复事件系统数据
+	var event_data = save_data.get("event_data", {})
+	if not event_data.is_empty():
+		EventManager.load_save_data(event_data)
 
 	print("[SaveLoadUI] 已从槽位 %d 加载游戏" % slot_index)
 	return true
