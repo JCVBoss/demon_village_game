@@ -4,6 +4,7 @@
 
 [node name="SaveSlot" type="Button"]
 custom_minimum_size = Vector2(400, 50)
+process_mode = 3
 script = ExtResource("1_slot")
 
 [node name="HBoxContainer" type="HBoxContainer" parent="."]

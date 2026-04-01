@@ -187,6 +187,7 @@ func show_save_mode() -> void:
 	"""显示保存模式"""
 	mode = "save"
 	_setup_ui()
+	_connect_signals()
 	_load_all_saves()
 	show()
 
@@ -195,5 +196,6 @@ func show_load_mode() -> void:
 	"""显示读取模式"""
 	mode = "load"
 	_setup_ui()
+	_connect_signals()
 	_load_all_saves()
 	show()
