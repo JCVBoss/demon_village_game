@@ -16,9 +16,12 @@ signal villager_selected(villager_id: String)
 @onready var pause_menu: Control = $UIRoot/PauseMenu
 @onready var save_load_ui: Control = $UIRoot/SaveLoadUI
 @onready var menu_button: Button = $UIRoot/BottomBar/MenuButton
+@onready var day_summary: CanvasLayer = $DaySummary
 
 # ==================== 状态 ====================
 var is_paused: bool = false
+var daily_interactions: int = 0
+var daily_trust_changes: Dictionary = {}
 
 # ==================== 配置 ====================
 const VillagerScene = preload("res://scenes/characters/Villager.tscn")
@@ -137,6 +140,9 @@ func _on_villager_dialogue_started(villager_id: String) -> void:
 	# 消耗行动点
 	GameManager.use_action_point(1)
 
+	# 记录今日互动次数
+	daily_interactions += 1
+
 
 func _on_villager_dialogue_ended() -> void:
 	"""村民对话结束"""
@@ -187,10 +193,29 @@ func _update_ui() -> void:
 func _on_day_changed(new_day: int) -> void:
 	"""天数变化回调"""
 	print("[Village] 进入第 %d 天" % new_day)
-	_update_ui()
+
+	# 显示每日总结
+	_show_day_summary(new_day - 1)
+
 	# 检查新一天的事件
 	EventManager.check_events(new_day)
-	# TODO: 显示天数过渡动画
+
+
+func _show_day_summary(completed_day: int) -> void:
+	"""显示每日总结"""
+	if day_summary:
+		day_summary.show_summary(completed_day, daily_interactions, daily_trust_changes)
+		# 等待玩家点击继续
+		await day_summary.continue_pressed
+
+	# 重置每日统计
+	_reset_daily_stats()
+
+
+func _reset_daily_stats() -> void:
+	"""重置每日统计"""
+	daily_interactions = 0
+	daily_trust_changes.clear()
 
 
 func _on_action_points_changed(new_points: int) -> void:
@@ -203,7 +228,15 @@ func _on_action_points_changed(new_points: int) -> void:
 func _on_trust_changed(villager_id: String, _old_value: int, new_value: int) -> void:
 	"""信任值变化回调"""
 	print("[Village] %s 信任值更新为 %d" % [villager_id, new_value])
-	# 更新对应村民的信任值显示（如果有的话）
+
+	# 记录今日信任变化
+	if not daily_trust_changes.has(villager_id):
+		daily_trust_changes[villager_id] = 0
+	# 计算实际变化量
+	var change = new_value - _old_value
+	daily_trust_changes[villager_id] += change
+
+	# 更新对应村民的信任值显示
 	_update_villager_trust_display(villager_id, new_value)
 
 
