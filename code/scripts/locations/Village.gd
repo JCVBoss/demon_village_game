@@ -137,9 +137,6 @@ func _on_villager_dialogue_started(villager_id: String) -> void:
 	if dialogue_box:
 		dialogue_box.show()
 
-	# 消耗行动点
-	GameManager.use_action_point(1)
-
 	# 记录今日互动次数
 	daily_interactions += 1
 
@@ -150,6 +147,21 @@ func _on_villager_dialogue_ended() -> void:
 	# 隐藏对话框
 	if dialogue_box:
 		dialogue_box.hide()
+
+	# 对话结束后消耗行动点
+	_consume_action_point()
+
+
+func _consume_action_point() -> void:
+	"""消耗行动点并检查是否进入下一天"""
+	GameManager.action_points -= 1
+	GameManager.action_points_changed.emit(GameManager.action_points)
+	_update_ui()
+	print("[Village] 消耗 1 行动点，剩余 %d" % GameManager.action_points)
+
+	# 检查是否需要进入下一天
+	if GameManager.action_points <= 0:
+		GameManager.advance_day()
 
 
 func _on_dialogue_line(_speaker: String, _text: String) -> void:
