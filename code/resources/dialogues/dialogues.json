@@ -19,21 +19,9 @@
 					{"speaker": "chenmo", "text": "我不认识你，也不想认识。没事的话，让开。"}
 				],
 				"choices": [
-					{
-						"text": "友好地打招呼",
-						"trust_change": 5,
-						"next_node": "friendly_greeting"
-					},
-					{
-						"text": "直接询问村子情况",
-						"trust_change": 0,
-						"next_node": "ask_village"
-					},
-					{
-						"text": "保持沉默离开",
-						"trust_change": -2,
-						"next_node": null
-					}
+					{"text": "友好地打招呼", "trust_change": 5, "next_node": "friendly_greeting"},
+					{"text": "直接询问村子情况", "trust_change": 0, "next_node": "ask_village"},
+					{"text": "保持沉默离开", "trust_change": -2, "next_node": null}
 				]
 			},
 			"friendly_greeting": {
@@ -46,16 +34,8 @@
 					{"speaker": "chenmo", "text": "酒馆在东边。他比我...更会说话。"}
 				],
 				"choices": [
-					{
-						"text": "谢谢，我会去找他",
-						"trust_change": 3,
-						"next_node": null
-					},
-					{
-						"text": "你为什么不去帮忙？",
-						"trust_change": -3,
-						"next_node": "why_not_help"
-					}
+					{"text": "谢谢，我会去找他", "trust_change": 3, "next_node": null},
+					{"text": "你为什么不去帮忙？", "trust_change": -3, "next_node": "why_not_help"}
 				]
 			},
 			"ask_village": {
@@ -68,16 +48,8 @@
 					{"speaker": "chenmo", "text": "想知道什么，去问别人。我只是个打杂的。"}
 				],
 				"choices": [
-					{
-						"text": "好的，谢谢",
-						"trust_change": 1,
-						"next_node": null
-					},
-					{
-						"text": "你好像有心事？",
-						"trust_change": 2,
-						"next_node": "notice_something"
-					}
+					{"text": "好的，谢谢", "trust_change": 1, "next_node": null},
+					{"text": "你好像有心事？", "trust_change": 2, "next_node": "notice_something"}
 				]
 			},
 			"why_not_help": {
@@ -89,11 +61,7 @@
 					{"speaker": "chenmo", "text": "别问了。去做你该做的事吧。"}
 				],
 				"choices": [
-					{
-						"text": "好吧，告辞",
-						"trust_change": 0,
-						"next_node": null
-					}
+					{"text": "好吧，告辞", "trust_change": 0, "next_node": null}
 				]
 			},
 			"notice_something": {
@@ -105,16 +73,152 @@
 					{"speaker": "chenmo", "text": "我只是累了。村子里的事...和你没关系。"}
 				],
 				"choices": [
-					{
-						"text": "如果需要帮助，可以找我",
-						"trust_change": 5,
-						"next_node": null
-					},
-					{
-						"text": "好吧，告辞",
-						"trust_change": 0,
-						"next_node": null
-					}
+					{"text": "如果需要帮助，可以找我", "trust_change": 5, "next_node": null},
+					{"text": "好吧，告辞", "trust_change": 0, "next_node": null}
+				]
+			}
+		}
+	},
+	"leishu": {
+		"villager_id": "leishu",
+		"villager_name": "雷叔",
+		"trust_stages": {
+			"wary": {"min": 0, "max": 20},
+			"neutral": {"min": 21, "max": 40},
+			"friendly": {"min": 41, "max": 60},
+			"trusted": {"min": 61, "max": 80},
+			"loyal": {"min": 81, "max": 100}
+		},
+		"dialogue_nodes": {
+			"initial": {
+				"node_id": "leishu_initial",
+				"trust_required": 0,
+				"lines": [
+					{"speaker": "narrator", "text": "（铁匠铺里传来叮叮当当的敲打声）"},
+					{"speaker": "leishu", "text": "啧，又来一个闲人..."},
+					{"speaker": "narrator", "text": "（老铁匠头也不抬，继续打铁）"},
+					{"speaker": "leishu", "text": "要修东西就放下，要买就付钱。别废话。"}
+				],
+				"choices": [
+					{"text": "您看起来很专业", "trust_change": 3, "next_node": "compliment"},
+					{"text": "我想看看你的作品", "trust_change": 1, "next_node": "look_works"},
+					{"text": "我只是路过", "trust_change": 0, "next_node": null}
+				]
+			},
+			"compliment": {
+				"node_id": "leishu_compliment",
+				"trust_required": 0,
+				"lines": [
+					{"speaker": "leishu", "text": "哼，专业？"},
+					{"speaker": "narrator", "text": "（他停下手中的活，瞥了你一眼）"},
+					{"speaker": "leishu", "text": "小子眼光还不错。这双手...以前可是给王国打造军械的。"}
+				],
+				"choices": [
+					{"text": "王国？那你怎么会在这里？", "trust_change": 2, "next_node": "ask_past"},
+					{"text": "原来是大匠师，失敬", "trust_change": 5, "next_node": null}
+				]
+			},
+			"look_works": {
+				"node_id": "leishu_look_works",
+				"trust_required": 0,
+				"lines": [
+					{"speaker": "leishu", "text": "看可以，别碰。"},
+					{"speaker": "narrator", "text": "（墙上挂着几把农具和一把短剑）"},
+					{"speaker": "leishu", "text": "都是些实用的东西。想看花哨的，去找别人。"}
+				],
+				"choices": [
+					{"text": "这把短剑做工很精细", "trust_change": 4, "next_node": null},
+					{"text": "我明白了，告辞", "trust_change": 0, "next_node": null}
+				]
+			},
+			"ask_past": {
+				"node_id": "leishu_ask_past",
+				"trust_required": 0,
+				"lines": [
+					{"speaker": "leishu", "text": "（沉默片刻，眼神变得暗淡）"},
+					{"speaker": "leishu", "text": "...那是很久以前的事了。"},
+					{"speaker": "leishu", "text": "人老了，就想图个清静。懂吗？"}
+				],
+				"choices": [
+					{"text": "我理解", "trust_change": 3, "next_node": null},
+					{"text": "告辞", "trust_change": 0, "next_node": null}
+				]
+			}
+		}
+	},
+	"jinling": {
+		"villager_id": "jinling",
+		"villager_name": "金铃",
+		"trust_stages": {
+			"wary": {"min": 0, "max": 20},
+			"neutral": {"min": 21, "max": 40},
+			"friendly": {"min": 41, "max": 60},
+			"trusted": {"min": 61, "max": 80},
+			"loyal": {"min": 81, "max": 100}
+		},
+		"dialogue_nodes": {
+			"initial": {
+				"node_id": "jinling_initial",
+				"trust_required": 0,
+				"lines": [
+					{"speaker": "jinling", "text": "哎呀，新面孔？"},
+					{"speaker": "narrator", "text": "（女商人眼睛亮了起来，上下打量你）"},
+					{"speaker": "jinling", "text": "来来来，看看有什么需要的。药草、火石、绳索...应有尽有。"}
+				],
+				"choices": [
+					{"text": "我想买些补给", "trust_change": 2, "next_node": "buy_supplies"},
+					{"text": "你是哪里人？", "trust_change": 1, "next_node": "ask_origin"},
+					{"text": "我只是看看", "trust_change": 0, "next_node": "just_looking"}
+				]
+			},
+			"buy_supplies": {
+				"node_id": "jinling_buy_supplies",
+				"trust_required": 0,
+				"lines": [
+					{"speaker": "jinling", "text": "好眼光！"},
+					{"speaker": "jinling", "text": "不过...我看你身上没什么钱吧？"},
+					{"speaker": "narrator", "text": "（她狡黠地笑了）"},
+					{"speaker": "jinling", "text": "没关系，有些东西...用钱买不到，用别的方式也可以。"}
+				],
+				"choices": [
+					{"text": "什么意思？", "trust_change": 2, "next_node": "mystery_hint"},
+					{"text": "那我下次再来", "trust_change": 0, "next_node": null}
+				]
+			},
+			"ask_origin": {
+				"node_id": "jinling_ask_origin",
+				"trust_required": 0,
+				"lines": [
+					{"speaker": "jinling", "text": "我？到处跑的商人，没有固定的家。"},
+					{"speaker": "jinling", "text": "这村子...算是我的一个落脚点吧。"},
+					{"speaker": "narrator", "text": "（她的表情微妙地变化了一下）"}
+				],
+				"choices": [
+					{"text": "你好像知道很多事", "trust_change": 3, "next_node": null},
+					{"text": "那我不打扰了", "trust_change": 0, "next_node": null}
+				]
+			},
+			"just_looking": {
+				"node_id": "jinling_just_looking",
+				"trust_required": 0,
+				"lines": [
+					{"speaker": "jinling", "text": "看吧看吧，不买也没关系。"},
+					{"speaker": "jinling", "text": "不过记住，机会不等人哦。"}
+				],
+				"choices": [
+					{"text": "我会记住的", "trust_change": 1, "next_node": null}
+				]
+			},
+			"mystery_hint": {
+				"node_id": "jinling_mystery_hint",
+				"trust_required": 0,
+				"lines": [
+					{"speaker": "jinling", "text": "（压低声音）"},
+					{"speaker": "jinling", "text": "这村子里...有不少秘密。"},
+					{"speaker": "jinling", "text": "想知道的话，得看你能拿出什么来交换。"}
+				],
+				"choices": [
+					{"text": "我明白了", "trust_change": 2, "next_node": null}
 				]
 			}
 		}
@@ -139,16 +243,8 @@
 					{"speaker": "baizhi", "text": "来，坐吧。让我看看。"}
 				],
 				"choices": [
-					{
-						"text": "谢谢，我没有受伤",
-						"trust_change": 2,
-						"next_node": "no_injury"
-					},
-					{
-						"text": "我只是来看看",
-						"trust_change": 0,
-						"next_node": "just_visiting"
-					}
+					{"text": "谢谢，我没有受伤", "trust_change": 2, "next_node": "no_injury"},
+					{"text": "我只是来看看", "trust_change": 0, "next_node": "just_visiting"}
 				]
 			},
 			"no_injury": {
@@ -160,11 +256,7 @@
 					{"speaker": "baizhi", "text": "如果你需要什么，我就在这里。"}
 				],
 				"choices": [
-					{
-						"text": "谢谢你的好意",
-						"trust_change": 3,
-						"next_node": null
-					}
+					{"text": "谢谢你的好意", "trust_change": 3, "next_node": null}
 				]
 			},
 			"just_visiting": {
@@ -175,11 +267,387 @@
 					{"speaker": "baizhi", "text": "有什么事随时来找我。"}
 				],
 				"choices": [
-					{
-						"text": "好的，告辞",
-						"trust_change": 0,
-						"next_node": null
-					}
+					{"text": "好的，告辞", "trust_change": 0, "next_node": null}
+				]
+			}
+		}
+	},
+	"john": {
+		"villager_id": "john",
+		"villager_name": "老约翰",
+		"trust_stages": {
+			"wary": {"min": 0, "max": 20},
+			"neutral": {"min": 21, "max": 40},
+			"friendly": {"min": 41, "max": 60},
+			"trusted": {"min": 61, "max": 80},
+			"loyal": {"min": 81, "max": 100}
+		},
+		"dialogue_nodes": {
+			"initial": {
+				"node_id": "john_initial",
+				"trust_required": 0,
+				"lines": [
+					{"speaker": "narrator", "text": "（教堂里光线昏暗，老神父正在祈祷）"},
+					{"speaker": "john", "text": "...神会指引迷途的人。"},
+					{"speaker": "narrator", "text": "（他转过身，眼神深邃）"},
+					{"speaker": "john", "text": "年轻人，你来寻求什么？救赎...还是答案？"}
+				],
+				"choices": [
+					{"text": "我想了解这个村子", "trust_change": 2, "next_node": "ask_village"},
+					{"text": "我只是在寻找方向", "trust_change": 3, "next_node": "seek_direction"},
+					{"text": "我只是路过", "trust_change": 0, "next_node": null}
+				]
+			},
+			"ask_village": {
+				"node_id": "john_ask_village",
+				"trust_required": 0,
+				"lines": [
+					{"speaker": "john", "text": "这个村子...有很多故事。"},
+					{"speaker": "john", "text": "有人来，有人走。有人隐藏，有人寻找。"},
+					{"speaker": "narrator", "text": "（他神秘地微笑）"},
+					{"speaker": "john", "text": "也许...你就是那个预言中的人。"}
+				],
+				"choices": [
+					{"text": "什么预言？", "trust_change": 5, "next_node": "ask_prophecy"},
+					{"text": "我不明白你的意思", "trust_change": 1, "next_node": null}
+				]
+			},
+			"seek_direction": {
+				"node_id": "john_seek_direction",
+				"trust_required": 0,
+				"lines": [
+					{"speaker": "john", "text": "方向...有意思的选择。"},
+					{"speaker": "john", "text": "有时候，答案不在远方，而在心中。"},
+					{"speaker": "john", "text": "年轻人，记住我的话。当你迷失时，问问自己——真正想要的是什么？"}
+				],
+				"choices": [
+					{"text": "我会记住的", "trust_change": 4, "next_node": null}
+				]
+			},
+			"ask_prophecy": {
+				"node_id": "john_ask_prophecy",
+				"trust_required": 0,
+				"lines": [
+					{"speaker": "john", "text": "（目光变得深邃）"},
+					{"speaker": "john", "text": "古老的预言说..."},
+					{"speaker": "john", "text": "「当黑暗吞噬最后的光明，真正的勇者将从灰烬中诞生。」"},
+					{"speaker": "john", "text": "但预言的后半部分...只有时间才能揭晓。"}
+				],
+				"choices": [
+					{"text": "后半部分是什么？", "trust_change": 3, "next_node": null},
+					{"text": "谢谢你的指引", "trust_change": 2, "next_node": null}
+				]
+			}
+		}
+	},
+	"daxiong": {
+		"villager_id": "daxiong",
+		"villager_name": "大熊",
+		"trust_stages": {
+			"wary": {"min": 0, "max": 20},
+			"neutral": {"min": 21, "max": 40},
+			"friendly": {"min": 41, "max": 60},
+			"trusted": {"min": 61, "max": 80},
+			"loyal": {"min": 81, "max": 100}
+		},
+		"dialogue_nodes": {
+			"initial": {
+				"node_id": "daxiong_initial",
+				"trust_required": 0,
+				"lines": [
+					{"speaker": "daxiong", "text": "哈！新面孔！"},
+					{"speaker": "narrator", "text": "（酒馆老板热情地迎上来）"},
+					{"speaker": "daxiong", "text": "来来来，坐下喝一杯！想知道什么，尽管问。大熊我消息最灵通了！"}
+				],
+				"choices": [
+					{"text": "我想了解村子的情况", "trust_change": 2, "next_node": "ask_village"},
+					{"text": "给我来杯酒", "trust_change": 1, "next_node": "order_drink"},
+					{"text": "我只是来看看", "trust_change": 0, "next_node": null}
+				]
+			},
+			"ask_village": {
+				"node_id": "daxiong_ask_village",
+				"trust_required": 0,
+				"lines": [
+					{"speaker": "daxiong", "text": "村子？这里的人各有各的故事。"},
+					{"speaker": "daxiong", "text": "陈默那小子整天沉默寡言..."},
+					{"speaker": "daxiong", "text": "白芷大夫温柔善良..."},
+					{"speaker": "daxiong", "text": "老约翰神神叨叨的...每个人都有秘密，你懂的。"}
+				],
+				"choices": [
+					{"text": "你的故事呢？", "trust_change": 3, "next_node": "ask_his_story"},
+					{"text": "谢谢分享", "trust_change": 2, "next_node": null}
+				]
+			},
+			"order_drink": {
+				"node_id": "daxiong_order_drink",
+				"trust_required": 0,
+				"lines": [
+					{"speaker": "daxiong", "text": "好嘞！"},
+					{"speaker": "narrator", "text": "（他熟练地倒了一杯麦酒）"},
+					{"speaker": "daxiong", "text": "喝吧，这可是我亲自酿的。不过...喝酒要给钱哦！"}
+				],
+				"choices": [
+					{"text": "我下次补上", "trust_change": -1, "next_node": null},
+					{"text": "真不错！", "trust_change": 2, "next_node": null}
+				]
+			},
+			"ask_his_story": {
+				"node_id": "daxiong_ask_his_story",
+				"trust_required": 0,
+				"lines": [
+					{"speaker": "daxiong", "text": "我？"},
+					{"speaker": "narrator", "text": "（他愣了一下，笑容微微收敛）"},
+					{"speaker": "daxiong", "text": "...一个退休的老佣兵，就这样。"},
+					{"speaker": "daxiong", "text": "现在只想安安静静开个酒馆。"}
+				],
+				"choices": [
+					{"text": "明白了", "trust_change": 2, "next_node": null}
+				]
+			}
+		}
+	},
+	"ying": {
+		"villager_id": "ying",
+		"villager_name": "影",
+		"trust_stages": {
+			"wary": {"min": 0, "max": 20},
+			"neutral": {"min": 21, "max": 40},
+			"friendly": {"min": 41, "max": 60},
+			"trusted": {"min": 61, "max": 80},
+			"loyal": {"min": 81, "max": 100}
+		},
+		"dialogue_nodes": {
+			"initial": {
+				"node_id": "ying_initial",
+				"trust_required": 0,
+				"lines": [
+					{"speaker": "narrator", "text": "（村外的小屋里，一个黑衣人静静地站着）"},
+					{"speaker": "ying", "text": "...你不该来这里。"},
+					{"speaker": "narrator", "text": "（他的声音冷漠而疏离）"},
+					{"speaker": "ying", "text": "回去吧。这里没有你要找的东西。"}
+				],
+				"choices": [
+					{"text": "你怎么知道我在找什么？", "trust_change": 3, "next_node": "suspicious"},
+					{"text": "我只是路过", "trust_change": 0, "next_node": null},
+					{"text": "告辞", "trust_change": -1, "next_node": null}
+				]
+			},
+			"suspicious": {
+				"node_id": "ying_suspicious",
+				"trust_required": 0,
+				"lines": [
+					{"speaker": "ying", "text": "（眼神微微闪烁）"},
+					{"speaker": "ying", "text": "...每个人都在找什么。"},
+					{"speaker": "ying", "text": "答案、救赎、复仇...或者只是活下去。"},
+					{"speaker": "ying", "text": "问题是，你愿意付出什么代价？"}
+				],
+				"choices": [
+					{"text": "你在说什么？", "trust_change": 2, "next_node": null},
+					{"text": "我不知道", "trust_change": 1, "next_node": null}
+				]
+			}
+		}
+	},
+	"xiaoan": {
+		"villager_id": "xiaoan",
+		"villager_name": "小安",
+		"trust_stages": {
+			"wary": {"min": 0, "max": 20},
+			"neutral": {"min": 21, "max": 40},
+			"friendly": {"min": 41, "max": 60},
+			"trusted": {"min": 61, "max": 80},
+			"loyal": {"min": 81, "max": 100}
+		},
+		"dialogue_nodes": {
+			"initial": {
+				"node_id": "xiaoan_initial",
+				"trust_required": 0,
+				"lines": [
+					{"speaker": "xiaoan", "text": "大哥哥/大姐姐！你是新来的吗？"},
+					{"speaker": "narrator", "text": "（小男孩眼睛亮亮的，充满好奇）"},
+					{"speaker": "xiaoan", "text": "你是勇者吗？像故事里那样的？"}
+				],
+				"choices": [
+					{"text": "是的，我是勇者", "trust_change": 2, "next_node": "confirm_hero"},
+					{"text": "我只是一个旅行者", "trust_change": 1, "next_node": "deny_hero"},
+					{"text": "你叫什么名字？", "trust_change": 3, "next_node": "ask_name"}
+				]
+			},
+			"confirm_hero": {
+				"node_id": "xiaoan_confirm_hero",
+				"trust_required": 0,
+				"lines": [
+					{"speaker": "xiaoan", "text": "哇！真的吗？"},
+					{"speaker": "xiaoan", "text": "那你一定有很厉害的装备吧？"},
+					{"speaker": "xiaoan", "text": "我爸爸以前也是...（突然停下）"},
+					{"speaker": "narrator", "text": "（他的表情暗淡了一瞬间）"}
+				],
+				"choices": [
+					{"text": "你爸爸？", "trust_change": 2, "next_node": "ask_father"},
+					{"text": "没关系，慢慢说", "trust_change": 4, "next_node": null}
+				]
+			},
+			"deny_hero": {
+				"node_id": "xiaoan_deny_hero",
+				"trust_required": 0,
+				"lines": [
+					{"speaker": "xiaoan", "text": "哦...好吧。"},
+					{"speaker": "xiaoan", "text": "但是叔叔说，每个人都可以成为英雄！"},
+					{"speaker": "xiaoan", "text": "只要...只要心里有光！"}
+				],
+				"choices": [
+					{"text": "你的叔叔是谁？", "trust_change": 3, "next_node": null},
+					{"text": "说得好，小朋友", "trust_change": 2, "next_node": null}
+				]
+			},
+			"ask_name": {
+				"node_id": "xiaoan_ask_name",
+				"trust_required": 0,
+				"lines": [
+					{"speaker": "xiaoan", "text": "我叫小安！"},
+					{"speaker": "xiaoan", "text": "大家都对我很好。叔叔、白芷姐姐、大熊伯伯..."},
+					{"speaker": "xiaoan", "text": "你要在这里待多久？"}
+				],
+				"choices": [
+					{"text": "我也不知道", "trust_change": 1, "next_node": null},
+					{"text": "待到找到我要找的东西", "trust_change": 2, "next_node": null}
+				]
+			},
+			"ask_father": {
+				"node_id": "xiaoan_ask_father",
+				"trust_required": 0,
+				"lines": [
+					{"speaker": "xiaoan", "text": "...爸爸去了很远的地方。"},
+					{"speaker": "xiaoan", "text": "叔叔说，他是个英雄。"},
+					{"speaker": "narrator", "text": "（他的眼里闪烁着泪光）"},
+					{"speaker": "xiaoan", "text": "我...我想变得像他一样勇敢。"}
+				],
+				"choices": [
+					{"text": "你一定会的", "trust_change": 5, "next_node": null},
+					{"text": "保重，小朋友", "trust_change": 2, "next_node": null}
+				]
+			}
+		}
+	},
+	"ahu": {
+		"villager_id": "ahu",
+		"villager_name": "阿虎",
+		"trust_stages": {
+			"wary": {"min": 0, "max": 20},
+			"neutral": {"min": 21, "max": 40},
+			"friendly": {"min": 41, "max": 60},
+			"trusted": {"min": 61, "max": 80},
+			"loyal": {"min": 81, "max": 100}
+		},
+		"dialogue_nodes": {
+			"initial": {
+				"node_id": "ahu_initial",
+				"trust_required": 0,
+				"lines": [
+					{"speaker": "narrator", "text": "（年轻的守卫拦住了你）"},
+					{"speaker": "ahu", "text": "站住！你是谁？"},
+					{"speaker": "narrator", "text": "（他警惕地看着你，手按在剑柄上）"},
+					{"speaker": "ahu", "text": "村子不欢迎可疑的人。说明你的来意。"}
+				],
+				"choices": [
+					{"text": "我叫勇者，是路过的旅人", "trust_change": 1, "next_node": "introduce"},
+					{"text": "我来这里是为了帮助村子", "trust_change": 3, "next_node": "offer_help"},
+					{"text": "我为什么要向你解释？", "trust_change": -3, "next_node": "confront"}
+				]
+			},
+			"introduce": {
+				"node_id": "ahu_introduce",
+				"trust_required": 0,
+				"lines": [
+					{"speaker": "ahu", "text": "勇者...？"},
+					{"speaker": "narrator", "text": "（他的表情稍微放松了一些）"},
+					{"speaker": "ahu", "text": "听说过...但我不确定是不是真的。"},
+					{"speaker": "ahu", "text": "行吧，你可以进去。但别惹事。"}
+				],
+				"choices": [
+					{"text": "谢谢，我会的", "trust_change": 2, "next_node": null}
+				]
+			},
+			"offer_help": {
+				"node_id": "ahu_offer_help",
+				"trust_required": 0,
+				"lines": [
+					{"speaker": "ahu", "text": "帮助？"},
+					{"speaker": "narrator", "text": "（他的眼睛亮了起来）"},
+					{"speaker": "ahu", "text": "真的吗？村子确实需要帮助..."},
+					{"speaker": "ahu", "text": "去找大熊吧，他在酒馆。他是这里消息最灵通的人。"}
+				],
+				"choices": [
+					{"text": "好的，谢谢", "trust_change": 3, "next_node": null}
+				]
+			},
+			"confront": {
+				"node_id": "ahu_confront",
+				"trust_required": 0,
+				"lines": [
+					{"speaker": "ahu", "text": "因为我是这里的守卫！"},
+					{"speaker": "narrator", "text": "（他的语气变得强硬）"},
+					{"speaker": "ahu", "text": "如果你不想合作，就离开这里。我们不需要麻烦。"}
+				],
+				"choices": [
+					{"text": "抱歉，我失礼了", "trust_change": 1, "next_node": null},
+					{"text": "告辞", "trust_change": -2, "next_node": null}
+				]
+			}
+		}
+	},
+	"yeya": {
+		"villager_id": "yeya",
+		"villager_name": "夜鸦",
+		"trust_stages": {
+			"wary": {"min": 0, "max": 20},
+			"neutral": {"min": 21, "max": 40},
+			"friendly": {"min": 41, "max": 60},
+			"trusted": {"min": 61, "max": 80},
+			"loyal": {"min": 81, "max": 100}
+		},
+		"dialogue_nodes": {
+			"initial": {
+				"node_id": "yeya_initial",
+				"trust_required": 0,
+				"lines": [
+					{"speaker": "narrator", "text": "（图书管理员抬起头，目光冷静）"},
+					{"speaker": "yeya", "text": "...看书？"},
+					{"speaker": "yeya", "text": "这里没什么有趣的。只有一些旧账本和过时的记录。"},
+					{"speaker": "narrator", "text": "（他的语气平静，但眼神似乎在观察你）"}
+				],
+				"choices": [
+					{"text": "我想了解这个村子", "trust_change": 2, "next_node": "ask_village"},
+					{"text": "你在这里工作很久了吗？", "trust_change": 1, "next_node": "ask_work"},
+					{"text": "告辞", "trust_change": 0, "next_node": null}
+				]
+			},
+			"ask_village": {
+				"node_id": "yeya_ask_village",
+				"trust_required": 0,
+				"lines": [
+					{"speaker": "yeya", "text": "村子？"},
+					{"speaker": "yeya", "text": "...只是个普通的山村。没什么特别的。"},
+					{"speaker": "narrator", "text": "（他的目光微微闪烁）"},
+					{"speaker": "yeya", "text": "你为什么来这里？我听说...勇者都应该去魔王城。"}
+				],
+				"choices": [
+					{"text": "我...也不知道", "trust_change": 2, "next_node": null},
+					{"text": "这不关你的事", "trust_change": -2, "next_node": null}
+				]
+			},
+			"ask_work": {
+				"node_id": "yeya_ask_work",
+				"trust_required": 0,
+				"lines": [
+					{"speaker": "yeya", "text": "...很久了。"},
+					{"speaker": "yeya", "text": "这里安静，适合思考。"},
+					{"speaker": "yeya", "text": "不像外面...那么多纷扰。"}
+				],
+				"choices": [
+					{"text": "你喜欢安静？", "trust_change": 2, "next_node": null},
+					{"text": "明白了", "trust_change": 1, "next_node": null}
 				]
 			}
 		}
