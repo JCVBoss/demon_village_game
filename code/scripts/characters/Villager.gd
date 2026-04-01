@@ -80,10 +80,14 @@ func _load_villager_data() -> void:
 		var json = JSON.new()
 		if json.parse(json_string) == OK:
 			var data = json.data
-			if data.has(villager_id):
-				_villager_data = data[villager_id]
+			# JSON 结构是 {"villagers": {"chenmo": {...}, ...}}
+			var villagers = data.get("villagers", data)
+			if villagers.has(villager_id):
+				_villager_data = villagers[villager_id]
 				villager_name = _villager_data.get("name", villager_name)
 				print("[Villager] 加载 %s 数据成功" % villager_name)
+			else:
+				print("[Villager] 未找到村民 %s 的数据" % villager_id)
 
 
 func _load_sprite() -> void:
