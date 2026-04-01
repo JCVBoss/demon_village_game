@@ -111,7 +111,17 @@ func _show_choices(choices: Array) -> void:
 	for i in range(choices.size()):
 		var choice = choices[i]
 		var button = Button.new()
-		button.text = "%d. %s" % [i + 1, choice.text]
+
+		# 构建按钮文本，显示信任值变化
+		var text = "%d. %s" % [i + 1, choice.text]
+		if choice.has("trust_change"):
+			var trust_change = choice.trust_change
+			if trust_change > 0:
+				text += " (+%d信任)" % trust_change
+			elif trust_change < 0:
+				text += " (%d信任)" % trust_change
+
+		button.text = text
 		button.pressed.connect(_on_choice_button_pressed.bind(i))
 		choices_container.add_child(button)
 

@@ -218,7 +218,7 @@ func _update_villager_trust_display(villager_id: String, trust_value: int) -> vo
 	if villagers_container:
 		for child in villagers_container.get_children():
 			if child.villager_id == villager_id:
-				child.current_trust = trust_value
+				child.set_trust_value(trust_value)
 
 
 func advance_to_next_day() -> void:

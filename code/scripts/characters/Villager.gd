@@ -122,11 +122,11 @@ func _setup_ui() -> void:
 		interaction_label.visible = false
 
 	if name_label:
-		name_label.text = villager_name
+		# 从 TrustManager 获取当前信任值并显示
+		current_trust = TrustManager.get_trust(villager_id)
+		var trust_level_name = TrustManager.get_trust_level_name(villager_id)
+		name_label.text = "%s [%s]" % [villager_name, trust_level_name]
 		name_label.visible = true
-
-	# 从 TrustManager 获取当前信任值
-	current_trust = TrustManager.get_trust(villager_id)
 
 
 # ==================== 表情系统 ====================
@@ -214,7 +214,23 @@ func update_trust(amount: int) -> void:
 	if _villager_data.has("trust_level"):
 		_villager_data["trust_level"] = current_trust
 
+	# 更新名称显示
+	_update_name_display()
+
 	print("[Villager] %s 信任值更新: %d" % [villager_name, current_trust])
+
+
+func _update_name_display() -> void:
+	"""更新名称显示，包含信任等级"""
+	if name_label:
+		var trust_level_name = TrustManager.get_trust_level_name(villager_id)
+		name_label.text = "%s [%s]" % [villager_name, trust_level_name]
+
+
+func set_trust_value(value: int) -> void:
+	"""设置信任值（用于加载后更新）"""
+	current_trust = value
+	_update_name_display()
 
 
 func get_trust_level() -> String:
