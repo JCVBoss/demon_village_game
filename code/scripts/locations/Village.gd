@@ -155,7 +155,29 @@ func _consume_action_point() -> void:
 
 	# 检查是否需要进入下一天
 	if GameManager.action_points <= 0:
-		GameManager.advance_day()
+		# 先显示每日总结，等待玩家确认后再进入下一天
+		_show_day_summary_and_advance()
+
+
+func _show_day_summary_and_advance() -> void:
+	"""显示每日总结并进入下一天"""
+	var completed_day = GameManager.current_day
+
+	# 显示每日总结
+	if day_summary:
+		day_summary.show_summary(completed_day, daily_interactions, daily_trust_changes)
+		# 等待玩家点击继续
+		await day_summary.continue_pressed
+
+	# 重置每日统计
+	_reset_daily_stats()
+
+	# 进入下一天
+	GameManager.advance_day()
+	_update_ui()
+
+	# 检查新一天的事件
+	EventManager.check_events(GameManager.current_day)
 
 
 func _on_dialogue_line(_speaker: String, _text: String) -> void:
@@ -201,24 +223,19 @@ func _update_ui() -> void:
 # ==================== 游戏流程 ====================
 
 func _on_day_changed(new_day: int) -> void:
-	"""天数变化回调"""
+	"""天数变化回调 - 由其他来源触发的天数变化"""
 	print("[Village] 进入第 %d 天" % new_day)
-
-	# 显示每日总结
-	_show_day_summary(new_day - 1)
+	_update_ui()
 
 	# 检查新一天的事件
 	EventManager.check_events(new_day)
 
 
 func _show_day_summary(completed_day: int) -> void:
-	"""显示每日总结"""
+	"""显示每日总结（备用）"""
 	if day_summary:
 		day_summary.show_summary(completed_day, daily_interactions, daily_trust_changes)
-		# 等待玩家点击继续
 		await day_summary.continue_pressed
-
-	# 重置每日统计
 	_reset_daily_stats()
 
 
