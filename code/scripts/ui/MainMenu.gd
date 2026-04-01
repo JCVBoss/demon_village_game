@@ -3,7 +3,6 @@ extends Control
 
 # ==================== 信号 ====================
 signal new_game_pressed
-signal continue_pressed
 signal load_game_pressed
 signal quit_pressed
 

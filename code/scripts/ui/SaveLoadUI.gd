@@ -57,12 +57,17 @@ func _setup_ui() -> void:
 func _connect_signals() -> void:
 	"""连接信号"""
 	if back_button:
-		back_button.pressed.connect(_on_back_pressed)
+		# 避免重复连接
+		if not back_button.pressed.is_connected(_on_back_pressed):
+			back_button.pressed.connect(_on_back_pressed)
 
 	# 连接槽位信号
 	for slot in slots:
-		slot.slot_selected.connect(_on_slot_selected)
-		slot.slot_deleted.connect(_on_slot_deleted)
+		# 避免重复连接
+		if not slot.slot_selected.is_connected(_on_slot_selected):
+			slot.slot_selected.connect(_on_slot_selected)
+		if not slot.slot_deleted.is_connected(_on_slot_deleted):
+			slot.slot_deleted.connect(_on_slot_deleted)
 
 
 # ==================== 存档操作 ====================
