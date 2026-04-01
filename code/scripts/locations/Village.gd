@@ -142,14 +142,8 @@ func _on_villager_dialogue_started(villager_id: String) -> void:
 
 
 func _on_villager_dialogue_ended() -> void:
-	"""村民对话结束"""
-	print("[Village] 对话结束")
-	# 隐藏对话框
-	if dialogue_box:
-		dialogue_box.hide()
-
-	# 对话结束后消耗行动点
-	_consume_action_point()
+	"""村民对话结束（备用）"""
+	pass
 
 
 func _consume_action_point() -> void:
@@ -175,10 +169,14 @@ func _on_choices_presented(_choices: Array) -> void:
 
 
 func _on_dialogue_ended(_villager_id: String) -> void:
-	"""对话结束回调"""
+	"""对话结束回调 - DialogueManager 信号"""
+	print("[Village] 对话结束 (DialogueManager)")
 	# 隐藏对话框
 	if dialogue_box:
 		dialogue_box.hide()
+
+	# 对话结束后消耗行动点
+	_consume_action_point()
 
 
 # ==================== UI 更新 ====================
