@@ -1,6 +1,6 @@
 ## DaySummary - 每日总结界面
 ## 显示一天结束时的总结信息
-extends CanvasLayer
+extends Control
 
 # ==================== 信号 ====================
 signal continue_pressed

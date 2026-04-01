@@ -90,6 +90,10 @@ layout_mode = 1
 visible = false
 layout_mode = 1
 
-[node name="EventNotification" parent="." instance=ExtResource("7_event")]
+[node name="EventNotification" parent="UIRoot" instance=ExtResource("7_event")]
+visible = false
+layout_mode = 1
 
-[node name="DaySummary" parent="." instance=ExtResource("8_summary")]
+[node name="DaySummary" parent="UIRoot" instance=ExtResource("8_summary")]
+visible = false
+layout_mode = 1

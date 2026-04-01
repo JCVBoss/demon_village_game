@@ -16,7 +16,7 @@ signal villager_selected(villager_id: String)
 @onready var pause_menu: Control = $UIRoot/PauseMenu
 @onready var save_load_ui: Control = $UIRoot/SaveLoadUI
 @onready var menu_button: Button = $UIRoot/BottomBar/MenuButton
-@onready var day_summary: CanvasLayer = $DaySummary
+@onready var day_summary: Control = $UIRoot/DaySummary
 
 # ==================== 状态 ====================
 var is_paused: bool = false

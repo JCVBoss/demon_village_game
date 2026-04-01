@@ -1,6 +1,6 @@
 ## EventNotification - 事件通知 UI
 ## 显示剧情事件触发的通知
-extends CanvasLayer
+extends Control
 
 # ==================== 节点引用 ====================
 @onready var notification_panel: PanelContainer = $MarginContainer/PanelContainer
@@ -49,7 +49,11 @@ func _fade_out() -> void:
 	"""淡出动画"""
 	var tween = create_tween()
 	tween.tween_property(self, "modulate:a", 0.0, fade_duration)
-	tween.tween_callback(hide)
+	tween.tween_callback(_reset_and_hide)
+
+
+func _reset_and_hide() -> void:
+	hide()
 	modulate.a = 1.0
 
 
