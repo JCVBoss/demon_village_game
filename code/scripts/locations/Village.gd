@@ -13,6 +13,12 @@ signal villager_selected(villager_id: String)
 @onready var player: CharacterBody2D = $Player
 @onready var dialogue_box: PanelContainer = $UIRoot/DialogueBox
 @onready var village_ui: CanvasLayer = $UIRoot
+@onready var pause_menu: Control = $UIRoot/PauseMenu
+@onready var save_load_ui: Control = $UIRoot/SaveLoadUI
+@onready var menu_button: Button = $UIRoot/BottomBar/MenuButton
+
+# ==================== 状态 ====================
+var is_paused: bool = false
 
 # ==================== 配置 ====================
 const VillagerScene = preload("res://scenes/characters/Villager.tscn")
@@ -38,6 +44,9 @@ func _ready() -> void:
 	# 连接对话管理器信号
 	_connect_dialogue_signals()
 
+	# 连接UI信号
+	_connect_ui_signals()
+
 	# 生成村民
 	_spawn_villagers()
 
@@ -52,6 +61,28 @@ func _connect_dialogue_signals() -> void:
 	DialogueManager.dialogue_line_spoken.connect(_on_dialogue_line)
 	DialogueManager.choice_presented.connect(_on_choices_presented)
 	DialogueManager.dialogue_ended.connect(_on_dialogue_ended)
+
+
+func _connect_ui_signals() -> void:
+	"""连接UI信号"""
+	# 菜单按钮
+	if menu_button:
+		menu_button.pressed.connect(_on_menu_button_pressed)
+
+	# 暂停菜单
+	if pause_menu:
+		pause_menu.resume_pressed.connect(_on_resume_pressed)
+		pause_menu.save_pressed.connect(_on_save_pressed)
+		pause_menu.load_pressed.connect(_on_load_pressed)
+		pause_menu.quit_to_menu_pressed.connect(_on_quit_to_menu_pressed)
+		pause_menu.hide()
+
+	# 存档界面
+	if save_load_ui:
+		save_load_ui.save_completed.connect(_on_save_completed)
+		save_load_ui.load_completed.connect(_on_load_completed)
+		save_load_ui.cancelled.connect(_on_save_load_cancelled)
+		save_load_ui.hide()
 
 
 # ==================== 村民生成 ====================
@@ -156,4 +187,96 @@ func _input(event: InputEvent) -> void:
 func _on_menu_button_pressed() -> void:
 	"""菜单按钮按下"""
 	print("[Village] 打开菜单")
-	# TODO: 实现暂停菜单
+	_pause_game()
+	if pause_menu:
+		pause_menu.show_menu()
+
+
+# ==================== 暂停菜单回调 ====================
+
+func _pause_game() -> void:
+	"""暂停游戏"""
+	is_paused = true
+	get_tree().paused = true
+
+
+func _resume_game() -> void:
+	"""恢复游戏"""
+	is_paused = false
+	get_tree().paused = false
+
+
+func _on_resume_pressed() -> void:
+	"""继续游戏"""
+	print("[Village] 继续游戏")
+	_resume_game()
+	if pause_menu:
+		pause_menu.hide_menu()
+
+
+func _on_save_pressed() -> void:
+	"""打开保存界面"""
+	print("[Village] 打开保存界面")
+	if pause_menu:
+		pause_menu.hide_menu()
+	if save_load_ui:
+		save_load_ui.show_save_mode()
+
+
+func _on_load_pressed() -> void:
+	"""打开读取界面"""
+	print("[Village] 打开读取界面")
+	if pause_menu:
+		pause_menu.hide_menu()
+	if save_load_ui:
+		save_load_ui.show_load_mode()
+
+
+func _on_quit_to_menu_pressed() -> void:
+	"""返回主菜单"""
+	print("[Village] 返回主菜单")
+	_resume_game()
+	var result = get_tree().change_scene_to_file("res://scenes/Main.tscn")
+	if result != OK:
+		push_error("[Village] 无法返回主菜单")
+
+
+# ==================== 存档界面回调 ====================
+
+func _on_save_completed(_slot_index: int) -> void:
+	"""存档完成"""
+	print("[Village] 存档完成")
+	if save_load_ui:
+		save_load_ui.hide()
+	if pause_menu:
+		pause_menu.show_menu()
+
+
+func _on_load_completed(_slot_index: int) -> void:
+	"""读档完成"""
+	print("[Village] 读档完成")
+	_resume_game()
+	if save_load_ui:
+		save_load_ui.hide()
+	_update_ui()
+	# 重新生成村民位置
+	_spawn_villagers_after_load()
+
+
+func _on_save_load_cancelled() -> void:
+	"""取消存档操作"""
+	print("[Village] 取消存档操作")
+	if save_load_ui:
+		save_load_ui.hide()
+	if pause_menu:
+		pause_menu.show_menu()
+
+
+func _spawn_villagers_after_load() -> void:
+	"""加载后刷新村民"""
+	# 清除现有村民
+	if villagers_container:
+		for child in villagers_container.get_children():
+			child.queue_free()
+	# 重新生成
+	_spawn_villagers()
