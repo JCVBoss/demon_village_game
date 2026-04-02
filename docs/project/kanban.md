@@ -80,6 +80,8 @@
 | AR-008 | 金铃立绘 | 3 | AliceBussiness | 3/30 |
 | AR-009 | 影立绘 | 3 | AliceBussiness | 3/31 |
 | AR-010 | 阿虎立绘 | 3 | AliceBussiness | 4/1 |
+| **AR-011** | **村庄场景** | **5** | **AliceBussiness** | **4/2** |
+| **AR-012** | **UI 素材包** | **5** | **AliceBussiness** | **4/2** |
 
 **Done 总计：** 20 个任务，66 故事点
 

@@ -70,8 +70,8 @@
 | AR-008 | 金铃立绘 | P1 | 3 | AliceBussiness | ✅ Done | 3/30 完成 |
 | AR-009 | 影立绘 | P2 | 3 | AliceBussiness | ✅ Done | 3/31 完成 |
 | AR-010 | 阿虎立绘 | P2 | 3 | AliceBussiness | ✅ Done | 4/1 完成 |
-| AR-011 | 村庄场景 | P0 | 5 | AliceBussiness | 🟡 In Progress | 80% |
-| AR-012 | UI 素材包 | P1 | 5 | AliceBussiness | 🟡 In Progress | 50% |
+| AR-011 | 村庄场景 | P0 | 5 | AliceBussiness | ✅ Done | 4/2 完成 |
+| AR-012 | UI 素材包 | P1 | 5 | AliceBussiness | ✅ Done | 4/2 完成 |
 | AR-013 | 森林场景 | P1 | 5 | AliceBussiness | ⏳ Todo | - |
 | AR-014 | 战斗特效 | P2 | 3 | AliceBussiness | ⏳ Todo | - |
 
