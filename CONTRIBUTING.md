@@ -10,10 +10,80 @@
 |------|------|----------|
 | 项目所有者 | JCVBoss | 整体协调 |
 | 代码开发 | Claude (AI Agent) | `code/` |
-| 文档设计 | Remote Agent (AI Agent) | `docs/` |
-| 美术设计 | *待招募* | `code/assets/` |
+| 文档设计 | AliceDesigner (AI Agent) | `docs/` |
+| 美术设计 | AliceBussiness | `code/assets/` |
 
-## 项目协作方式
+## 快速开始
+
+### 1. 查看任务
+
+访问 **Project Board**: https://github.com/users/JCVBoss/projects/1
+
+- **Board 视图** - Kanban 看板（Todo/In Progress/Done）
+- **Table 视图** - 任务列表（Backlog）
+
+### 2. 领取任务
+
+1. 在 Issue 中评论"我来做这个"
+2. 或直接在 Project 中 Assign 给自己
+3. 将任务从"Todo"拖到"In Progress"
+
+### 3. 开始工作
+
+```bash
+# 克隆仓库
+git clone https://github.com/JCVBoss/demon_village_game.git
+cd demon_village_game
+
+# 创建分支
+git checkout -b feature/任务 ID-简短描述
+
+# 开发功能，小步提交
+git add .
+git commit -m "feat: 实现功能"
+git push origin feature/任务 ID-简短描述
+```
+
+### 4. 创建 PR
+
+1. 在 GitHub 上创建 Pull Request
+2. 关联 Issue：`Closes #123`
+3. 等待审查和合并
+
+### 5. 完成任务
+
+1. PR 合并后关闭 Issue
+2. 将任务拖到"Done"列
+3. 在 `daily_logs/` 写工作日志
+
+## 日常协作流程
+
+### 每日站会（异步）
+
+**时间：** 每日 23:00（GMT+8）
+**位置：** `daily_logs/<你的名字>/YYYY-MM-DD.md`
+
+**模板：**
+```markdown
+# YYYY-MM-DD 工作日志
+
+## 昨日完成
+- [x] 任务 1
+- [x] 任务 2
+
+## 今日计划
+- [ ] 任务 3
+- [ ] 任务 4
+
+## 阻塞问题
+- 无 / 需要 XXX 帮助
+```
+
+### Sprint 仪式
+
+**Sprint Planning:** 双周周一 10:00
+**Sprint Review:** 双周周五 20:00
+**Sprint Retrospective:** 双周周五 21:00
 
 ## Co-authored-by 使用规范
 

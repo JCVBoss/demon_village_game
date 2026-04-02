@@ -2,6 +2,11 @@
 
 本文档定义了 Demon Village Game 项目的贡献者角色、工作内容和协作方式。
 
+**最后更新：** 2026-04-02
+**当前进度：** 38%
+**Project Board:** https://github.com/users/JCVBoss/projects/1
+**Issue 列表：** https://github.com/JCVBoss/demon_village_game/issues
+
 ---
 
 ## 👥 当前贡献者
@@ -33,6 +38,11 @@
 - 决定项目路线图
 - 招募或移除贡献者
 
+**当前任务：**
+- 审查和合并 PR
+- Sprint Planning 和 Review
+- 决策阻塞问题
+
 ---
 
 ### 2. 代码开发 (Code Developer)
@@ -47,6 +57,17 @@
 - 脚本编写和调试
 - Bug 修复
 - 性能优化
+
+**当前 Sprint 0 任务（6 个，26 故事点）：**
+1. [CS-002] 实现 DialogueManager（P0，8 点）
+2. [DS-001] 对话 UI 实现（P0，5 点）
+3. [DS-002] 对话树解析器（P0，5 点）
+4. [DS-003] 陈默对话树实现（P0，3 点）
+5. [DS-004] 夜鸦对话树实现（P0，5 点）
+6. [DS-005] 老约翰对话树实现（P0，5 点）
+7. [DS-006] 小安对话树实现（P0，3 点）
+
+**查看所有任务：** https://github.com/JCVBoss/demon_village_game/issues
 
 **工作流程**:
 1. 从 GitHub 拉取最新代码

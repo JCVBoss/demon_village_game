@@ -26,6 +26,16 @@
 | [角色设定.md](docs/design/角色设定.md) | 10 位村民详细设定（背景/性格/秘密/关系网） |
 | [系统设计.md](docs/design/系统设计.md) | LLM 智能体架构、信任/情报/时限系统 |
 
+## 📊 项目管理
+
+**Project Board:** https://github.com/users/JCVBoss/projects/1
+
+**任务追踪:** https://github.com/JCVBoss/demon_village_game/issues
+
+**当前进度:** 38%（26 个任务，116 故事点）
+
+**协作指南:** 查看 [CONTRIBUTORS.md](CONTRIBUTORS.md) 和 [CONTRIBUTING.md](CONTRIBUTING.md)
+
 ## 📁 目录结构
 
 ```
