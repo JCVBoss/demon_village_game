@@ -1,3 +1,4 @@
+<!-- [TAG] 所有者:PO|维护责任人:SM|创建时间:2026-03-16|生效标记:✅|最后更新:2026-03-16|版本:v1.0 -->
 # 每日工作进展记录
 
 本目录用于记录项目的每日开发进展、问题追踪和重要决策。
@@ -8,12 +9,19 @@
 
 ```
 daily_logs/
-├── claude/              # Claude (AI Agent) 的工作记录
+├── alice/               # AliceDesigner 的工作记录（文档设计）
 │   └── YYYY-MM-DD.md
-├── remote_agent/        # 远端 Agent 的工作记录
+├── claude/              # Claude 的工作记录（代码开发）
+│   └── YYYY-MM-DD.md
+├── alicebussiness/      # AliceBussiness 的工作记录（美术设计）
 │   └── YYYY-MM-DD.md
 └── README.md            # 本说明文件
 ```
+
+**注意：**
+- `alice/` = AliceDesigner（文档设计）— 简化命名
+- ~~`alicedesigner/`~~ — 旧目录，已废弃
+- ~~`remote_agent/`~~ — 旧称，已废弃
 
 ## 记录格式
 

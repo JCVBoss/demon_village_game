@@ -1,3 +1,4 @@
+<!-- [TAG] 所有者:PO|维护责任人:SM|创建时间:2026-03-18|生效标记:✅|最后更新:2026-04-03|版本:v1.0 -->
 # 🏰 魔王城下的最后村庄 - Demon Village Game
 
 > "有时候，最勇敢的事不是打败魔王，而是保护你想保护的人。"
@@ -36,32 +37,86 @@
 
 **协作指南:** 查看 [CONTRIBUTORS.md](CONTRIBUTORS.md) 和 [CONTRIBUTING.md](CONTRIBUTING.md)
 
-## 📁 目录结构
+## 📁 完整目录结构
+
+### 文档树形索引
 
 ```
 demon_village_game/
-├── code/                   # 游戏源代码 (Claude 维护)
-│   ├── scenes/             # Godot 场景文件
-│   ├── scripts/            # GDScript 脚本
-│   │   ├── core/           # 核心系统（单例）
-│   │   └── ui/             # UI 脚本
-│   ├── assets/             # 游戏资源
-│   │   ├── sprites/        # 精灵图片
-│   │   ├── audio/          # 音频文件
-│   │   └── fonts/          # 字体文件
-│   └── resources/          # 数据文件
-│       └── data/           # JSON 数据
 │
-├── docs/                   # 设计文档 (Remote Agent 维护)
-│   └── design/             # 游戏设计文档
+├── 📄 README.md                    # [所有者:PO|维护:全体|创建:2026-03-16|✅生效] 项目说明
+├── 📄 CONTRIBUTING.md              # [所有者:PO|维护:SM|创建:2026-03-18|✅生效] 贡献指南
+├── 📄 CONTRIBUTORS.md              # [所有者:PO|维护:SM|创建:2026-03-18|✅生效] 贡献者角色说明
+├── 📄 CHANGELOG.md                 # [所有者:PO|维护:SM|创建:2026-03-16|✅生效] 变更日志
+├── 📄 PROGRESS.md                  # [所有者:PO|维护:SM|创建:2026-03-16|⏳待更新] 进度追踪
 │
-├── daily_logs/             # 工作进展记录
-│   ├── claude/             # Claude 的工作记录
-│   └── alicedesigner/      # AliceDesigner 的工作记录
+├── 📂 code/                        # [所有者:PO|维护:Claude|创建:2026-03-16|✅生效] 游戏源代码
+│   ├── project.godot               # Godot 项目配置
+│   ├── scenes/                     # Godot 场景文件
+│   ├── scripts/                    # GDScript 脚本
+│   │   ├── core/                   # 核心系统（单例）
+│   │   └── ui/                     # UI 脚本
+│   ├── assets/                     # 游戏资源 [维护:AliceBussiness]
+│   │   ├── sprites/                # 精灵图片
+│   │   ├── audio/                  # 音频文件
+│   │   └── fonts/                  # 字体文件
+│   └── resources/                  # 数据文件
+│       └── data/                   # JSON 数据
 │
-├── CONTRIBUTORS.md         # 贡献者角色说明
-├── CONTRIBUTING.md         # 贡献指南
-└── README.md               # 项目说明
+├── 📂 docs/                        # [所有者:PO|维护:AliceDesigner|创建:2026-03-16|✅生效] 设计文档
+│   │
+│   ├── 📂 design/                  # 游戏设计文档
+│   │   ├── 📄 角色设定.md           # [所有者:PO|维护:AliceDesigner|创建:2026-03-16|✅生效] 10 位村民详细设定
+│   │   ├── 📄 故事背景与主线.md     # [所有者:PO|维护:AliceDesigner|创建:2026-03-16|✅生效] 世界观 + 主线 + 多结局
+│   │   ├── 📄 系统设计.md           # [所有者:PO|维护:AliceDesigner|创建:2026-03-17|✅生效] LLM 智能体架构
+│   │   ├── 📄 双模式对话设计.md     # [所有者:PO|维护:AliceDesigner|创建:2026-04-02|✅生效] 对话系统架构
+│   │   ├── 📄 剧情流程设计.md       # [所有者:PO|维护:AliceDesigner|创建:2026-03-17|✅生效] 章节结构
+│   │   ├── 📄 项目计划.md           # [所有者:PO|维护:AliceDesigner|创建:2026-03-16|✅生效] 开发计划
+│   │   │
+│   │   ├── 📂 dialogue_trees/      # 对话树设计
+│   │   │   ├── 📄 README.md        # [所有者:PO|维护:AliceDesigner|创建:2026-04-02|✅生效] 对话树设计规范 v2.0
+│   │   │   ├── 📄 chenmo.md        # [所有者:PO|维护:AliceDesigner|创建:2026-03-17|✅生效] 陈默对话树
+│   │   │   ├── 📄 leishu.md        # [所有者:PO|维护:AliceDesigner|创建:2026-03-17|✅生效] 雷叔对话树
+│   │   │   ├── 📄 jinling.md       # [所有者:PO|维护:AliceDesigner|创建:2026-03-17|✅生效] 金铃对话树
+│   │   │   ├── 📄 baizhi.md        # [所有者:PO|维护:AliceDesigner|创建:2026-03-17|✅生效] 白芷对话树
+│   │   │   ├── 📄 john.md          # [所有者:PO|维护:AliceDesigner|创建:2026-03-17|✅生效] 老约翰对话树
+│   │   │   ├── 📄 daxiong.md       # [所有者:PO|维护:AliceDesigner|创建:2026-03-17|✅生效] 大熊对话树
+│   │   │   ├── 📄 ying.md          # [所有者:PO|维护:AliceDesigner|创建:2026-03-17|✅生效] 影对话树
+│   │   │   ├── 📄 xiaoan.md        # [所有者:PO|维护:AliceDesigner|创建:2026-03-17|✅生效] 小安对话树
+│   │   │   ├── 📄 ahu.md           # [所有者:PO|维护:AliceDesigner|创建:2026-03-17|✅生效] 阿虎对话树
+│   │   │   └── 📄 yeya.md          # [所有者:PO|维护:AliceDesigner|创建:2026-03-17|✅生效] 夜鸦对话树
+│   │   │
+│   │   └── 📂 personas/            # 角色人格卡（LLM 用）
+│   │       ├── 📄 chenmo.md        # [所有者:PO|维护:AliceDesigner|创建:2026-03-17|⏳待完善]
+│   │       ├── 📄 baizhi.md        # [所有者:PO|维护:AliceDesigner|创建:2026-03-17|⏳待完善]
+│   │       └── 📄 john.md          # [所有者:PO|维护:AliceDesigner|创建:2026-03-17|⏳待完善]
+│   │
+│   └── 📂 project/                 # 项目管理文档
+│       ├── 📄 项目管理手册.md        # [所有者:PO|维护:SM|创建:2026-04-02|✅生效] Scrum+Kanban 流程
+│       ├── 📄 backlog.md           # [所有者:PO|维护:PO|创建:2026-04-02|✅生效] Product Backlog
+│       ├── 📄 kanban.md            # [所有者:PO|维护:SM|创建:2026-04-02|✅生效] Kanban Board
+│       ├── 📄 协作指南.md           # [所有者:PO|维护:SM|创建:2026-04-02|✅生效] 团队协作规范
+│       ├── 📄 GitHub_Projects 指南.md # [所有者:PO|维护:SM|创建:2026-04-02|✅生效] GitHub Projects 使用
+│       ├── 📄 GitHub_CLI 认证指南.md  # [所有者:PO|维护:SM|创建:2026-04-02|✅生效] GitHub CLI 配置
+│       ├── 📄 GitHub_CLI 完整权限清单.md # [所有者:PO|维护:SM|创建:2026-04-02|✅生效] 权限说明
+│       ├── 📄 创建_GitHub_Project.md # [所有者:PO|维护:SM|创建:2026-04-02|✅生效] Project 配置报告
+│       ├── 📄 Project 配置完成报告.md # [所有者:PO|维护:SM|创建:2026-04-02|✅生效] 配置完成确认
+│       ├── 📄 Issue 批量创建完成报告.md # [所有者:PO|维护:SM|创建:2026-04-02|✅生效] Issue 创建确认
+│       ├── 📄 多 Agent 协作配置.md    # [所有者:PO|维护:SM|创建:2026-04-02|✅生效] Agent 协作配置
+│       └── 📄 任务看板.md            # [所有者:PO|维护:SM|创建:2026-04-02|⏳待同步] 任务看板快照
+│
+├── 📂 daily_logs/                  # [所有者:PO|维护:全体|创建:2026-03-16|✅生效] 工作进展记录
+│   ├── 📄 README.md                # [所有者:PO|维护:SM|创建:2026-03-16|✅生效] 日志规范说明
+│   │
+│   ├── 📂 alice/                   # AliceDesigner 工作记录
+│   │   ├── 📄 2026-03-16.md        # [所有者:AliceDesigner|创建:2026-03-16|✅归档] 项目初始化
+│   │   ├── 📄 2026-03-20.md        # [所有者:AliceDesigner|创建:2026-03-20|✅归档] 角色设定完成
+│   │   └── 📄 2026-04-02.md        # [所有者:AliceDesigner|创建:2026-04-02|✅归档] 文档规范更新
+│   │
+│   └── 📂 claude/                  # Claude 工作记录
+│       └── 📄 2026-03-25.md        # [所有者:Claude|创建:2026-03-25|✅归档] 代码开发记录
+│
+└── 📂 docs/design/                 # (同上，docs 子目录)
 ```
 
 ## 🛠️ 开发环境
