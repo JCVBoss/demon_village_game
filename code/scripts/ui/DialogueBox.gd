@@ -1,22 +1,84 @@
 ## DialogueBox - 对话框 UI 组件
-extends PanelContainer
+extends Control
 
 # ==================== 信号 ====================
 signal dialogue_finished
 
 # ==================== 引用 ====================
-@onready var speaker_name: Label = $VBoxContainer/SpeakerName
-@onready var dialogue_text: RichTextLabel = $VBoxContainer/DialogueText
-@onready var choices_container: VBoxContainer = $VBoxContainer/ChoicesContainer
-@onready var continue_hint: Label = $VBoxContainer/ContinueHint
+@onready var portrait: TextureRect = $MarginContainer/HBoxContainer/PortraitSection/Portrait
+@onready var speaker_name: Label = $MarginContainer/HBoxContainer/ContentSection/SpeakerName
+@onready var dialogue_text: RichTextLabel = $MarginContainer/HBoxContainer/ContentSection/DialogueText
+@onready var choices_container: VBoxContainer = $MarginContainer/HBoxContainer/ContentSection/ChoicesScroll/ChoicesContainer
+@onready var continue_hint: Label = $MarginContainer/HBoxContainer/ContentSection/ContinueHint
 
 # ==================== 状态 ====================
 var is_showing_choices: bool = false
+
+## 角色表情映射
+const CHARACTER_EXPRESSIONS = {
+	"chenmo": {
+		"default": "normal",
+		"expressions": ["angry", "happy", "normal", "sad", "surprised"]
+	},
+	"yeya": {
+		"default": "normal",
+		"expressions": ["calm", "conflicted", "normal", "thinking"]
+	},
+	"jinling": {
+		"default": "normal",
+		"expressions": ["calculating", "normal", "smile", "surprised"]
+	},
+	"baizhi": {
+		"default": "normal",
+		"expressions": ["concerned", "gentle_smile", "normal", "sad"]
+	},
+	"john": {
+		"default": "normal",
+		"expressions": ["mysterious", "normal", "serious", "wise"]
+	},
+	"daxiong": {
+		"default": "normal",
+		"expressions": ["laugh", "listening", "normal", "serious"]
+	},
+	"leishu": {
+		"default": "normal",
+		"expressions": ["angry", "happy", "normal", "tired"]
+	},
+	"xiaoan": {
+		"default": "normal",
+		"expressions": ["curious", "excited", "happy", "normal", "sad"]
+	},
+	"ahu": {
+		"default": "normal",
+		"expressions": ["determined", "excited", "normal", "serious"]
+	},
+	"ying": {
+		"default": "normal",
+		"expressions": ["cold", "normal", "thinking", "warning"]
+	}
+}
+
+## 角色名称映射
+const CHARACTER_NAMES = {
+	"player": "勇者",
+	"narrator": "——",
+	"chenmo": "陈默",
+	"yeya": "夜鸦",
+	"jinling": "金铃",
+	"baizhi": "白芷",
+	"john": "老约翰",
+	"daxiong": "大熊",
+	"leishu": "雷叔",
+	"xiaoan": "小安",
+	"ahu": "阿虎",
+	"ying": "影"
+}
 
 
 func _ready() -> void:
 	_connect_dialogue_manager()
 	continue_hint.hide()
+	portrait.hide()
 
 
 func _input(event: InputEvent) -> void:
@@ -34,19 +96,20 @@ func _connect_dialogue_manager() -> void:
 	DialogueManager.dialogue_ended.connect(_on_dialogue_ended)
 
 
-# ==================== 公共方法 ====================
+# ==================== 公共方法 ==================
 
 ## 开始与指定村民的对话
 func start_dialogue(villager_id: String) -> void:
 	DialogueManager.start_dialogue(villager_id)
 
 
-# ==================== 回调函数 ====================
+# ==================== 回调函数 ==================
 
 func _on_dialogue_line_spoken(speaker: String, text: String) -> void:
 	"""对话行显示"""
 	show()  # 确保对话框可见
 	_update_speaker_name(speaker)
+	_update_portrait(speaker, text)
 	dialogue_text.text = text
 	continue_hint.show()
 	_clear_choices()
@@ -65,6 +128,7 @@ func _on_choice_made(_choice_index: int, _choice_text: String) -> void:
 
 func _on_dialogue_ended(_villager_id: String) -> void:
 	hide()
+	portrait.hide()
 	dialogue_finished.emit()
 
 
@@ -72,37 +136,36 @@ func _on_continue_pressed() -> void:
 	DialogueManager.continue_dialogue()
 
 
-# ==================== 辅助方法 ====================
+# ==================== 辅助方法 ==================
 
 func _update_speaker_name(speaker: String) -> void:
 	"""更新说话者名称"""
-	match speaker:
-		"player":
-			speaker_name.text = "勇者"
-		"narrator":
-			speaker_name.text = "——"
-		"chenmo":
-			speaker_name.text = "陈默"
-		"yeya":
-			speaker_name.text = "夜鸦"
-		"jinling":
-			speaker_name.text = "金铃"
-		"baizhi":
-			speaker_name.text = "白芷"
-		"john":
-			speaker_name.text = "老约翰"
-		"daxiong":
-			speaker_name.text = "大熊"
-		"leishu":
-			speaker_name.text = "雷叔"
-		"xiaoan":
-			speaker_name.text = "小安"
-		"ahu":
-			speaker_name.text = "阿虎"
-		"ying":
-			speaker_name.text = "影"
-		_:
-			speaker_name.text = speaker
+	speaker_name.text = CHARACTER_NAMES.get(speaker, speaker)
+
+
+func _update_portrait(speaker: String, _text: String) -> void:
+	"""更新角色立绘"""
+	# 叙述者和玩家不显示立绘
+	if speaker == "narrator" or speaker == "player":
+		portrait.hide()
+		return
+
+	# 检查角色是否有立绘数据
+	if not CHARACTER_EXPRESSIONS.has(speaker):
+		portrait.hide()
+		return
+
+	var char_data = CHARACTER_EXPRESSIONS[speaker]
+	var expression = char_data.default
+
+	# 尝试加载立绘
+	var portrait_path = "res://assets/sprites/characters/%s_%s.png" % [speaker, expression]
+
+	if ResourceLoader.exists(portrait_path):
+		portrait.texture = load(portrait_path)
+		portrait.show()
+	else:
+		portrait.hide()
 
 
 func _show_choices(choices: Array) -> void:

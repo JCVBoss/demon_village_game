@@ -9,9 +9,10 @@ signal villager_selected(villager_id: String)
 @export var village_name: String = "暮色村"
 
 # ==================== 节点引用 ====================
+@onready var background: TextureRect = $BackgroundLayer/Background
 @onready var villagers_container: Node2D = $Villagers
 @onready var player: CharacterBody2D = $Player
-@onready var dialogue_box: PanelContainer = $UIRoot/DialogueBox
+@onready var dialogue_box: Control = $UIRoot/DialogueBox
 @onready var village_ui: CanvasLayer = $UIRoot
 @onready var pause_menu: Control = $UIRoot/PauseMenu
 @onready var save_load_ui: Control = $UIRoot/SaveLoadUI
@@ -22,6 +23,10 @@ signal villager_selected(villager_id: String)
 var is_paused: bool = false
 var daily_interactions: int = 0
 var daily_trust_changes: Dictionary = {}
+
+## 时间段
+enum TimeOfDay { DAY, TWILIGHT, NIGHT }
+var current_time: TimeOfDay = TimeOfDay.DAY
 
 # ==================== 配置 ====================
 const VillagerScene = preload("res://scenes/characters/Villager.tscn")
@@ -61,6 +66,9 @@ func _ready() -> void:
 
 	# 更新 UI
 	_update_ui()
+
+	# 更新背景
+	_update_background()
 
 	# 检查每日事件
 	EventManager.check_events(GameManager.current_day)
@@ -225,7 +233,10 @@ func _update_ui() -> void:
 func _on_day_changed(new_day: int) -> void:
 	"""天数变化回调 - 由其他来源触发的天数变化"""
 	print("[Village] 进入第 %d 天" % new_day)
+	# 重置为白天
+	current_time = TimeOfDay.DAY
 	_update_ui()
+	_update_background()
 
 	# 检查新一天的事件
 	EventManager.check_events(new_day)
@@ -248,8 +259,46 @@ func _reset_daily_stats() -> void:
 func _on_action_points_changed(new_points: int) -> void:
 	"""行动点变化回调"""
 	_update_ui()
+	_update_time_from_action_points(new_points)
 	if new_points <= 0:
 		print("[Village] 行动点耗尽，即将进入下一天")
+
+
+func _update_background() -> void:
+	"""根据时间段更新背景"""
+	var time_name = _get_time_name()
+	var bg_path = "res://assets/sprites/backgrounds/village_%s.png" % time_name
+
+	if ResourceLoader.exists(bg_path):
+		background.texture = load(bg_path)
+
+
+func _get_time_name() -> String:
+	"""获取时间段名称"""
+	match current_time:
+		TimeOfDay.DAY:
+			return "day"
+		TimeOfDay.TWILIGHT:
+			return "twilight"
+		TimeOfDay.NIGHT:
+			return "night"
+	return "day"
+
+
+func _update_time_from_action_points(points: int) -> void:
+	"""根据行动点数更新时间段"""
+	var max_points = GameManager.MAX_ACTION_POINTS
+	var old_time = current_time
+
+	if points > max_points * 0.6:
+		current_time = TimeOfDay.DAY
+	elif points > max_points * 0.3:
+		current_time = TimeOfDay.TWILIGHT
+	else:
+		current_time = TimeOfDay.NIGHT
+
+	if current_time != old_time:
+		_update_background()
 
 
 func _on_trust_changed(villager_id: String, _old_value: int, new_value: int) -> void:
