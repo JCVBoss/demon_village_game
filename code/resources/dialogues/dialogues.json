@@ -93,6 +93,8 @@
 			"initial": {
 				"node_id": "leishu_initial",
 				"trust_required": 0,
+				"day_min": 1,
+				"day_max": 10,
 				"lines": [
 					{"speaker": "narrator", "text": "（铁匠铺里传来叮叮当当的敲打声）"},
 					{"speaker": "leishu", "text": "啧，又来一个闲人..."},
@@ -108,6 +110,8 @@
 			"compliment": {
 				"node_id": "leishu_compliment",
 				"trust_required": 0,
+				"day_min": 1,
+				"day_max": 10,
 				"lines": [
 					{"speaker": "leishu", "text": "哼，专业？"},
 					{"speaker": "narrator", "text": "（他停下手中的活，瞥了你一眼）"},
@@ -115,33 +119,196 @@
 				],
 				"choices": [
 					{"text": "王国？那你怎么会在这里？", "trust_change": 2, "next_node": "ask_past"},
-					{"text": "原来是大匠师，失敬", "trust_change": 5, "next_node": null}
+					{"text": "原来是大匠师，失敬", "trust_change": 5, "next_node": "respect_master"}
 				]
 			},
 			"look_works": {
 				"node_id": "leishu_look_works",
 				"trust_required": 0,
+				"day_min": 1,
+				"day_max": 10,
 				"lines": [
 					{"speaker": "leishu", "text": "看可以，别碰。"},
 					{"speaker": "narrator", "text": "（墙上挂着几把农具和一把短剑）"},
 					{"speaker": "leishu", "text": "都是些实用的东西。想看花哨的，去找别人。"}
 				],
 				"choices": [
-					{"text": "这把短剑做工很精细", "trust_change": 4, "next_node": null},
+					{"text": "这把短剑做工很精细", "trust_change": 4, "next_node": "praise_sword"},
 					{"text": "我明白了，告辞", "trust_change": 0, "next_node": null}
 				]
 			},
 			"ask_past": {
 				"node_id": "leishu_ask_past",
 				"trust_required": 0,
+				"day_min": 1,
+				"day_max": 10,
 				"lines": [
 					{"speaker": "leishu", "text": "（沉默片刻，眼神变得暗淡）"},
 					{"speaker": "leishu", "text": "...那是很久以前的事了。"},
 					{"speaker": "leishu", "text": "人老了，就想图个清静。懂吗？"}
 				],
 				"choices": [
-					{"text": "我理解", "trust_change": 3, "next_node": null},
+					{"text": "我理解", "trust_change": 3, "next_node": "understand_past"},
 					{"text": "告辞", "trust_change": 0, "next_node": null}
+				]
+			},
+			"respect_master": {
+				"node_id": "leishu_respect_master",
+				"trust_required": 10,
+				"day_min": 1,
+				"day_max": 10,
+				"lines": [
+					{"speaker": "leishu", "text": "（嘴角微微上扬）"},
+					{"speaker": "leishu", "text": "...算你识相。"},
+					{"speaker": "leishu", "text": "有什么需要打造的，尽管说。只要付得起钱。"}
+				],
+				"choices": [
+					{"text": "我想定制一把武器", "trust_change": 2, "next_node": "request_weapon"},
+					{"text": "暂时不需要，谢谢", "trust_change": 1, "next_node": null}
+				]
+			},
+			"praise_sword": {
+				"node_id": "leishu_praise_sword",
+				"trust_required": 5,
+				"day_min": 1,
+				"day_max": 10,
+				"lines": [
+					{"speaker": "leishu", "text": "（眼中闪过一丝欣慰）"},
+					{"speaker": "leishu", "text": "这把剑...是给一个老朋友打的。"},
+					{"speaker": "leishu", "text": "他没来得及拿走。"}
+				],
+				"choices": [
+					{"text": "你的朋友？", "trust_change": 3, "next_node": "ask_friend"},
+					{"text": "真遗憾", "trust_change": 2, "next_node": null}
+				]
+			},
+			"understand_past": {
+				"node_id": "leishu_understand_past",
+				"trust_required": 5,
+				"day_min": 2,
+				"day_max": 10,
+				"lines": [
+					{"speaker": "leishu", "text": "（深深看了你一眼）"},
+					{"speaker": "leishu", "text": "...你小子倒是懂事。"},
+					{"speaker": "leishu", "text": "以后有什么难处，可以来找我。"},
+					{"speaker": "narrator", "text": "（他递给你一杯水）"}
+				],
+				"choices": [
+					{"text": "谢谢您", "trust_change": 5, "event_flag": "leishu_friendly", "next_node": null},
+					{"text": "我不需要同情", "trust_change": -2, "next_node": null}
+				]
+			},
+			"request_weapon": {
+				"node_id": "leishu_request_weapon",
+				"trust_required": 15,
+				"day_min": 2,
+				"day_max": 10,
+				"lines": [
+					{"speaker": "leishu", "text": "定制？"},
+					{"speaker": "narrator", "text": "（他认真地看着你）"},
+					{"speaker": "leishu", "text": "你能拿出什么来交换？钱？材料？还是...别的什么？"}
+				],
+				"choices": [
+					{"text": "我会去找材料", "trust_change": 2, "next_node": "promise_material"},
+					{"text": "我可以帮您做点什么", "trust_change": 3, "next_node": "offer_help"},
+					{"text": "算了，下次再说", "trust_change": 0, "next_node": null}
+				]
+			},
+			"ask_friend": {
+				"node_id": "leishu_ask_friend",
+				"trust_required": 10,
+				"day_min": 2,
+				"day_max": 10,
+				"lines": [
+					{"speaker": "leishu", "text": "（沉默良久）"},
+					{"speaker": "leishu", "text": "...一个勇士。真正的勇士。"},
+					{"speaker": "leishu", "text": "十年前...去了魔王城。再也没回来。"},
+					{"speaker": "narrator", "text": "（他的声音微微颤抖）"}
+				],
+				"choices": [
+					{"text": "我听说过魔王城的事", "trust_change": 2, "next_node": "know_demon_castle"},
+					{"text": "抱歉提起这事", "trust_change": 3, "next_node": null}
+				]
+			},
+			"promise_material": {
+				"node_id": "leishu_promise_material",
+				"trust_required": 20,
+				"day_min": 3,
+				"day_max": 10,
+				"lines": [
+					{"speaker": "leishu", "text": "材料..."},
+					{"speaker": "leishu", "text": "山里有不少好矿石。但危险。"},
+					{"speaker": "leishu", "text": "如果你能弄到，我给你打个好价钱。"}
+				],
+				"choices": [
+					{"text": "我会去的", "trust_change": 3, "event_flag": "leishu_material_quest", "next_node": null},
+					{"text": "太危险了，算了", "trust_change": -1, "next_node": null}
+				]
+			},
+			"offer_help": {
+				"node_id": "leishu_offer_help",
+				"trust_required": 25,
+				"day_min": 3,
+				"day_max": 10,
+				"lines": [
+					{"speaker": "leishu", "text": "帮忙？"},
+					{"speaker": "narrator", "text": "（他意外地看着你）"},
+					{"speaker": "leishu", "text": "这铺子我一个人就够了。但..."},
+					{"speaker": "leishu", "text": "村子有些地方确实需要人。去找大熊问问吧。"}
+				],
+				"choices": [
+					{"text": "好的，谢谢您", "trust_change": 2, "next_node": null}
+				]
+			},
+			"know_demon_castle": {
+				"node_id": "leishu_know_demon_castle",
+				"trust_required": 30,
+				"day_min": 4,
+				"day_max": 10,
+				"event_flags_required": ["leishu_friendly"],
+				"lines": [
+					{"speaker": "leishu", "text": "魔王城..."},
+					{"speaker": "narrator", "text": "（他的眼神变得复杂）"},
+					{"speaker": "leishu", "text": "那地方...不像传说中那么简单。"},
+					{"speaker": "leishu", "text": "很多勇者去了，没有一个回来。你...也要去吗？"}
+				],
+				"choices": [
+					{"text": "是的，这是我的使命", "trust_change": 0, "next_node": "mission_to_castle"},
+					{"text": "我不确定", "trust_change": 2, "next_node": "uncertain_path"}
+				]
+			},
+			"mission_to_castle": {
+				"node_id": "leishu_mission_to_castle",
+				"trust_required": 35,
+				"day_min": 5,
+				"day_max": 10,
+				"event_flags_required": ["leishu_friendly"],
+				"lines": [
+					{"speaker": "leishu", "text": "使命..."},
+					{"speaker": "narrator", "text": "（他深深叹了口气）"},
+					{"speaker": "leishu", "text": "年轻人，使命是好东西。但要活着才能完成。"},
+					{"speaker": "leishu", "text": "如果要去...至少做好准备。我可以教你一些东西。"}
+				],
+				"choices": [
+					{"text": "谢谢您，我会来学习", "trust_change": 5, "event_flag": "leishu_training", "next_node": null},
+					{"text": "我自己会想办法", "trust_change": -1, "next_node": null}
+				]
+			},
+			"uncertain_path": {
+				"node_id": "leishu_uncertain_path",
+				"trust_required": 35,
+				"day_min": 5,
+				"day_max": 10,
+				"event_flags_required": ["leishu_friendly"],
+				"lines": [
+					{"speaker": "leishu", "text": "不确定..."},
+					{"speaker": "leishu", "text": "这是好事。说明你在思考。"},
+					{"speaker": "leishu", "text": "别急着做决定。在村子里多待几天，听听大家的故事。"},
+					{"speaker": "leishu", "text": "也许你会找到...不一样的答案。"}
+				],
+				"choices": [
+					{"text": "您说得对", "trust_change": 4, "next_node": null},
+					{"text": "我没有太多时间", "trust_change": 0, "next_node": null}
 				]
 			}
 		}

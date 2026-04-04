@@ -31,8 +31,8 @@ func show_summary(day: int, interactions: int, trust_changes: Dictionary) -> voi
 			for villager in trust_changes:
 				var change = trust_changes[villager]
 				if change != 0:
-					var sign = "+" if change > 0 else ""
-					text += "  %s: %s%d\n" % [villager, sign, change]
+					var sign_str = "+" if change > 0 else ""
+					text += "  %s: %s%d\n" % [villager, sign_str, change]
 		else:
 			text += "今天没有互动...\n"
 

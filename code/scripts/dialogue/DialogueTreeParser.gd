@@ -18,6 +18,9 @@ var current_node_id: String = ""
 var current_tree_data: Dictionary = {}
 var available_nodes: Array = []
 
+## 对话是否进行中
+var is_in_dialogue: bool = false
+
 ## 已访问节点（用于存档）
 var visited_nodes: Dictionary = {}
 
@@ -191,6 +194,7 @@ func start_dialogue(villager_id: String) -> bool:
 	current_tree_id = villager_id
 	current_node_id = best_node.node_id
 	current_tree_data = trees[villager_id]
+	is_in_dialogue = true
 
 	# 标记节点为已访问
 	var visited_key = "%s_%s" % [villager_id, current_node_id]
@@ -215,6 +219,7 @@ func start_dialogue_at_node(villager_id: String, node_id: String) -> bool:
 	current_tree_id = villager_id
 	current_node_id = node_id
 	current_tree_data = trees[villager_id]
+	is_in_dialogue = true
 
 	# 标记节点为已访问
 	var visited_key = "%s_%s" % [villager_id, current_node_id]
@@ -287,6 +292,7 @@ func end_dialogue() -> void:
 	current_tree_id = ""
 	current_node_id = ""
 	current_tree_data = {}
+	is_in_dialogue = false
 
 
 # ==================== 查询方法 ====================
