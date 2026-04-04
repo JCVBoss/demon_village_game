@@ -21,6 +21,7 @@ config/icon="res://icon.svg"
 
 GameManager="*res://scripts/core/GameManager.gd"
 DialogueManager="*res://scripts/core/DialogueManager.gd"
+DialogueTreeParser="*res://scripts/dialogue/DialogueTreeParser.gd"
 TrustManager="*res://scripts/core/TrustManager.gd"
 EventManager="*res://scripts/core/EventManager.gd"
 
