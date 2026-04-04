@@ -521,6 +521,8 @@
 			"initial": {
 				"node_id": "daxiong_initial",
 				"trust_required": 0,
+				"day_min": 1,
+				"day_max": 10,
 				"lines": [
 					{"speaker": "daxiong", "text": "哈！新面孔！"},
 					{"speaker": "narrator", "text": "（酒馆老板热情地迎上来）"},
@@ -535,6 +537,8 @@
 			"ask_village": {
 				"node_id": "daxiong_ask_village",
 				"trust_required": 0,
+				"day_min": 1,
+				"day_max": 10,
 				"lines": [
 					{"speaker": "daxiong", "text": "村子？这里的人各有各的故事。"},
 					{"speaker": "daxiong", "text": "陈默那小子整天沉默寡言..."},
@@ -549,6 +553,8 @@
 			"order_drink": {
 				"node_id": "daxiong_order_drink",
 				"trust_required": 0,
+				"day_min": 1,
+				"day_max": 10,
 				"lines": [
 					{"speaker": "daxiong", "text": "好嘞！"},
 					{"speaker": "narrator", "text": "（他熟练地倒了一杯麦酒）"},
@@ -556,12 +562,14 @@
 				],
 				"choices": [
 					{"text": "我下次补上", "trust_change": -1, "next_node": null},
-					{"text": "真不错！", "trust_change": 2, "next_node": null}
+					{"text": "真不错！", "trust_change": 2, "next_node": "compliment_drink"}
 				]
 			},
 			"ask_his_story": {
 				"node_id": "daxiong_ask_his_story",
 				"trust_required": 0,
+				"day_min": 1,
+				"day_max": 10,
 				"lines": [
 					{"speaker": "daxiong", "text": "我？"},
 					{"speaker": "narrator", "text": "（他愣了一下，笑容微微收敛）"},
@@ -569,7 +577,187 @@
 					{"speaker": "daxiong", "text": "现在只想安安静静开个酒馆。"}
 				],
 				"choices": [
-					{"text": "明白了", "trust_change": 2, "next_node": null}
+					{"text": "明白了", "trust_change": 2, "next_node": null},
+					{"text": "为什么来这个村子？", "trust_change": 3, "next_node": "why_here"}
+				]
+			},
+			"compliment_drink": {
+				"node_id": "daxiong_compliment_drink",
+				"trust_required": 5,
+				"day_min": 1,
+				"day_max": 10,
+				"lines": [
+					{"speaker": "daxiong", "text": "哈哈！识货！"},
+					{"speaker": "daxiong", "text": "这可是用山泉水和自家种的麦子酿的。"},
+					{"speaker": "daxiong", "text": "外面可喝不到这么纯正的！"}
+				],
+				"choices": [
+					{"text": "村子外面有什么？", "trust_change": 2, "next_node": "outside_village"},
+					{"text": "我记住这里了", "trust_change": 3, "next_node": null}
+				]
+			},
+			"why_here": {
+				"node_id": "daxiong_why_here",
+				"trust_required": 5,
+				"day_min": 2,
+				"day_max": 10,
+				"lines": [
+					{"speaker": "daxiong", "text": "（沉默了一会）"},
+					{"speaker": "daxiong", "text": "因为...这里需要人保护。"},
+					{"speaker": "daxiong", "text": "而且...有人需要我照顾。"},
+					{"speaker": "narrator", "text": "（他看了一眼角落里的小安）"}
+				],
+				"choices": [
+					{"text": "那个孩子是？", "trust_change": 3, "next_node": "about_xiaoan"},
+					{"text": "你是个好人", "trust_change": 4, "event_flag": "daxiong_friendly", "next_node": null}
+				]
+			},
+			"outside_village": {
+				"node_id": "daxiong_outside_village",
+				"trust_required": 10,
+				"day_min": 2,
+				"day_max": 10,
+				"lines": [
+					{"speaker": "daxiong", "text": "外面..."},
+					{"speaker": "narrator", "text": "（他的表情变得严肃）"},
+					{"speaker": "daxiong", "text": "东边是山，西边是平原。"},
+					{"speaker": "daxiong", "text": "北边...就是魔王城的方向。没人敢去那边。"}
+				],
+				"choices": [
+					{"text": "魔王城？", "trust_change": 2, "next_node": "demon_castle"},
+					{"text": "有什么危险？", "trust_change": 2, "next_node": "dangers"}
+				]
+			},
+			"about_xiaoan": {
+				"node_id": "daxiong_about_xiaoan",
+				"trust_required": 10,
+				"day_min": 2,
+				"day_max": 10,
+				"lines": [
+					{"speaker": "daxiong", "text": "（表情变得柔和）"},
+					{"speaker": "daxiong", "text": "小安。他的父母...五年前去世了。"},
+					{"speaker": "daxiong", "text": "我和他父亲是战友。答应了照顾他。"},
+					{"speaker": "daxiong", "text": "那孩子...比我想象的坚强。"}
+				],
+				"choices": [
+					{"text": "他父母是怎么去世的？", "trust_change": 3, "next_node": "xiaoan_parents"},
+					{"text": "你照顾得很好", "trust_change": 4, "next_node": null}
+				]
+			},
+			"demon_castle": {
+				"node_id": "daxiong_demon_castle",
+				"trust_required": 15,
+				"day_min": 3,
+				"day_max": 10,
+				"lines": [
+					{"speaker": "daxiong", "text": "（压低声音）"},
+					{"speaker": "daxiong", "text": "那地方...不是传说。是真的。"},
+					{"speaker": "daxiong", "text": "很多勇者去过，但..."},
+					{"speaker": "daxiong", "text": "没人回来过。一个都没有。"}
+				],
+				"choices": [
+					{"text": "我要去那里", "trust_change": 0, "next_node": "going_there"},
+					{"text": "为什么没人回来？", "trust_change": 3, "next_node": "no_return"}
+				]
+			},
+			"dangers": {
+				"node_id": "daxiong_dangers",
+				"trust_required": 15,
+				"day_min": 3,
+				"day_max": 10,
+				"lines": [
+					{"speaker": "daxiong", "text": "山里有野兽，偶尔还有怪物。"},
+					{"speaker": "daxiong", "text": "平原上有强盗。"},
+					{"speaker": "daxiong", "text": "但最可怕的...是夜晚从北方吹来的风。"},
+					{"speaker": "narrator", "text": "（他打了个寒战）"}
+				],
+				"choices": [
+					{"text": "北方...魔王城？", "trust_change": 2, "next_node": "demon_castle"},
+					{"text": "我会小心的", "trust_change": 2, "next_node": null}
+				]
+			},
+			"xiaoan_parents": {
+				"node_id": "daxiong_xiaoan_parents",
+				"trust_required": 20,
+				"day_min": 3,
+				"day_max": 10,
+				"event_flags_required": ["daxiong_friendly"],
+				"lines": [
+					{"speaker": "daxiong", "text": "（眼眶微微泛红）"},
+					{"speaker": "daxiong", "text": "瘟疫。五年前的那场瘟疫。"},
+					{"speaker": "daxiong", "text": "他们为了照顾病人...自己也染上了。"},
+					{"speaker": "daxiong", "text": "真正的英雄。"}
+				],
+				"choices": [
+					{"text": "我很抱歉", "trust_change": 4, "event_flag": "daxiong_trust", "next_node": null},
+					{"text": "那场瘟疫的起因是什么？", "trust_change": 3, "next_node": "plague_origin"}
+				]
+			},
+			"going_there": {
+				"node_id": "daxiong_going_there",
+				"trust_required": 25,
+				"day_min": 4,
+				"day_max": 10,
+				"event_flags_required": ["daxiong_friendly"],
+				"lines": [
+					{"speaker": "daxiong", "text": "（他猛地站起来）"},
+					{"speaker": "daxiong", "text": "你疯了？！"},
+					{"speaker": "daxiong", "text": "你知道那意味着什么吗？"},
+					{"speaker": "daxiong", "text": "听着，如果一定要去...至少让我帮你准备一下。"}
+				],
+				"choices": [
+					{"text": "好，我需要什么？", "trust_change": 3, "next_node": "preparation"},
+					{"text": "我自己能搞定", "trust_change": -2, "next_node": null}
+				]
+			},
+			"no_return": {
+				"node_id": "daxiong_no_return",
+				"trust_required": 25,
+				"day_min": 4,
+				"day_max": 10,
+				"lines": [
+					{"speaker": "daxiong", "text": "不知道。"},
+					{"speaker": "narrator", "text": "（他摇了摇头）"},
+					{"speaker": "daxiong", "text": "有人说被杀了。有人说被俘虏了。"},
+					{"speaker": "daxiong", "text": "还有人说...他们自愿留下了。谁知道呢。"}
+				],
+				"choices": [
+					{"text": "我会查清楚的", "trust_change": 4, "event_flag": "daxiong_investigation", "next_node": null},
+					{"text": "这太奇怪了", "trust_change": 2, "next_node": null}
+				]
+			},
+			"plague_origin": {
+				"node_id": "daxiong_plague_origin",
+				"trust_required": 25,
+				"day_min": 4,
+				"day_max": 10,
+				"event_flags_required": ["daxiong_trust"],
+				"lines": [
+					{"speaker": "daxiong", "text": "（看了一眼四周，压低声音）"},
+					{"speaker": "daxiong", "text": "有人说...是从北方来的。"},
+					{"speaker": "daxiong", "text": "从魔王城的方向。"},
+					{"speaker": "daxiong", "text": "我不信邪，但...很多巧合说不通。"}
+				],
+				"choices": [
+					{"text": "我会调查清楚", "trust_change": 5, "next_node": null},
+					{"text": "也许只是巧合", "trust_change": 1, "next_node": null}
+				]
+			},
+			"preparation": {
+				"node_id": "daxiong_preparation",
+				"trust_required": 30,
+				"day_min": 5,
+				"day_max": 10,
+				"event_flags_required": ["daxiong_trust"],
+				"lines": [
+					{"speaker": "daxiong", "text": "（他叹了口气）"},
+					{"speaker": "daxiong", "text": "首先，你需要好的装备。去找雷叔。"},
+					{"speaker": "daxiong", "text": "其次，带够药。白芷那里有。"},
+					{"speaker": "daxiong", "text": "最后...活着回来。这村子需要你。"}
+				],
+				"choices": [
+					{"text": "谢谢你，大熊", "trust_change": 5, "event_flag": "daxiong_preparation", "next_node": null},
+					{"text": "我会的", "trust_change": 3, "next_node": null}
 				]
 			}
 		}
