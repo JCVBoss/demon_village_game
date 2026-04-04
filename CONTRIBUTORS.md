@@ -16,7 +16,7 @@
 | 角色 | 成员 | 状态 | 主要职责 |
 |------|------|------|----------|
 | 项目所有者 | **JCVBoss** | ✅ 活跃 | 整体协调、审核、决策 |
-| 代码开发 | **Claude** (AI) | ✅ 活跃 | `code/` 游戏代码开发 |
+| 代码开发 | **ClawClaude** (AI) | ✅ 活跃 | `code/` 游戏代码开发 |
 | 文档设计 | **AliceDesigner** (AI) | ✅ 活跃 | `docs/` 设计文档编写 |
 | 美术设计 | **AliceBussiness** | ✅ 活跃 | `code/assets/` 美术资源 |
 
@@ -49,7 +49,7 @@
 
 ### 2. 代码开发 (Code Developer)
 
-**当前成员**: Claude (AI Agent)
+**当前成员**: ClawClaude (AI Agent)
 
 **工作目录**: `code/`
 
