@@ -404,6 +404,8 @@
 			"initial": {
 				"node_id": "baizhi_initial",
 				"trust_required": 0,
+				"day_min": 1,
+				"day_max": 10,
 				"lines": [
 					{"speaker": "baizhi", "text": "......你受伤了？"},
 					{"speaker": "narrator", "text": "（她看着你，眼神里带着一丝关切）"},
@@ -411,30 +413,328 @@
 				],
 				"choices": [
 					{"text": "谢谢，我没有受伤", "trust_change": 2, "next_node": "no_injury"},
-					{"text": "我只是来看看", "trust_change": 0, "next_node": "just_visiting"}
+					{"text": "我只是来看看", "trust_change": 0, "next_node": "just_visiting"},
+					{"text": "你在做什么？", "trust_change": 1, "next_node": "ask_work"}
 				]
 			},
 			"no_injury": {
 				"node_id": "baizhi_no_injury",
 				"trust_required": 0,
+				"day_min": 1,
+				"day_max": 10,
 				"lines": [
 					{"speaker": "baizhi", "text": "（微微点头）"},
 					{"speaker": "baizhi", "text": "有些伤...不在身上。"},
 					{"speaker": "baizhi", "text": "如果你需要什么，我就在这里。"}
 				],
 				"choices": [
-					{"text": "谢谢你的好意", "trust_change": 3, "next_node": null}
+					{"text": "谢谢你的好意", "trust_change": 3, "next_node": "thank_care"},
+					{"text": "你的医术是跟谁学的？", "trust_change": 2, "next_node": "ask_training"}
 				]
 			},
 			"just_visiting": {
 				"node_id": "baizhi_just_visiting",
 				"trust_required": 0,
+				"day_min": 1,
+				"day_max": 10,
 				"lines": [
 					{"speaker": "baizhi", "text": "......好的。"},
-					{"speaker": "baizhi", "text": "有什么事随时来找我。"}
+					{"speaker": "baizhi", "text": "有什么事随时来找我。"},
+					{"speaker": "narrator", "text": "（她低下头继续整理草药）"}
 				],
 				"choices": [
-					{"text": "好的，告辞", "trust_change": 0, "next_node": null}
+					{"text": "好的，告辞", "trust_change": 0, "next_node": null},
+					{"text": "这些草药是做什么的？", "trust_change": 2, "next_node": "ask_herbs"}
+				]
+			},
+			"ask_work": {
+				"node_id": "baizhi_ask_work",
+				"trust_required": 0,
+				"day_min": 1,
+				"day_max": 10,
+				"lines": [
+					{"speaker": "baizhi", "text": "（展示手中的草药）"},
+					{"speaker": "baizhi", "text": "晒干这些草药。冬天要来了。"},
+					{"speaker": "baizhi", "text": "村子需要储备药材。"}
+				],
+				"choices": [
+					{"text": "需要帮忙吗？", "trust_change": 3, "next_node": "offer_help"},
+					{"text": "你一个人忙得过来吗？", "trust_change": 2, "next_node": "ask_workload"}
+				]
+			},
+			"thank_care": {
+				"node_id": "baizhi_thank_care",
+				"trust_required": 5,
+				"day_min": 1,
+				"day_max": 10,
+				"lines": [
+					{"speaker": "baizhi", "text": "（嘴角微微上扬）"},
+					{"speaker": "baizhi", "text": "...不客气。"},
+					{"speaker": "baizhi", "text": "在这个村子里，大家互相照顾。"}
+				],
+				"choices": [
+					{"text": "村子里的病人多吗？", "trust_change": 2, "next_node": "ask_patients"},
+					{"text": "告辞", "trust_change": 0, "next_node": null}
+				]
+			},
+			"ask_training": {
+				"node_id": "baizhi_ask_training",
+				"trust_required": 5,
+				"day_min": 2,
+				"day_max": 10,
+				"lines": [
+					{"speaker": "baizhi", "text": "（动作停顿了一下）"},
+					{"speaker": "baizhi", "text": "...我母亲教的。"},
+					{"speaker": "baizhi", "text": "她是村里以前的大夫。"},
+					{"speaker": "narrator", "text": "（她的眼神变得柔和）"}
+				],
+				"choices": [
+					{"text": "她现在在哪里？", "trust_change": 3, "next_node": "ask_mother"},
+					{"text": "原来如此，难怪你医术这么好", "trust_change": 2, "next_node": null}
+				]
+			},
+			"ask_herbs": {
+				"node_id": "baizhi_ask_herbs",
+				"trust_required": 5,
+				"day_min": 2,
+				"day_max": 10,
+				"lines": [
+					{"speaker": "baizhi", "text": "这些是止血草和安神叶。"},
+					{"speaker": "baizhi", "text": "山里采来的。"},
+					{"speaker": "baizhi", "text": "如果你要去危险的地方，带一些会有用。"}
+				],
+				"choices": [
+					{"text": "谢谢，我会记着的", "trust_change": 3, "next_node": null},
+					{"text": "山里还有这种草药？", "trust_change": 2, "next_node": "herbs_location"}
+				]
+			},
+			"offer_help": {
+				"node_id": "baizhi_offer_help",
+				"trust_required": 10,
+				"day_min": 2,
+				"day_max": 10,
+				"lines": [
+					{"speaker": "baizhi", "text": "（抬头看着你）"},
+					{"speaker": "baizhi", "text": "...你愿意帮忙？"},
+					{"speaker": "baizhi", "text": "那就帮我把这些草药分类吧。"},
+					{"speaker": "narrator", "text": "（她递给你一篮草药）"}
+				],
+				"choices": [
+					{"text": "好的，交给我", "trust_change": 5, "event_flag": "baizhi_friendly", "next_node": null},
+					{"text": "抱歉，我还有其他事", "trust_change": -1, "next_node": null}
+				]
+			},
+			"ask_workload": {
+				"node_id": "baizhi_ask_workload",
+				"trust_required": 10,
+				"day_min": 2,
+				"day_max": 10,
+				"lines": [
+					{"speaker": "baizhi", "text": "......习惯了。"},
+					{"speaker": "baizhi", "text": "以前还有母亲帮忙，现在..."},
+					{"speaker": "narrator", "text": "（她的声音低下去）"},
+					{"speaker": "baizhi", "text": "没事。我能应付。"}
+				],
+				"choices": [
+					{"text": "发生什么事了？", "trust_change": 3, "next_node": "ask_past"},
+					{"text": "保重", "trust_change": 1, "next_node": null}
+				]
+			},
+			"ask_patients": {
+				"node_id": "baizhi_ask_patients",
+				"trust_required": 15,
+				"day_min": 3,
+				"day_max": 10,
+				"lines": [
+					{"speaker": "baizhi", "text": "病人..."},
+					{"speaker": "narrator", "text": "（她的表情变得复杂）"},
+					{"speaker": "baizhi", "text": "有些是普通病症。但也有一些...奇怪的病。"},
+					{"speaker": "baizhi", "text": "治不好的病。"}
+				],
+				"choices": [
+					{"text": "什么奇怪的病？", "trust_change": 3, "next_node": "strange_illness"},
+					{"text": "我不打扰你了", "trust_change": 0, "next_node": null}
+				]
+			},
+			"ask_mother": {
+				"node_id": "baizhi_ask_mother",
+				"trust_required": 20,
+				"day_min": 3,
+				"day_max": 10,
+				"lines": [
+					{"speaker": "baizhi", "text": "（沉默片刻）"},
+					{"speaker": "baizhi", "text": "...她五年前去世了。"},
+					{"speaker": "baizhi", "text": "一场奇怪的病。蔓延到整个村子。"},
+					{"speaker": "narrator", "text": "（她的眼眶微微泛红）"}
+				],
+				"choices": [
+					{"text": "我很抱歉", "trust_change": 4, "event_flag": "baizhi_trust", "next_node": null},
+					{"text": "那场病还有其他人吗？", "trust_change": 2, "next_node": "other_victims"}
+				]
+			},
+			"herbs_location": {
+				"node_id": "baizhi_herbs_location",
+				"trust_required": 15,
+				"day_min": 3,
+				"day_max": 10,
+				"lines": [
+					{"speaker": "baizhi", "text": "村子东边的山谷里有很多。"},
+					{"speaker": "baizhi", "text": "但那里...不太安全。"},
+					{"speaker": "baizhi", "text": "有时候会有野兽出没。"}
+				],
+				"choices": [
+					{"text": "我可以去帮你采", "trust_change": 4, "event_flag": "baizhi_herbs_quest", "next_node": null},
+					{"text": "明白了，我会小心", "trust_change": 1, "next_node": null}
+				]
+			},
+			"strange_illness": {
+				"node_id": "baizhi_strange_illness",
+				"trust_required": 25,
+				"day_min": 4,
+				"day_max": 10,
+				"event_flags_required": ["baizhi_friendly"],
+				"lines": [
+					{"speaker": "baizhi", "text": "（压低声音）"},
+					{"speaker": "baizhi", "text": "有些村民...晚上会做噩梦。"},
+					{"speaker": "baizhi", "text": "醒来后变得...不太一样。"},
+					{"speaker": "baizhi", "text": "像是被什么东西...缠上了一样。"}
+				],
+				"choices": [
+					{"text": "这和魔王城有关吗？", "trust_change": 3, "next_node": "demon_connection"},
+					{"text": "有办法治疗吗？", "trust_change": 2, "next_node": "treatment"}
+				]
+			},
+			"ask_past": {
+				"node_id": "baizhi_ask_past",
+				"trust_required": 25,
+				"day_min": 4,
+				"day_max": 10,
+				"event_flags_required": ["baizhi_friendly"],
+				"lines": [
+					{"speaker": "baizhi", "text": "（深深叹了口气）"},
+					{"speaker": "baizhi", "text": "...五年前，村子遭遇了一场瘟疫。"},
+					{"speaker": "baizhi", "text": "母亲为了救人...自己也染上了。"},
+					{"speaker": "narrator", "text": "（她的声音微微颤抖）"}
+				],
+				"choices": [
+					{"text": "她是个勇敢的人", "trust_change": 5, "next_node": null},
+					{"text": "那场瘟疫的起因是什么？", "trust_change": 3, "next_node": "plague_origin"}
+				]
+			},
+			"other_victims": {
+				"node_id": "baizhi_other_victims",
+				"trust_required": 25,
+				"day_min": 4,
+				"day_max": 10,
+				"lines": [
+					{"speaker": "baizhi", "text": "...小安的父母。"},
+					{"speaker": "baizhi", "text": "还有...其他几个人。"},
+					{"speaker": "baizhi", "text": "村子在那之后变得很安静。"}
+				],
+				"choices": [
+					{"text": "小安...就是那个小男孩？", "trust_change": 2, "next_node": "about_xiaoan"},
+					{"text": "我很抱歉提起这些", "trust_change": 3, "next_node": null}
+				]
+			},
+			"demon_connection": {
+				"node_id": "baizhi_demon_connection",
+				"trust_required": 30,
+				"day_min": 5,
+				"day_max": 10,
+				"event_flags_required": ["baizhi_trust"],
+				"lines": [
+					{"speaker": "baizhi", "text": "（眼神变得警惕）"},
+					{"speaker": "baizhi", "text": "你怎么知道魔王城？"},
+					{"speaker": "narrator", "text": "（她沉默了片刻）"},
+					{"speaker": "baizhi", "text": "...有人说，那地方散发的力量...会影响这里。"}
+				],
+				"choices": [
+					{"text": "我要去魔王城", "trust_change": 0, "next_node": "going_to_castle"},
+					{"text": "有办法保护村民吗？", "trust_change": 4, "next_node": "protection"}
+				]
+			},
+			"treatment": {
+				"node_id": "baizhi_treatment",
+				"trust_required": 30,
+				"day_min": 5,
+				"day_max": 10,
+				"event_flags_required": ["baizhi_friendly"],
+				"lines": [
+					{"speaker": "baizhi", "text": "我在尝试各种方法。"},
+					{"speaker": "baizhi", "text": "古老的药方...祈祷..."},
+					{"speaker": "baizhi", "text": "但效果都不明显。"},
+					{"speaker": "narrator", "text": "（她的表情变得疲惫）"}
+				],
+				"choices": [
+					{"text": "也许我可以帮忙", "trust_change": 4, "next_node": null},
+					{"text": "别放弃希望", "trust_change": 3, "next_node": null}
+				]
+			},
+			"plague_origin": {
+				"node_id": "baizhi_plague_origin",
+				"trust_required": 35,
+				"day_min": 5,
+				"day_max": 10,
+				"event_flags_required": ["baizhi_trust"],
+				"lines": [
+					{"speaker": "baizhi", "text": "（目光变得深沉）"},
+					{"speaker": "baizhi", "text": "有人说...是从魔王城方向吹来的风。"},
+					{"speaker": "baizhi", "text": "带着某种...诅咒。"},
+					{"speaker": "baizhi", "text": "我不知道是不是真的。但...我相信这不是普通的病。"}
+				],
+				"choices": [
+					{"text": "我会查清楚的", "trust_change": 5, "event_flag": "baizhi_investigation", "next_node": null},
+					{"text": "这太可怕了", "trust_change": 2, "next_node": null}
+				]
+			},
+			"about_xiaoan": {
+				"node_id": "baizhi_about_xiaoan",
+				"trust_required": 30,
+				"day_min": 5,
+				"day_max": 10,
+				"lines": [
+					{"speaker": "baizhi", "text": "（表情变得柔和）"},
+					{"speaker": "baizhi", "text": "是的。他那时才三岁。"},
+					{"speaker": "baizhi", "text": "现在大熊在照顾他。"},
+					{"speaker": "baizhi", "text": "那孩子...很坚强。"}
+				],
+				"choices": [
+					{"text": "我会照顾好他的", "trust_change": 4, "next_node": null},
+					{"text": "村子很温暖", "trust_change": 3, "next_node": null}
+				]
+			},
+			"going_to_castle": {
+				"node_id": "baizhi_going_to_castle",
+				"trust_required": 35,
+				"day_min": 6,
+				"day_max": 10,
+				"event_flags_required": ["baizhi_trust"],
+				"lines": [
+					{"speaker": "baizhi", "text": "（她紧张地看着你）"},
+					{"speaker": "baizhi", "text": "你要去那里？"},
+					{"speaker": "baizhi", "text": "...如果你真的要去，让我给你准备一些药。"},
+					{"speaker": "baizhi", "text": "可以帮你抵御那里的...东西。"}
+				],
+				"choices": [
+					{"text": "谢谢你，白芷", "trust_change": 5, "event_flag": "baizhi_medicine", "next_node": null},
+					{"text": "不用了，我自己会准备", "trust_change": -1, "next_node": null}
+				]
+			},
+			"protection": {
+				"node_id": "baizhi_protection",
+				"trust_required": 35,
+				"day_min": 6,
+				"day_max": 10,
+				"event_flags_required": ["baizhi_trust"],
+				"lines": [
+					{"speaker": "baizhi", "text": "我在研究一种药剂。"},
+					{"speaker": "baizhi", "text": "可以暂时抵抗那种影响。"},
+					{"speaker": "baizhi", "text": "但材料...很难找。"},
+					{"speaker": "baizhi", "text": "山里深处有一种花，叫「月见草」。只有在夜晚才会绽放。"}
+				],
+				"choices": [
+					{"text": "我可以帮你去找", "trust_change": 5, "event_flag": "baizhi_flower_quest", "next_node": null},
+					{"text": "希望你能成功", "trust_change": 2, "next_node": null}
 				]
 			}
 		}
