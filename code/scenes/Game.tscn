@@ -8,6 +8,16 @@ script = ExtResource("1_game")
 
 [node name="UIRoot" type="CanvasLayer" parent="."]
 
+[node name="Background" type="TextureRect" parent="UIRoot"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+expand_mode = 1
+stretch_mode = 6
+
 [node name="TopBar" type="PanelContainer" parent="UIRoot"]
 layout_mode = 1
 anchors_preset = 10
@@ -36,17 +46,9 @@ anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_top = 60.0
+offset_bottom = -60.0
 grow_horizontal = 2
 grow_vertical = 2
-
-[node name="BgColor" type="ColorRect" parent="UIRoot/VillageView"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-color = Color(0.15, 0.15, 0.2, 1)
 
 [node name="PlaceholderLabel" type="Label" parent="UIRoot/VillageView"]
 layout_mode = 1
@@ -58,7 +60,7 @@ anchor_bottom = 0.5
 grow_horizontal = 2
 grow_vertical = 2
 text = "暮色村
-(村庄场景待实现)"
+(点击开始对话测试)"
 horizontal_alignment = 1
 
 [node name="DialogueBox" parent="UIRoot" instance=ExtResource("2_dialogue")]
