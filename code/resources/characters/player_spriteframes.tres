@@ -1,12 +1,25 @@
 [gd_resource type="SpriteFrames" load_steps=2 format=3 uid="uid://q1r2s3t4u5v6w"]
 
-[ext_resource type="Texture2D" path="res://assets/sprites/characters/player_walk.png" id="1_walk"]
+[ext_resource type="Texture2D" uid="uid://cplayerwalk001" path="res://assets/sprites/characters/player_walk.png" id="1_walk"]
 
 [resource]
 animations = [{
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("1_walk")
+"texture": ExtResource("1_walk"),
+"region": Rect2(0, 0, 32, 32)
+}, {
+"duration": 1.0,
+"texture": ExtResource("1_walk"),
+"region": Rect2(32, 0, 32, 32)
+}, {
+"duration": 1.0,
+"texture": ExtResource("1_walk"),
+"region": Rect2(64, 0, 32, 32)
+}, {
+"duration": 1.0,
+"texture": ExtResource("1_walk"),
+"region": Rect2(96, 0, 32, 32)
 }],
 "loop": true,
 "name": "walk_down",
@@ -14,7 +27,20 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("1_walk")
+"texture": ExtResource("1_walk"),
+"region": Rect2(0, 32, 32, 32)
+}, {
+"duration": 1.0,
+"texture": ExtResource("1_walk"),
+"region": Rect2(32, 32, 32, 32)
+}, {
+"duration": 1.0,
+"texture": ExtResource("1_walk"),
+"region": Rect2(64, 32, 32, 32)
+}, {
+"duration": 1.0,
+"texture": ExtResource("1_walk"),
+"region": Rect2(96, 32, 32, 32)
 }],
 "loop": true,
 "name": "walk_left",
@@ -22,7 +48,20 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("1_walk")
+"texture": ExtResource("1_walk"),
+"region": Rect2(0, 64, 32, 32)
+}, {
+"duration": 1.0,
+"texture": ExtResource("1_walk"),
+"region": Rect2(32, 64, 32, 32)
+}, {
+"duration": 1.0,
+"texture": ExtResource("1_walk"),
+"region": Rect2(64, 64, 32, 32)
+}, {
+"duration": 1.0,
+"texture": ExtResource("1_walk"),
+"region": Rect2(96, 64, 32, 32)
 }],
 "loop": true,
 "name": "walk_right",
@@ -30,9 +69,58 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("1_walk")
+"texture": ExtResource("1_walk"),
+"region": Rect2(0, 96, 32, 32)
+}, {
+"duration": 1.0,
+"texture": ExtResource("1_walk"),
+"region": Rect2(32, 96, 32, 32)
+}, {
+"duration": 1.0,
+"texture": ExtResource("1_walk"),
+"region": Rect2(64, 96, 32, 32)
+}, {
+"duration": 1.0,
+"texture": ExtResource("1_walk"),
+"region": Rect2(96, 96, 32, 32)
 }],
 "loop": true,
 "name": "walk_up",
 "speed": 8.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_walk"),
+"region": Rect2(0, 0, 32, 32)
+}],
+"loop": true,
+"name": "idle_down",
+"speed": 1.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_walk"),
+"region": Rect2(0, 32, 32, 32)
+}],
+"loop": true,
+"name": "idle_left",
+"speed": 1.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_walk"),
+"region": Rect2(0, 64, 32, 32)
+}],
+"loop": true,
+"name": "idle_right",
+"speed": 1.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_walk"),
+"region": Rect2(0, 96, 32, 32)
+}],
+"loop": true,
+"name": "idle_up",
+"speed": 1.0
 }]
