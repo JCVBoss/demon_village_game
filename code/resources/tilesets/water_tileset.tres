@@ -1,0 +1,86 @@
+[gd_resource type="TileSet" load_steps=2 format=3 uid="uid://x7y8z9a0b1c2d"]
+
+[ext_resource type="Texture2D" path="res://assets/sprites/tilesets/water.png" id="1_water"]
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_0"]
+texture = ExtResource("1_water")
+tile_size = Vector2i(64, 64)
+texture_region_size = Vector2i(64, 64)
+
+# 基础水面瓦片（4 帧动画）
+[sub_resource type="TileData" id="TileData_water_frame0"]
+terrain_set = 0
+terrain = 0
+animation_speed = 4.0
+
+[sub_resource type="TileData" id="TileData_water_frame1"]
+terrain_set = 0
+terrain = 0
+animation_speed = 4.0
+
+[sub_resource type="TileData" id="TileData_water_frame2"]
+terrain_set = 0
+terrain = 0
+animation_speed = 4.0
+
+[sub_resource type="TileData" id="TileData_water_frame3"]
+terrain_set = 0
+terrain = 0
+animation_speed = 4.0
+
+# 边缘瓦片
+[sub_resource type="TileData" id="TileData_edge_top"]
+terrain_set = 0
+terrain = 1
+
+[sub_resource type="TileData" id="TileData_edge_right"]
+terrain_set = 0
+terrain = 1
+
+[sub_resource type="TileData" id="TileData_edge_bottom"]
+terrain_set = 0
+terrain = 1
+
+[sub_resource type="TileData" id="TileData_edge_left"]
+terrain_set = 0
+terrain = 1
+
+# 角落瓦片
+[sub_resource type="TileData" id="TileData_corner_topleft"]
+terrain_set = 0
+terrain = 2
+
+[sub_resource type="TileData" id="TileData_corner_topright"]
+terrain_set = 0
+terrain = 2
+
+[sub_resource type="TileData" id="TileData_corner_bottomleft"]
+terrain_set = 0
+terrain = 2
+
+[sub_resource type="TileData" id="TileData_corner_bottomright"]
+terrain_set = 0
+terrain = 2
+
+[resource]
+tile_size = Vector2i(64, 64)
+terrain_set_count = 1
+
+# Terrain Set 0: 水体地形
+# Terrain 0: 内部水面（4 帧动画）
+# Terrain 1: 边缘（水岸过渡）
+# Terrain 2: 角落
+
+# 瓦片映射（按图集位置）
+# (0,0) water_base_frame0 -> TileData_water_frame0
+# (1,0) water_base_frame1 -> TileData_water_frame1
+# (2,0) water_base_frame2 -> TileData_water_frame2
+# (3,0) water_base_frame3 -> TileData_water_frame3
+# (0,1) water_edge_top -> TileData_edge_top
+# (1,1) water_edge_right -> TileData_edge_right
+# (2,1) water_edge_bottom -> TileData_edge_bottom
+# (3,1) water_edge_left -> TileData_edge_left
+# (0,2) water_corner_topleft -> TileData_corner_topleft
+# (1,2) water_corner_topright -> TileData_corner_topright
+# (2,2) water_corner_bottomleft -> TileData_corner_bottomleft
+# (3,2) water_corner_bottomright -> TileData_corner_bottomright
