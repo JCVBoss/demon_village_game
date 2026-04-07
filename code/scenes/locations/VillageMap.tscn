@@ -1,0 +1,42 @@
+[gd_scene load_steps=3 format=3 uid="uid://cvillagemap001"]
+
+[ext_resource type="Script" path="res://scripts/core/TileMapManager.gd" id="1_script"]
+[ext_resource type="TileSet" uid="uid://cvillagetileset001" path="res://resources/tilesets/VillageTileset.tres" id="2_tileset"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_bounds"]
+size = Vector2(1920, 1600)
+
+[node name="VillageMap" type="Node2D"]
+script = ExtResource("1_script")
+
+[node name="Ground" type="TileMapLayer" parent="."]
+tile_set = ExtResource("2_tileset")
+z_index = -10
+
+[node name="Water" type="TileMapLayer" parent="."]
+tile_set = ExtResource("2_tileset")
+z_index = -8
+
+[node name="Roads" type="TileMapLayer" parent="."]
+tile_set = ExtResource("2_tileset")
+z_index = -5
+
+[node name="Buildings" type="TileMapLayer" parent="."]
+tile_set = ExtResource("2_tileset")
+z_index = 0
+
+[node name="Decorations" type="TileMapLayer" parent="."]
+tile_set = ExtResource("2_tileset")
+z_index = 5
+
+[node name="Borders" type="TileMapLayer" parent="."]
+tile_set = ExtResource("2_tileset")
+z_index = 10
+
+[node name="MapBounds" type="StaticBody2D" parent="."]
+collision_layer = 2
+collision_mask = 1
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="MapBounds"]
+position = Vector2(960, 800)
+shape = SubResource("RectangleShape2D_bounds")

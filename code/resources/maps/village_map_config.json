@@ -1,0 +1,137 @@
+{
+	"map_name": "暮色村",
+	"tile_size": 64,
+	"map_width": 30,
+	"map_height": 25,
+	"pixel_width": 1920,
+	"pixel_height": 1600,
+	"layers": {
+		"ground": {
+			"z_index": -10,
+			"description": "草地底层"
+		},
+		"roads": {
+			"z_index": -5,
+			"description": "道路层"
+		},
+		"water": {
+			"z_index": -8,
+			"description": "水体层"
+		},
+		"buildings": {
+			"z_index": 0,
+			"description": "建筑层"
+		},
+		"decorations": {
+			"z_index": 5,
+			"description": "装饰物层"
+		},
+		"borders": {
+			"z_index": 10,
+			"description": "边界层"
+		}
+	},
+	"buildings": [
+		{
+			"id": "blacksmith",
+			"name": "铁匠铺",
+			"npc": "leishu",
+			"position": {"x": 3, "y": 10},
+			"size": {"width": 4, "height": 3},
+			"enterable": true
+		},
+		{
+			"id": "church",
+			"name": "教堂",
+			"npc": "john",
+			"position": {"x": 12, "y": 8},
+			"size": {"width": 5, "height": 4},
+			"enterable": true
+		},
+		{
+			"id": "tavern",
+			"name": "酒馆",
+			"npc": "daxiong",
+			"position": {"x": 20, "y": 8},
+			"size": {"width": 5, "height": 3},
+			"enterable": true
+		},
+		{
+			"id": "merchant",
+			"name": "商人行会",
+			"npc": "jinling",
+			"position": {"x": 24, "y": 12},
+			"size": {"width": 4, "height": 3},
+			"enterable": true
+		},
+		{
+			"id": "school",
+			"name": "学校",
+			"npc": "xiaoan",
+			"position": {"x": 3, "y": 16},
+			"size": {"width": 3, "height": 3},
+			"enterable": true
+		},
+		{
+			"id": "chenmo_hut",
+			"name": "陈默小屋",
+			"npc": "chenmo",
+			"position": {"x": 3, "y": 3},
+			"size": {"width": 3, "height": 2},
+			"enterable": false
+		},
+		{
+			"id": "baizhi_garden",
+			"name": "白芷药园",
+			"npc": "baizhi",
+			"position": {"x": 3, "y": 20},
+			"size": {"width": 4, "height": 3},
+			"enterable": false
+		},
+		{
+			"id": "guard_post",
+			"name": "守卫营房",
+			"npc": "ahu",
+			"position": {"x": 3, "y": 22},
+			"size": {"width": 4, "height": 3},
+			"enterable": false
+		},
+		{
+			"id": "abandoned_warehouse",
+			"name": "废弃仓库",
+			"npc": null,
+			"position": {"x": 20, "y": 3},
+			"size": {"width": 3, "height": 2},
+			"enterable": false
+		},
+		{
+			"id": "ying_home",
+			"name": "影的住所",
+			"npc": "ying",
+			"position": {"x": 26, "y": 16},
+			"size": {"width": 3, "height": 2},
+			"enterable": false
+		}
+	],
+	"npc_positions": {
+		"chenmo": {"x": 200, "y": 300},
+		"leishu": {"x": 400, "y": 250},
+		"jinling": {"x": 600, "y": 350},
+		"baizhi": {"x": 300, "y": 450},
+		"john": {"x": 150, "y": 200},
+		"daxiong": {"x": 700, "y": 200},
+		"ying": {"x": 850, "y": 400},
+		"xiaoan": {"x": 500, "y": 500},
+		"ahu": {"x": 100, "y": 400},
+		"yeya": {"x": 800, "y": 300}
+	},
+	"transitions": [
+		{
+			"id": "to_forest",
+			"target_scene": "ForestMap.tscn",
+			"position": {"x": 15, "y": 24},
+			"size": {"width": 4, "height": 1},
+			"trigger_area": {"x": 960, "y": 1500, "width": 256, "height": 64}
+		}
+	]
+}
