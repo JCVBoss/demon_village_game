@@ -64,6 +64,9 @@ const SOURCE_BUILDINGS: int = 2
 const SOURCE_WATER: int = 3
 const SOURCE_BORDERS: int = 4
 
+# 事件触发器配置
+const TRIGGER_CONFIG_PATH: String = "res://resources/events/village_triggers.json"
+
 
 func _ready() -> void:
 	print("[Village] 进入村庄: %s" % village_name)
@@ -85,6 +88,9 @@ func _ready() -> void:
 
 	# 生成村民
 	_spawn_villagers()
+
+	# 初始化事件触发系统
+	_init_event_trigger_system()
 
 	# 更新 UI
 	_update_ui()
@@ -136,6 +142,37 @@ func _connect_ui_signals() -> void:
 		save_load_ui.load_completed.connect(_on_load_completed)
 		save_load_ui.cancelled.connect(_on_save_load_cancelled)
 		save_load_ui.hide()
+
+
+# ==================== 事件触发系统 ====================
+
+func _init_event_trigger_system() -> void:
+	"""初始化事件触发系统"""
+	if not EventTriggerSystem:
+		return
+
+	# 设置玩家引用
+	EventTriggerSystem.set_player(player)
+
+	# 加载触发器配置
+	EventTriggerSystem.load_triggers(TRIGGER_CONFIG_PATH)
+
+	# 连接触发器信号
+	EventTriggerSystem.trigger_activated.connect(_on_trigger_activated)
+
+	print("[Village] 事件触发系统初始化完成")
+
+
+func _on_trigger_activated(trigger_id: String, trigger_data: Dictionary) -> void:
+	"""触发器激活回调"""
+	print("[Village] 触发器激活: %s" % trigger_id)
+
+	# 处理自动对话
+	if trigger_data.get("auto_dialogue", false):
+		var message = trigger_data.get("message", "")
+		if not message.is_empty():
+			# TODO: 显示提示消息
+			print("[Village] 提示: %s" % message)
 
 
 # ==================== 地图生成 ====================

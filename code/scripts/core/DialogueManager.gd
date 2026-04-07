@@ -16,6 +16,9 @@ var current_villager_id: String = ""
 var current_dialogue_data: Dictionary = {}
 var current_line_index: int = 0
 
+# 已看过的对话
+var seen_dialogues: Array = []
+
 # ==================== 对话数据 ====================
 # 存储所有对话脚本数据（保留用于向后兼容）
 var dialogue_scripts: Dictionary = {}
@@ -257,6 +260,13 @@ func select_choice(choice_index: int) -> void:
 ## 结束对话
 func end_dialogue() -> void:
 	var villager_id = current_villager_id
+	var dialogue_id = current_node_id
+
+	# 记录已看过的对话
+	if not dialogue_id.is_empty():
+		var seen_key = "%s_%s" % [villager_id, dialogue_id]
+		if seen_key not in seen_dialogues:
+			seen_dialogues.append(seen_key)
 
 	is_in_dialogue = false
 	current_villager_id = ""
@@ -300,3 +310,30 @@ func has_new_dialogue(villager_id: String) -> bool:
 	if use_parser and DialogueTreeParser:
 		return DialogueTreeParser.has_unvisited_nodes(villager_id)
 	return true
+
+
+## 检查是否看过某个对话
+func has_seen_dialogue(dialogue_key: String) -> bool:
+	"""检查是否已经看过指定对话"""
+	return dialogue_key in seen_dialogues
+
+
+## 检查是否看过村民的某个对话节点
+func has_seen_villager_dialogue(villager_id: String, node_id: String) -> bool:
+	"""检查是否已经看过村民的某个对话节点"""
+	var seen_key = "%s_%s" % [villager_id, node_id]
+	return seen_key in seen_dialogues
+
+
+# ==================== 存档支持 ====================
+
+## 获取存档数据
+func get_save_data() -> Dictionary:
+	return {
+		"seen_dialogues": seen_dialogues
+	}
+
+
+## 加载存档数据
+func load_save_data(data: Dictionary) -> void:
+	seen_dialogues = data.get("seen_dialogues", [])

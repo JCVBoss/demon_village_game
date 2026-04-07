@@ -109,7 +109,9 @@ func _save_game(slot_index: int) -> bool:
 			"is_first_play": GameManager.is_first_play
 		},
 		"trust_data": TrustManager.get_save_data(),
-		"event_data": EventManager.get_save_data()
+		"event_data": EventManager.get_save_data(),
+		"trigger_data": EventTriggerSystem.get_save_data() if EventTriggerSystem else {},
+		"dialogue_data": DialogueManager.get_save_data() if DialogueManager else {}
 	}
 
 	var file_path = "user://save_%d.json" % slot_index
@@ -149,6 +151,16 @@ func _load_game(slot_index: int) -> bool:
 	var event_data = save_data.get("event_data", {})
 	if not event_data.is_empty():
 		EventManager.load_save_data(event_data)
+
+	# 恢复触发器系统数据
+	var trigger_data = save_data.get("trigger_data", {})
+	if not trigger_data.is_empty() and EventTriggerSystem:
+		EventTriggerSystem.load_save_data(trigger_data)
+
+	# 恢复对话系统数据
+	var dialogue_data = save_data.get("dialogue_data", {})
+	if not dialogue_data.is_empty() and DialogueManager:
+		DialogueManager.load_save_data(dialogue_data)
 
 	print("[SaveLoadUI] 已从槽位 %d 加载游戏" % slot_index)
 	return true

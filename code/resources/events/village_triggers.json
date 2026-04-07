@@ -1,0 +1,147 @@
+{
+	"version": "1.0",
+	"description": "暮色村事件触发器配置",
+	"triggers": {
+		"village_entrance": {
+			"type": "position",
+			"x": 400,
+			"y": 300,
+			"width": 200,
+			"height": 200,
+			"shape": "rectangle",
+			"event_id": "first_visit_village",
+			"one_shot": true,
+			"trigger_data": {
+				"message": "欢迎来到暮色村",
+				"auto_dialogue": true
+			}
+		},
+		"chenmo_secret_area": {
+			"type": "position",
+			"x": 150,
+			"y": 100,
+			"width": 100,
+			"height": 100,
+			"shape": "rectangle",
+			"event_id": "chenmo_secret_discovered",
+			"one_shot": true,
+			"prerequisites": ["chenmo_trust_40"],
+			"trigger_data": {
+				"discovery_type": "location",
+				"secret_id": "chenmo_past"
+			}
+		},
+		"dialogue_chenmo_first": {
+			"type": "dialogue",
+			"villager_id": "chenmo",
+			"dialogue_id": "first_meeting",
+			"event_id": "met_chenmo",
+			"one_shot": true
+		},
+		"dialogue_chenmo_trust": {
+			"type": "dialogue",
+			"villager_id": "chenmo",
+			"event_id": "chenmo_trust_40",
+			"one_shot": true,
+			"trigger_data": {
+				"trust_check": true,
+				"min_trust": 40
+			}
+		},
+		"dialogue_yeya_order": {
+			"type": "dialogue",
+			"villager_id": "yeya",
+			"dialogue_id": "secret_mission",
+			"event_id": "yeya_order_received",
+			"one_shot": true,
+			"prerequisites": ["day_5_reached"]
+		},
+		"item_ancient_key": {
+			"type": "item",
+			"item_id": "ancient_key",
+			"action": "obtain",
+			"event_id": "found_ancient_key",
+			"one_shot": true,
+			"trigger_data": {
+				"unlocks_area": "ancient_ruins"
+			}
+		},
+		"item_medicine_use": {
+			"type": "item",
+			"item_id": "medicine",
+			"action": "use",
+			"event_id": "healed_villager",
+			"one_shot": false,
+			"max_triggers": 5
+		},
+		"day_3_events": {
+			"type": "time",
+			"day": 3,
+			"event_id": "day_3_morning",
+			"one_shot": true
+		},
+		"day_5_reached": {
+			"type": "time",
+			"day": 5,
+			"event_id": "day_5_reached",
+			"one_shot": true
+		},
+		"day_7_to_9": {
+			"type": "time",
+			"day_range": [7, 9],
+			"event_id": "tension_rising",
+			"one_shot": true
+		},
+		"flag_chenmo_secret_known": {
+			"type": "story_flag",
+			"flag_name": "chenmo_secret_known",
+			"value": true,
+			"event_id": "secret_revealed_chenmo",
+			"one_shot": true
+		},
+		"final_battle_conditions": {
+			"type": "combination",
+			"logic": "and",
+			"conditions": [
+				{
+					"type": "day",
+					"min_day": 10
+				},
+				{
+					"type": "flag",
+					"flag_name": "village_united",
+					"value": true
+				},
+				{
+					"type": "event_completed",
+					"event_id": "all_secrets_known"
+				}
+			],
+			"event_id": "final_battle",
+			"one_shot": true
+		},
+		"any_trust_high": {
+			"type": "combination",
+			"logic": "or",
+			"conditions": [
+				{
+					"type": "trust",
+					"villager_id": "chenmo",
+					"min_trust": 80
+				},
+				{
+					"type": "trust",
+					"villager_id": "yeya",
+					"min_trust": 80
+				},
+				{
+					"type": "trust",
+					"villager_id": "john",
+					"min_trust": 80
+				}
+			],
+			"event_id": "trusted_ally",
+			"one_shot": true
+		}
+	}
+}
