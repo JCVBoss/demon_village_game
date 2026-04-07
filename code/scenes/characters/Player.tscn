@@ -21,7 +21,7 @@ shape = SubResource("CircleShape2D_collision")
 sprite_frames = ExtResource("2_frames")
 animation = "idle_down"
 autoplay = "idle_down"
-scale = Vector2(2, 2)
+scale = Vector2(1, 1)
 
 [node name="InteractionArea" type="Area2D" parent="."]
 collision_layer = 0
