@@ -537,6 +537,14 @@ func _on_load_completed(_slot_index: int) -> void:
 	if save_load_ui:
 		save_load_ui.hide()
 	_update_ui()
+
+	# 恢复玩家位置
+	if GameManager.player_data.has("saved_position"):
+		var saved_pos = GameManager.player_data.saved_position
+		player.global_position = saved_pos
+		print("[Village] 恢复玩家位置: %s" % str(saved_pos))
+		GameManager.player_data.erase("saved_position")
+
 	# 重新生成村民位置
 	_spawn_villagers_after_load()
 

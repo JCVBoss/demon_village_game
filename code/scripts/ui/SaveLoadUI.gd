@@ -98,12 +98,19 @@ func _load_save_data(slot_index: int) -> Dictionary:
 
 func _save_game(slot_index: int) -> bool:
 	"""保存游戏到指定槽位"""
+	# 获取玩家位置
+	var player_pos = Vector2.ZERO
+	var player_node = get_tree().get_first_node_in_group("player")
+	if player_node:
+		player_pos = player_node.global_position
+
 	var save_data = {
 		"version": "0.1.0",
 		"timestamp": Time.get_unix_time_from_system(),
 		"current_day": GameManager.current_day,
 		"action_points": GameManager.action_points,
 		"player_data": GameManager.player_data.duplicate(true),
+		"player_position": {"x": player_pos.x, "y": player_pos.y},
 		"game_state": {
 			"current_state": GameManager.current_state,
 			"is_first_play": GameManager.is_first_play
