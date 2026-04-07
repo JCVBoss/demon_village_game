@@ -1,5 +1,5 @@
 ## Village - 村庄主场景
-## 包含村庄背景、村民角色、交互系统
+## 包含村庄 TileMap、村民角色、交互系统
 extends Node2D
 
 # ==================== 信号 ====================
@@ -9,7 +9,13 @@ signal villager_selected(villager_id: String)
 @export var village_name: String = "暮色村"
 
 # ==================== 节点引用 ====================
-@onready var background: TextureRect = $BackgroundLayer/Background
+@onready var tile_map_root: Node2D = $TileMapRoot
+@onready var ground_layer: TileMapLayer = $TileMapRoot/Ground
+@onready var roads_layer: TileMapLayer = $TileMapRoot/Roads
+@onready var buildings_layer: TileMapLayer = $TileMapRoot/Buildings
+@onready var decorations_layer: TileMapLayer = $TileMapRoot/Decorations
+@onready var water_layer: TileMapLayer = $TileMapRoot/Water
+@onready var borders_layer: TileMapLayer = $TileMapRoot/Borders
 @onready var villagers_container: Node2D = $Villagers
 @onready var player: CharacterBody2D = $Player
 @onready var dialogue_box: Control = $UIRoot/DialogueBox
@@ -18,6 +24,7 @@ signal villager_selected(villager_id: String)
 @onready var save_load_ui: Control = $UIRoot/SaveLoadUI
 @onready var menu_button: Button = $UIRoot/BottomBar/MenuButton
 @onready var day_summary: Control = $UIRoot/DaySummary
+@onready var time_overlay: CanvasModulate = $TimeOverlay
 
 # ==================== 状态 ====================
 var is_paused: bool = false
@@ -45,6 +52,18 @@ const VILLAGER_POSITIONS: Dictionary = {
 	"yeya": Vector2(800, 300)
 }
 
+# 地图尺寸配置
+const MAP_WIDTH: int = 30
+const MAP_HEIGHT: int = 25
+const TILE_SIZE: int = 64
+
+# TileSet 源索引
+const SOURCE_GRASS: int = 0
+const SOURCE_ROADS: int = 1
+const SOURCE_BUILDINGS: int = 2
+const SOURCE_WATER: int = 3
+const SOURCE_BORDERS: int = 4
+
 
 func _ready() -> void:
 	print("[Village] 进入村庄: %s" % village_name)
@@ -61,14 +80,17 @@ func _ready() -> void:
 	# 连接UI信号
 	_connect_ui_signals()
 
+	# 生成默认地图
+	_generate_default_map()
+
 	# 生成村民
 	_spawn_villagers()
 
 	# 更新 UI
 	_update_ui()
 
-	# 更新背景
-	_update_background()
+	# 初始化时间光照
+	_update_time_overlay()
 
 	# 检查每日事件
 	EventManager.check_events(GameManager.current_day)
@@ -114,6 +136,72 @@ func _connect_ui_signals() -> void:
 		save_load_ui.load_completed.connect(_on_load_completed)
 		save_load_ui.cancelled.connect(_on_save_load_cancelled)
 		save_load_ui.hide()
+
+
+# ==================== 地图生成 ====================
+
+func _generate_default_map() -> void:
+	"""生成默认村庄地图"""
+	_generate_ground_layer()
+	_generate_roads_layer()
+	_generate_borders()
+	print("[Village] 默认地图生成完成")
+
+
+func _generate_ground_layer() -> void:
+	"""生成草地层"""
+	if not ground_layer:
+		return
+
+	for x in range(MAP_WIDTH):
+		for y in range(MAP_HEIGHT):
+			var tile_coords = Vector2i(randi() % 4, 0)
+			ground_layer.set_cell(Vector2i(x, y), SOURCE_GRASS, tile_coords)
+
+
+func _generate_roads_layer() -> void:
+	"""生成道路层"""
+	if not roads_layer:
+		return
+
+	# 主干道：东西向
+	for x in range(4, 26):
+		roads_layer.set_cell(Vector2i(x, 12), SOURCE_ROADS, Vector2i(0, 0))
+		roads_layer.set_cell(Vector2i(x, 13), SOURCE_ROADS, Vector2i(1, 0))
+
+	# 主干道：南北向
+	for y in range(14, 24):
+		roads_layer.set_cell(Vector2i(14, y), SOURCE_ROADS, Vector2i(0, 0))
+		roads_layer.set_cell(Vector2i(15, y), SOURCE_ROADS, Vector2i(1, 0))
+
+	# 广场区域
+	for x in range(12, 18):
+		for y in range(10, 14):
+			roads_layer.set_cell(Vector2i(x, y), SOURCE_ROADS, Vector2i(2, 0))
+
+
+func _generate_borders() -> void:
+	"""生成边界（树木）"""
+	if not borders_layer:
+		return
+
+	# 北边界
+	for x in range(MAP_WIDTH):
+		borders_layer.set_cell(Vector2i(x, 0), SOURCE_BORDERS, Vector2i(0, 0))
+		borders_layer.set_cell(Vector2i(x, 1), SOURCE_BORDERS, Vector2i(1, 0))
+
+	# 南边界
+	for x in range(MAP_WIDTH):
+		borders_layer.set_cell(Vector2i(x, MAP_HEIGHT - 1), SOURCE_BORDERS, Vector2i(0, 0))
+
+	# 西边界
+	for y in range(MAP_HEIGHT):
+		borders_layer.set_cell(Vector2i(0, y), SOURCE_BORDERS, Vector2i(0, 0))
+		borders_layer.set_cell(Vector2i(1, y), SOURCE_BORDERS, Vector2i(1, 0))
+
+	# 东边界
+	for y in range(MAP_HEIGHT):
+		borders_layer.set_cell(Vector2i(MAP_WIDTH - 1, y), SOURCE_BORDERS, Vector2i(0, 0))
 
 
 # ==================== 村民生成 ====================
@@ -236,7 +324,7 @@ func _on_day_changed(new_day: int) -> void:
 	# 重置为白天
 	current_time = TimeOfDay.DAY
 	_update_ui()
-	_update_background()
+	_update_time_overlay()
 
 	# 检查新一天的事件
 	EventManager.check_events(new_day)
@@ -264,25 +352,18 @@ func _on_action_points_changed(new_points: int) -> void:
 		print("[Village] 行动点耗尽，即将进入下一天")
 
 
-func _update_background() -> void:
-	"""根据时间段更新背景"""
-	var time_name = _get_time_name()
-	var bg_path = "res://assets/sprites/backgrounds/village_%s.png" % time_name
+func _update_time_overlay() -> void:
+	"""根据时间段更新光照叠加层"""
+	if not time_overlay:
+		return
 
-	if ResourceLoader.exists(bg_path):
-		background.texture = load(bg_path)
-
-
-func _get_time_name() -> String:
-	"""获取时间段名称"""
 	match current_time:
 		TimeOfDay.DAY:
-			return "day"
+			time_overlay.color = Color(1.0, 1.0, 1.0, 1.0)
 		TimeOfDay.TWILIGHT:
-			return "twilight"
+			time_overlay.color = Color(0.9, 0.7, 0.6, 1.0)
 		TimeOfDay.NIGHT:
-			return "night"
-	return "day"
+			time_overlay.color = Color(0.3, 0.3, 0.5, 1.0)
 
 
 func _update_time_from_action_points(points: int) -> void:
@@ -298,7 +379,7 @@ func _update_time_from_action_points(points: int) -> void:
 		current_time = TimeOfDay.NIGHT
 
 	if current_time != old_time:
-		_update_background()
+		_update_time_overlay()
 
 
 func _on_trust_changed(villager_id: String, _old_value: int, new_value: int) -> void:
