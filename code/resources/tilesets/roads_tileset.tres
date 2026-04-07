@@ -1,0 +1,82 @@
+[gd_resource type="TileSet" load_steps=2 format=3 uid="uid://c8d9e0f1g2h3i"]
+
+[ext_resource type="Texture2D" path="res://assets/sprites/tilesets/roads.png" id="1_roads"]
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_0"]
+texture = ExtResource("1_roads")
+tile_size = Vector2i(64, 64)
+texture_region_size = Vector2i(64, 64)
+
+# 基础道路瓦片（内部）
+[sub_resource type="TileData" id="TileData_base_0"]
+terrain_set = 0
+terrain = 0
+
+[sub_resource type="TileData" id="TileData_base_1"]
+terrain_set = 0
+terrain = 0
+
+[sub_resource type="TileData" id="TileData_base_2"]
+terrain_set = 0
+terrain = 0
+
+[sub_resource type="TileData" id="TileData_base_3"]
+terrain_set = 0
+terrain = 0
+
+# 边缘瓦片
+[sub_resource type="TileData" id="TileData_edge_top"]
+terrain_set = 0
+terrain = 1
+
+[sub_resource type="TileData" id="TileData_edge_right"]
+terrain_set = 0
+terrain = 1
+
+[sub_resource type="TileData" id="TileData_edge_bottom"]
+terrain_set = 0
+terrain = 1
+
+[sub_resource type="TileData" id="TileData_edge_left"]
+terrain_set = 0
+terrain = 1
+
+# 角落瓦片
+[sub_resource type="TileData" id="TileData_corner_topleft"]
+terrain_set = 0
+terrain = 2
+
+[sub_resource type="TileData" id="TileData_corner_topright"]
+terrain_set = 0
+terrain = 2
+
+[sub_resource type="TileData" id="TileData_corner_bottomleft"]
+terrain_set = 0
+terrain = 2
+
+[sub_resource type="TileData" id="TileData_corner_bottomright"]
+terrain_set = 0
+terrain = 2
+
+[resource]
+tile_size = Vector2i(64, 64)
+terrain_set_count = 1
+
+# Terrain Set 0: 道路地形
+# Terrain 0: 内部道路
+# Terrain 1: 边缘
+# Terrain 2: 角落
+
+# 瓦片映射（按图集位置）
+# (0,0) road_base_0 -> TileData_base_0
+# (1,0) road_base_1 -> TileData_base_1
+# (2,0) road_base_2 -> TileData_base_2
+# (3,0) road_base_3 -> TileData_base_3
+# (0,1) road_edge_top -> TileData_edge_top
+# (1,1) road_edge_right -> TileData_edge_right
+# (2,1) road_edge_bottom -> TileData_edge_bottom
+# (3,1) road_edge_left -> TileData_edge_left
+# (0,2) road_corner_topleft -> TileData_corner_topleft
+# (1,2) road_corner_topright -> TileData_corner_topright
+# (2,2) road_corner_bottomleft -> TileData_corner_bottomleft
+# (3,2) road_corner_bottomright -> TileData_corner_bottomright

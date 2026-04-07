@@ -1,0 +1,271 @@
+{
+  "_meta": {
+    "document": "村庄地图布局设计",
+    "version": "v1.0",
+    "created": "2026-04-07",
+    "author": "AliceDesigner",
+    "issue": "#60 DS-014"
+  },
+  "map": {
+    "id": "twilight_village",
+    "name": "暮色村",
+    "size": { "width": 30, "height": 25, "unit": "tiles" },
+    "tileSize": 64,
+    "pixelSize": { "width": 1920, "height": 1600 }
+  },
+  "layers": [
+    { "index": 0, "name": "Ground", "zIndex": -10, "description": "地面（草地、道路）" },
+    { "index": 1, "name": "Ground_Decoration", "zIndex": -5, "description": "地面装饰（花朵、石子）" },
+    { "index": 2, "name": "Buildings", "zIndex": 0, "description": "建筑地基" },
+    { "index": 3, "name": "Objects", "zIndex": 10, "description": "建筑、树木、装饰物" },
+    { "index": 4, "name": "Collision", "zIndex": 100, "description": "碰撞体（不可见）" },
+    { "index": 5, "name": "Overlay", "zIndex": 200, "description": "天气、昼夜效果" },
+    { "index": 6, "name": "UI", "zIndex": 300, "description": "小地图、提示" }
+  ],
+  "buildings": [
+    {
+      "id": "blacksmith",
+      "name": "铁匠铺",
+      "position": { "x": 3, "y": 8 },
+      "size": { "width": 4, "height": 3 },
+      "enterable": true,
+      "npc": "雷叔",
+      "interiorScene": "scenes/interiors/blacksmith.tscn"
+    },
+    {
+      "id": "church",
+      "name": "教堂",
+      "position": { "x": 13, "y": 8 },
+      "size": { "width": 5, "height": 4 },
+      "enterable": true,
+      "npc": "老约翰",
+      "interiorScene": "scenes/interiors/church.tscn"
+    },
+    {
+      "id": "tavern",
+      "name": "酒馆",
+      "position": { "x": 20, "y": 8 },
+      "size": { "width": 5, "height": 3 },
+      "enterable": true,
+      "npc": "大熊",
+      "interiorScene": "scenes/interiors/tavern.tscn"
+    },
+    {
+      "id": "merchant_guild",
+      "name": "商人行会",
+      "position": { "x": 20, "y": 10 },
+      "size": { "width": 4, "height": 3 },
+      "enterable": true,
+      "npc": "金铃",
+      "interiorScene": "scenes/interiors/merchant_guild.tscn"
+    },
+    {
+      "id": "school",
+      "name": "学校",
+      "position": { "x": 6, "y": 13 },
+      "size": { "width": 3, "height": 3 },
+      "enterable": true,
+      "npc": "小安",
+      "interiorScene": "scenes/interiors/school.tscn"
+    },
+    {
+      "id": "chenmo_cabin",
+      "name": "陈默小屋",
+      "position": { "x": 5, "y": 5 },
+      "size": { "width": 3, "height": 2 },
+      "enterable": false,
+      "npc": "陈默",
+      "note": "后期剧情可进入"
+    },
+    {
+      "id": "baizhi_garden",
+      "name": "白芷药园",
+      "position": { "x": 5, "y": 15 },
+      "size": { "width": 4, "height": 3 },
+      "enterable": false,
+      "npc": "白芷",
+      "note": "户外药园，可交互"
+    },
+    {
+      "id": "guard_barracks",
+      "name": "守卫营房",
+      "position": { "x": 20, "y": 18 },
+      "size": { "width": 4, "height": 3 },
+      "enterable": false,
+      "npc": "阿虎",
+      "note": "守卫驻地，可交互"
+    },
+    {
+      "id": "shadow_hideout",
+      "name": "影的住所",
+      "position": { "x": 25, "y": 15 },
+      "size": { "width": 3, "height": 2 },
+      "enterable": false,
+      "npc": "影",
+      "note": "独居，隐蔽"
+    },
+    {
+      "id": "abandoned_warehouse",
+      "name": "废弃仓库",
+      "position": { "x": 20, "y": 5 },
+      "size": { "width": 3, "height": 2 },
+      "enterable": false,
+      "npc": null,
+      "locked": true,
+      "note": "上锁，剧情关键"
+    }
+  ],
+  "npcSpawnPoints": [
+    { "npc": "陈默", "position": { "x": 5, "y": 5 }, "area": "陈默小屋" },
+    { "npc": "雷叔", "position": { "x": 5, "y": 10 }, "area": "铁匠铺" },
+    { "npc": "金铃", "position": { "x": 22, "y": 12 }, "area": "商人行会" },
+    { "npc": "白芷", "position": { "x": 5, "y": 15 }, "area": "白芷药园" },
+    { "npc": "老约翰", "position": { "x": 15, "y": 10 }, "area": "教堂" },
+    { "npc": "大熊", "position": { "x": 22, "y": 10 }, "area": "酒馆" },
+    { "npc": "影", "position": { "x": 25, "y": 15 }, "area": "影的住所" },
+    { "npc": "小安", "position": { "x": 8, "y": 15 }, "area": "学校" },
+    { "npc": "阿虎", "position": { "x": 20, "y": 18 }, "area": "守卫营房" },
+    { "npc": "夜鸦", "position": { "x": 25, "y": 5 }, "area": "观察点" }
+  ],
+  "roads": [
+    {
+      "id": "main_east_west",
+      "name": "东西向主干道",
+      "type": "stone",
+      "width": 3,
+      "from": { "x": 3, "y": 10 },
+      "to": { "x": 25, "y": 10 }
+    },
+    {
+      "id": "main_north_south",
+      "name": "南北向主干道",
+      "type": "stone",
+      "width": 3,
+      "from": { "x": 15, "y": 8 },
+      "to": { "x": 15, "y": 20 }
+    },
+    {
+      "id": "branch_blacksmith",
+      "name": "铁匠铺支路",
+      "type": "dirt",
+      "width": 2,
+      "from": { "x": 5, "y": 10 },
+      "to": { "x": 5, "y": 8 }
+    },
+    {
+      "id": "branch_school",
+      "name": "学校支路",
+      "type": "dirt",
+      "width": 2,
+      "from": { "x": 8, "y": 13 },
+      "to": { "x": 8, "y": 10 }
+    }
+  ],
+  "decorations": {
+    "trees": [
+      { "type": "pine", "position": { "x": 1, "y": 2 }, "count": 20, "area": "北边界" },
+      { "type": "pine", "position": { "x": 3, "y": 3 }, "count": 6, "area": "陈默小屋周围" },
+      { "type": "oak", "position": { "x": 13, "y": 11 }, "count": 6, "area": "广场周围" },
+      { "type": "fruit", "position": { "x": 5, "y": 16 }, "count": 4, "area": "药园周围" },
+      { "type": "pine", "position": { "x": 25, "y": 16 }, "count": 8, "area": "影的住所周围" }
+    ],
+    "props": [
+      { "type": "street_light", "count": 8, "area": "主干道两侧" },
+      { "type": "flower_bed", "count": 4, "area": "广场周围" },
+      { "type": "bench", "count": 3, "area": "广场、酒馆前" },
+      { "type": "well", "count": 1, "position": { "x": 15, "y": 12 }, "area": "广场中心" },
+      { "type": "barrel_chest", "count": 10, "area": "建筑周围" }
+    ]
+  },
+  "eventTriggers": [
+    {
+      "id": "player_wake",
+      "position": { "x": 15, "y": 12 },
+      "radius": 1,
+      "condition": "game_start",
+      "event": "chapter_1_start",
+      "description": "勇者醒来，序章结束"
+    },
+    {
+      "id": "village_square_intro",
+      "position": { "x": 15, "y": 12 },
+      "radius": 3,
+      "condition": "day_1_morning",
+      "event": "village_introduction",
+      "description": "村民聚集，介绍村庄"
+    },
+    {
+      "id": "chenmo_meet",
+      "position": { "x": 5, "y": 5 },
+      "radius": 2,
+      "condition": "day_2_or_later",
+      "event": "chenmo_first_meet",
+      "description": "触发陈默剧情"
+    },
+    {
+      "id": "warehouse_unlock",
+      "position": { "x": 20, "y": 5 },
+      "radius": 1,
+      "condition": "day_5_or_later_and_key_item",
+      "event": "warehouse_enter",
+      "description": "废弃仓库剧情关键"
+    },
+    {
+      "id": "forest_blockade",
+      "position": { "x": 15, "y": 20 },
+      "radius": 2,
+      "condition": "day_8",
+      "event": "demon_army_blockade",
+      "description": "魔王军封锁森林入口"
+    },
+    {
+      "id": "final_battle",
+      "position": { "x": 15, "y": 12 },
+      "radius": 5,
+      "condition": "day_10",
+      "event": "final_battle_start",
+      "description": "最终决战，三路进攻汇聚"
+    }
+  ],
+  "boundaries": {
+    "north": {
+      "y": 0,
+      "type": "solid",
+      "visual": "black_corruption",
+      "description": "黑潮侵蚀，不可通行"
+    },
+    "east": {
+      "x": 30,
+      "type": "solid",
+      "visual": "fade_out",
+      "description": "世界边界，不可探索"
+    },
+    "west": {
+      "x": 0,
+      "type": "solid",
+      "visual": "fade_out",
+      "description": "世界边界，不可探索"
+    },
+    "south": {
+      "y": 25,
+      "type": "transition",
+      "transitionTo": "mist_forest",
+      "transitionPosition": { "x": 15, "y": 0 },
+      "description": "通往迷雾森林"
+    }
+  },
+  "lighting": {
+    "dayCycle": {
+      "dawn": { "hour": 6, "color": "#FFE4B5", "intensity": 0.7 },
+      "day": { "hour": 12, "color": "#FFFFFF", "intensity": 1.0 },
+      "dusk": { "hour": 18, "color": "#FF6347", "intensity": 0.6 },
+      "night": { "hour": 22, "color": "#191970", "intensity": 0.3 }
+    },
+    "lightSources": [
+      { "type": "street_light", "position": { "x": 10, "y": 10 }, "radius": 3 },
+      { "type": "street_light", "position": { "x": 20, "y": 10 }, "radius": 3 },
+      { "type": "building_light", "building": "tavern", "hours": [18, 22] },
+      { "type": "building_light", "building": "church", "hours": [6, 20] }
+    ]
+  }
+}

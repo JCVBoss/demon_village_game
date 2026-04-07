@@ -1,0 +1,82 @@
+[gd_resource type="TileSet" load_steps=2 format=3 uid="uid://bq7x8y9z0a1b2"]
+
+[ext_resource type="Texture2D" path="res://assets/sprites/tilesets/grass.png" id="1_grass"]
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_0"]
+texture = ExtResource("1_grass")
+tile_size = Vector2i(64, 64)
+texture_region_size = Vector2i(64, 64)
+
+# 基础草地瓦片（内部）
+[sub_resource type="TileData" id="TileData_base_0"]
+terrain_set = 0
+terrain = 0
+
+[sub_resource type="TileData" id="TileData_base_1"]
+terrain_set = 0
+terrain = 0
+
+[sub_resource type="TileData" id="TileData_base_2"]
+terrain_set = 0
+terrain = 0
+
+[sub_resource type="TileData" id="TileData_base_3"]
+terrain_set = 0
+terrain = 0
+
+# 边缘瓦片
+[sub_resource type="TileData" id="TileData_edge_top"]
+terrain_set = 0
+terrain = 1
+
+[sub_resource type="TileData" id="TileData_edge_right"]
+terrain_set = 0
+terrain = 1
+
+[sub_resource type="TileData" id="TileData_edge_bottom"]
+terrain_set = 0
+terrain = 1
+
+[sub_resource type="TileData" id="TileData_edge_left"]
+terrain_set = 0
+terrain = 1
+
+# 角落瓦片
+[sub_resource type="TileData" id="TileData_corner_topleft"]
+terrain_set = 0
+terrain = 2
+
+[sub_resource type="TileData" id="TileData_corner_topright"]
+terrain_set = 0
+terrain = 2
+
+[sub_resource type="TileData" id="TileData_corner_bottomleft"]
+terrain_set = 0
+terrain = 2
+
+[sub_resource type="TileData" id="TileData_corner_bottomright"]
+terrain_set = 0
+terrain = 2
+
+[resource]
+tile_size = Vector2i(64, 64)
+terrain_set_count = 1
+
+# Terrain Set 0: 草地地形
+# Terrain 0: 内部草地
+# Terrain 1: 边缘
+# Terrain 2: 角落
+
+# 瓦片映射（按图集位置）
+# (0,0) grass_base_0 -> TileData_base_0
+# (1,0) grass_base_1 -> TileData_base_1
+# (2,0) grass_base_2 -> TileData_base_2
+# (3,0) grass_base_3 -> TileData_base_3
+# (0,1) grass_edge_top -> TileData_edge_top
+# (1,1) grass_edge_right -> TileData_edge_right
+# (2,1) grass_edge_bottom -> TileData_edge_bottom
+# (3,1) grass_edge_left -> TileData_edge_left
+# (0,2) grass_corner_topleft -> TileData_corner_topleft
+# (1,2) grass_corner_topright -> TileData_corner_topright
+# (2,2) grass_corner_bottomleft -> TileData_corner_bottomleft
+# (3,2) grass_corner_bottomright -> TileData_corner_bottomright

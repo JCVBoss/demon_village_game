@@ -1,0 +1,102 @@
+[gd_resource type="TileSet" load_steps=2 format=3 uid="uid://e3f4g5h6i7j8k"]
+
+[ext_resource type="Texture2D" path="res://assets/sprites/tilesets/borders.png" id="1_borders"]
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_0"]
+texture = ExtResource("1_borders")
+tile_size = Vector2i(64, 64)
+texture_region_size = Vector2i(64, 64)
+
+# 迷雾边缘瓦片
+[sub_resource type="TileData" id="TileData_fog_edge_top"]
+terrain_set = 0
+terrain = 0
+
+[sub_resource type="TileData" id="TileData_fog_edge_right"]
+terrain_set = 0
+terrain = 0
+
+[sub_resource type="TileData" id="TileData_fog_edge_bottom"]
+terrain_set = 0
+terrain = 0
+
+[sub_resource type="TileData" id="TileData_fog_edge_left"]
+terrain_set = 0
+terrain = 0
+
+# 远山边界
+[sub_resource type="TileData" id="TileData_hill_border"]
+terrain_set = 1
+terrain = 0
+
+# 树林边界
+[sub_resource type="TileData" id="TileData_tree_border"]
+terrain_set = 1
+terrain = 1
+
+# 渐变边缘瓦片
+[sub_resource type="TileData" id="TileData_gradient_edge_top"]
+terrain_set = 2
+terrain = 0
+
+[sub_resource type="TileData" id="TileData_gradient_edge_right"]
+terrain_set = 2
+terrain = 0
+
+[sub_resource type="TileData" id="TileData_gradient_edge_bottom"]
+terrain_set = 2
+terrain = 0
+
+[sub_resource type="TileData" id="TileData_gradient_edge_left"]
+terrain_set = 2
+terrain = 0
+
+# 角落迷雾过渡
+[sub_resource type="TileData" id="TileData_corner_fog_topleft"]
+terrain_set = 3
+terrain = 0
+
+[sub_resource type="TileData" id="TileData_corner_fog_topright"]
+terrain_set = 3
+terrain = 0
+
+[sub_resource type="TileData" id="TileData_corner_fog_bottomleft"]
+terrain_set = 3
+terrain = 0
+
+[sub_resource type="TileData" id="TileData_corner_fog_bottomright"]
+terrain_set = 3
+terrain = 0
+
+[resource]
+tile_size = Vector2i(64, 64)
+terrain_set_count = 4
+
+# Terrain Set 0: 迷雾边缘
+# Terrain 0: 迷雾边缘（4 方向）
+
+# Terrain Set 1: 装饰边界
+# Terrain 0: 远山边界
+# Terrain 1: 树林边界
+
+# Terrain Set 2: 渐变边缘
+# Terrain 0: 渐变边缘（4 方向）
+
+# Terrain Set 3: 角落过渡
+# Terrain 0: 角落迷雾过渡（4 角）
+
+# 瓦片映射（按图集位置）
+# (0,0) fog_edge_top -> TileData_fog_edge_top
+# (1,0) fog_edge_right -> TileData_fog_edge_right
+# (2,0) fog_edge_bottom -> TileData_fog_edge_bottom
+# (3,0) fog_edge_left -> TileData_fog_edge_left
+# (0,1) hill_border -> TileData_hill_border
+# (1,1) tree_border -> TileData_tree_border
+# (2,1) gradient_edge_top -> TileData_gradient_edge_top
+# (3,1) gradient_edge_right -> TileData_gradient_edge_right
+# (0,2) gradient_edge_bottom -> TileData_gradient_edge_bottom
+# (1,2) gradient_edge_left -> TileData_gradient_edge_left
+# (2,2) corner_fog_topleft -> TileData_corner_fog_topleft
+# (3,2) corner_fog_topright -> TileData_corner_fog_topright
+# (0,3) corner_fog_bottomleft -> TileData_corner_fog_bottomleft
+# (1,3) corner_fog_bottomright -> TileData_corner_fog_bottomright
