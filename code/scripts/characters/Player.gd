@@ -29,10 +29,9 @@ var is_running: bool = false
 var last_movement_direction: Vector2 = Vector2.DOWN
 
 # ==================== 节点引用 ====================
-@onready var animated_sprite: AnimatedSprite2D = $AnimatedSprite2D
+@onready var sprite: Sprite2D = $Sprite2D
 @onready var interaction_area: Area2D = $InteractionArea
 @onready var interaction_label: Label = $InteractionLabel
-@onready var collision_shape: CollisionShape2D = $CollisionShape2D
 
 
 func _ready() -> void:
@@ -77,7 +76,7 @@ func _connect_signals() -> void:
 func _initialize_player() -> void:
 	if interaction_label:
 		interaction_label.visible = false
-	_update_animation()
+	print("[Player] 玩家初始化完成，支持 8 方向移动")
 
 
 func _physics_process(delta: float) -> void:
@@ -185,19 +184,13 @@ func _set_movement_state(new_state: MovementState) -> void:
 		return
 	current_state = new_state
 	movement_state_changed.emit(new_state)
-	_update_animation()
+	# TODO: 更新动画
+	# _update_animation()
 
 
 func _update_animation() -> void:
-	if not animated_sprite:
-		return
-
-	var anim_name = _get_animation_name()
-
-	if animated_sprite.animation != anim_name:
-		animated_sprite.play(anim_name)
-
-	animated_sprite.speed_scale = 1.5 if is_running else 1.0
+	# 暂时禁用动画更新
+	pass
 
 
 func _get_animation_name() -> String:

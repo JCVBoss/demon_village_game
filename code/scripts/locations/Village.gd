@@ -38,18 +38,18 @@ var current_time: TimeOfDay = TimeOfDay.DAY
 # ==================== 配置 ====================
 const VillagerScene = preload("res://scenes/characters/Villager.tscn")
 
-# 村民位置配置 (ID -> 位置)
+# 村民位置配置 (ID -> 位置) - 地图中心附近
 const VILLAGER_POSITIONS: Dictionary = {
-	"chenmo": Vector2(200, 300),
-	"leishu": Vector2(400, 250),
-	"jinling": Vector2(600, 350),
-	"baizhi": Vector2(300, 450),
-	"john": Vector2(150, 200),
-	"daxiong": Vector2(700, 200),
-	"ying": Vector2(850, 400),
-	"xiaoan": Vector2(500, 500),
-	"ahu": Vector2(100, 400),
-	"yeya": Vector2(800, 300)
+	"chenmo": Vector2(800, 700),
+	"leishu": Vector2(1100, 700),
+	"jinling": Vector2(850, 900),
+	"baizhi": Vector2(1050, 850),
+	"john": Vector2(750, 950),
+	"daxiong": Vector2(1150, 900),
+	"ying": Vector2(900, 1000),
+	"xiaoan": Vector2(1000, 1000),
+	"ahu": Vector2(800, 1100),
+	"yeya": Vector2(1100, 1100)
 }
 
 # 地图尺寸配置
@@ -181,14 +181,13 @@ func _generate_roads_layer() -> void:
 
 
 func _generate_borders() -> void:
-	"""生成边界（树木）"""
+	"""生成边界（树木装饰，无碰撞）"""
 	if not borders_layer:
 		return
 
 	# 北边界
 	for x in range(MAP_WIDTH):
 		borders_layer.set_cell(Vector2i(x, 0), SOURCE_BORDERS, Vector2i(0, 0))
-		borders_layer.set_cell(Vector2i(x, 1), SOURCE_BORDERS, Vector2i(1, 0))
 
 	# 南边界
 	for x in range(MAP_WIDTH):
@@ -197,7 +196,6 @@ func _generate_borders() -> void:
 	# 西边界
 	for y in range(MAP_HEIGHT):
 		borders_layer.set_cell(Vector2i(0, y), SOURCE_BORDERS, Vector2i(0, 0))
-		borders_layer.set_cell(Vector2i(1, y), SOURCE_BORDERS, Vector2i(1, 0))
 
 	# 东边界
 	for y in range(MAP_HEIGHT):

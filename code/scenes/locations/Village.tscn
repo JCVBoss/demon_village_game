@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://cvillage001"]
+[gd_scene load_steps=15 format=3 uid="uid://cvillage001"]
 
 [ext_resource type="Script" path="res://scripts/locations/Village.gd" id="1_village"]
 [ext_resource type="PackedScene" path="res://scenes/characters/Player.tscn" id="2_player"]
@@ -10,10 +10,19 @@
 [ext_resource type="PackedScene" path="res://scenes/ui/DaySummary.tscn" id="8_summary"]
 [ext_resource type="TileSet" uid="uid://cvillagetileset001" path="res://resources/tilesets/VillageTileset.tres" id="9_tileset"]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_bounds"]
-size = Vector2(1920, 1600)
-
 [sub_resource type="CameraAttributesPractical" id="CameraAttributesPractical_1"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_north"]
+size = Vector2(1920, 32)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_south"]
+size = Vector2(1920, 32)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_west"]
+size = Vector2(32, 1600)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_east"]
+size = Vector2(32, 1600)
 
 [node name="Village" type="Node2D"]
 script = ExtResource("1_village")
@@ -44,23 +53,49 @@ z_index = 5
 tile_set = ExtResource("9_tileset")
 z_index = 10
 
-[node name="MapBounds" type="StaticBody2D" parent="."]
+[node name="MapBoundaries" type="Node2D" parent="."]
+
+[node name="NorthWall" type="StaticBody2D" parent="MapBoundaries"]
 collision_layer = 2
 collision_mask = 0
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="MapBounds"]
-position = Vector2(960, 800)
-shape = SubResource("RectangleShape2D_bounds")
+[node name="CollisionShape2D" type="CollisionShape2D" parent="MapBoundaries/NorthWall"]
+position = Vector2(960, 16)
+shape = SubResource("RectangleShape2D_north")
+
+[node name="SouthWall" type="StaticBody2D" parent="MapBoundaries"]
+collision_layer = 2
+collision_mask = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="MapBoundaries/SouthWall"]
+position = Vector2(960, 1584)
+shape = SubResource("RectangleShape2D_south")
+
+[node name="WestWall" type="StaticBody2D" parent="MapBoundaries"]
+collision_layer = 2
+collision_mask = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="MapBoundaries/WestWall"]
+position = Vector2(16, 800)
+shape = SubResource("RectangleShape2D_west")
+
+[node name="EastWall" type="StaticBody2D" parent="MapBoundaries"]
+collision_layer = 2
+collision_mask = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="MapBoundaries/EastWall"]
+position = Vector2(1904, 800)
+shape = SubResource("RectangleShape2D_east")
 
 [node name="Villagers" type="Node2D" parent="."]
 
-[node name="TimeOverlay" type="CanvasModulate" parent="."]
-color = Color(1, 1, 1, 1)
-
 [node name="Player" parent="." instance=ExtResource("2_player")]
-position = Vector2(640, 400)
+position = Vector2(960, 800)
+z_index = 100
 
 [node name="Camera2D" type="Camera2D" parent="Player"]
+enabled = true
+current = true
 zoom = Vector2(1, 1)
 limit_left = 0
 limit_top = 0
@@ -68,6 +103,9 @@ limit_right = 1920
 limit_bottom = 1600
 position_smoothing_enabled = true
 position_smoothing_speed = 8.0
+
+[node name="TimeOverlay" type="CanvasModulate" parent="."]
+color = Color(1, 1, 1, 1)
 
 [node name="UIRoot" type="CanvasLayer" parent="."]
 
