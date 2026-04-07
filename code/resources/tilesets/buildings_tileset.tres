@@ -1,0 +1,82 @@
+[gd_resource type="TileSet" load_steps=2 format=3 uid="uid://j4k5l6m7n8o9p"]
+
+[ext_resource type="Texture2D" path="res://assets/sprites/tilesets/buildings.png" id="1_buildings"]
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_0"]
+texture = ExtResource("1_buildings")
+tile_size = Vector2i(64, 64)
+texture_region_size = Vector2i(64, 64)
+
+# 墙壁瓦片
+[sub_resource type="TileData" id="TileData_wall_0"]
+terrain_set = 0
+terrain = 0
+
+[sub_resource type="TileData" id="TileData_wall_1"]
+terrain_set = 0
+terrain = 0
+
+[sub_resource type="TileData" id="TileData_wall_2"]
+terrain_set = 0
+terrain = 0
+
+[sub_resource type="TileData" id="TileData_wall_3"]
+terrain_set = 0
+terrain = 0
+
+# 屋顶瓦片
+[sub_resource type="TileData" id="TileData_roof_horizontal"]
+terrain_set = 1
+terrain = 0
+
+[sub_resource type="TileData" id="TileData_roof_diagonal"]
+terrain_set = 1
+terrain = 0
+
+# 门窗瓦片
+[sub_resource type="TileData" id="TileData_door"]
+terrain_set = 2
+terrain = 0
+
+[sub_resource type="TileData" id="TileData_window"]
+terrain_set = 2
+terrain = 0
+
+# 墙角
+[sub_resource type="TileData" id="TileData_corner"]
+terrain_set = 0
+terrain = 1
+
+# 地基
+[sub_resource type="TileData" id="TileData_foundation"]
+terrain_set = 3
+terrain = 0
+
+[resource]
+tile_size = Vector2i(64, 64)
+terrain_set_count = 4
+
+# Terrain Set 0: 墙壁
+# Terrain 0: 普通墙壁
+# Terrain 1: 墙角
+
+# Terrain Set 1: 屋顶
+# Terrain 0: 屋顶瓦片
+
+# Terrain Set 2: 门窗
+# Terrain 0: 门/窗
+
+# Terrain Set 3: 地基
+# Terrain 0: 地基
+
+# 瓦片映射（按图集位置）
+# (0,0) wall_0 -> TileData_wall_0
+# (1,0) wall_1 -> TileData_wall_1
+# (2,0) wall_2 -> TileData_wall_2
+# (3,0) wall_3 -> TileData_wall_3
+# (0,1) roof_horizontal -> TileData_roof_horizontal
+# (1,1) roof_diagonal -> TileData_roof_diagonal
+# (2,1) door -> TileData_door
+# (3,1) window -> TileData_window
+# (0,2) corner -> TileData_corner
+# (1,2) foundation -> TileData_foundation
