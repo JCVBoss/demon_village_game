@@ -1,0 +1,370 @@
+{
+  "_meta": {
+    "document": "NPC 活动范围设计",
+    "version": "v1.0",
+    "created": "2026-04-07",
+    "author": "AliceDesigner",
+    "issue": "#74 DS-019"
+  },
+  "npcs": [
+    {
+      "id": "chenmo",
+      "name": "陈默",
+      "role": "逃兵",
+      "activityType": "fixed_wander",
+      "personality": "回避、内向",
+      "zones": [
+        {
+          "id": "cabin",
+          "name": "陈默小屋",
+          "position": { "x": 5, "y": 5 },
+          "size": { "width": 3, "height": 2 },
+          "timeRange": [0, 24],
+          "behavior": "wander_inside",
+          "priority": 1
+        },
+        {
+          "id": "north_boundary",
+          "name": "北边界",
+          "position": { "x": 5, "y": 2 },
+          "size": { "width": 5, "height": 2 },
+          "timeRange": [22, 6],
+          "behavior": "stand_watch",
+          "priority": 2,
+          "unlockCondition": "day_3_or_later"
+        }
+      ],
+      "dialogueConditions": {
+        "day_1_2": { "condition": "day<3", "attitude": "avoid" },
+        "day_3_plus": { "condition": "day>=3", "attitude": "open" },
+        "night": { "condition": "time>=22 or time<=6", "location": "north_boundary" }
+      }
+    },
+    {
+      "id": "leishu",
+      "name": "雷叔",
+      "role": "铁匠",
+      "activityType": "work_rest",
+      "personality": "豪爽、热心",
+      "zones": [
+        {
+          "id": "blacksmith_work",
+          "name": "铁匠铺工作区",
+          "position": { "x": 3, "y": 8 },
+          "size": { "width": 4, "height": 3 },
+          "timeRange": [8, 18],
+          "behavior": "work",
+          "priority": 1
+        },
+        {
+          "id": "square_bench",
+          "name": "广场长椅",
+          "position": { "x": 15, "y": 11 },
+          "size": { "width": 1, "height": 1 },
+          "timeRange": [12, 13],
+          "behavior": "rest",
+          "priority": 2
+        }
+      ],
+      "dialogueConditions": {
+        "work_hours": { "condition": "time>=8 and time<18", "location": "blacksmith" },
+        "lunch_break": { "condition": "time>=12 and time<13", "location": "square" }
+      }
+    },
+    {
+      "id": "jinling",
+      "name": "金铃",
+      "role": "商人",
+      "activityType": "work_social",
+      "personality": "精明、消息灵通",
+      "zones": [
+        {
+          "id": "merchant_guild",
+          "name": "商人行会",
+          "position": { "x": 20, "y": 10 },
+          "size": { "width": 4, "height": 3 },
+          "timeRange": [9, 17],
+          "behavior": "trade",
+          "priority": 1
+        },
+        {
+          "id": "tavern",
+          "name": "酒馆",
+          "position": { "x": 20, "y": 8 },
+          "size": { "width": 5, "height": 3 },
+          "timeRange": [17, 20],
+          "behavior": "social",
+          "priority": 2
+        }
+      ],
+      "dialogueConditions": {
+        "trade_hours": { "condition": "time>=9 and time<17", "location": "guild" },
+        "social_hours": { "condition": "time>=17 and time<20", "location": "tavern", "trustRequired": 30 }
+      }
+    },
+    {
+      "id": "baizhi",
+      "name": "白芷",
+      "role": "医师",
+      "activityType": "work_prayer",
+      "personality": "温柔、善良",
+      "zones": [
+        {
+          "id": "garden",
+          "name": "白芷药园",
+          "position": { "x": 5, "y": 15 },
+          "size": { "width": 4, "height": 3 },
+          "timeRange": [6, 18],
+          "behavior": "work",
+          "priority": 1
+        },
+        {
+          "id": "church",
+          "name": "教堂",
+          "position": { "x": 13, "y": 8 },
+          "size": { "width": 5, "height": 4 },
+          "timeRange": [18, 19],
+          "behavior": "pray",
+          "priority": 2
+        }
+      ],
+      "dialogueConditions": {
+        "work_hours": { "condition": "time>=6 and time<18", "location": "garden" },
+        "prayer_time": { "condition": "time>=18 and time<19", "location": "church", "interruptible": "emergency" }
+      }
+    },
+    {
+      "id": "john",
+      "name": "老约翰",
+      "role": "祭司",
+      "activityType": "fixed_preach",
+      "personality": "神秘、智慧",
+      "zones": [
+        {
+          "id": "church",
+          "name": "教堂",
+          "position": { "x": 13, "y": 8 },
+          "size": { "width": 5, "height": 4 },
+          "timeRange": [0, 24],
+          "behavior": "pray",
+          "priority": 1
+        },
+        {
+          "id": "square",
+          "name": "广场",
+          "position": { "x": 15, "y": 12 },
+          "size": { "width": 1, "height": 1 },
+          "timeRange": [12, 13],
+          "behavior": "preach",
+          "priority": 2
+        }
+      ],
+      "dialogueConditions": {
+        "always_available": { "condition": "true", "location": "church" },
+        "preach_time": { "condition": "time>=12 and time<13", "location": "square" }
+      }
+    },
+    {
+      "id": "daxiong",
+      "name": "大熊",
+      "role": "酒馆老板",
+      "activityType": "work_social",
+      "personality": "豪爽、信息中心",
+      "zones": [
+        {
+          "id": "tavern",
+          "name": "酒馆",
+          "position": { "x": 20, "y": 8 },
+          "size": { "width": 5, "height": 3 },
+          "timeRange": [10, 22],
+          "behavior": "work",
+          "priority": 1
+        },
+        {
+          "id": "square",
+          "name": "广场",
+          "position": { "x": 15, "y": 12 },
+          "size": { "width": 1, "height": 1 },
+          "timeRange": [10, 10.5],
+          "behavior": "shop",
+          "priority": 2
+        }
+      ],
+      "dialogueConditions": {
+        "work_hours": { "condition": "time>=10 and time<22", "location": "tavern" }
+      }
+    },
+    {
+      "id": "ying",
+      "name": "影",
+      "role": "独居者",
+      "activityType": "stealth_recon",
+      "personality": "神秘、隐蔽",
+      "zones": [
+        {
+          "id": "hideout",
+          "name": "影的住所",
+          "position": { "x": 25, "y": 15 },
+          "size": { "width": 3, "height": 2 },
+          "timeRange": [6, 18],
+          "behavior": "hide",
+          "priority": 1
+        },
+        {
+          "id": "warehouse",
+          "name": "废弃仓库",
+          "position": { "x": 20, "y": 5 },
+          "size": { "width": 3, "height": 2 },
+          "timeRange": [22, 2],
+          "behavior": "secret_meeting",
+          "priority": 2,
+          "unlockCondition": "day_5_or_later"
+        },
+        {
+          "id": "rooftops",
+          "name": "全村屋顶",
+          "position": { "x": 0, "y": 0 },
+          "size": { "width": 30, "height": 25 },
+          "timeRange": [2, 6],
+          "behavior": "recon",
+          "priority": 3
+        }
+      ],
+      "dialogueConditions": {
+        "day_avoid": { "condition": "time>=6 and time<18", "attitude": "avoid" },
+        "night_meet": { "condition": "day>=5 and time>=22 and time<2", "location": "warehouse" }
+      }
+    },
+    {
+      "id": "xiaoan",
+      "name": "小安",
+      "role": "孩子",
+      "activityType": "study_play",
+      "personality": "天真、好奇",
+      "zones": [
+        {
+          "id": "school",
+          "name": "学校",
+          "position": { "x": 6, "y": 13 },
+          "size": { "width": 3, "height": 3 },
+          "timeRange": [8, 16],
+          "behavior": "study",
+          "priority": 1
+        },
+        {
+          "id": "square",
+          "name": "广场",
+          "position": { "x": 15, "y": 12 },
+          "size": { "width": 1, "height": 1 },
+          "timeRange": [12, 13],
+          "behavior": "play",
+          "priority": 2
+        }
+      ],
+      "dialogueConditions": {
+        "school_hours": { "condition": "time>=8 and time<16", "location": "school" },
+        "lunch_play": { "condition": "time>=12 and time<13", "location": "square" }
+      }
+    },
+    {
+      "id": "ahu",
+      "name": "阿虎",
+      "role": "守卫",
+      "activityType": "patrol_guard",
+      "personality": "年轻、尽责",
+      "zones": [
+        {
+          "id": "barracks",
+          "name": "守卫营房",
+          "position": { "x": 20, "y": 18 },
+          "size": { "width": 4, "height": 3 },
+          "timeRange": [6, 8],
+          "behavior": "shift_change",
+          "priority": 1
+        },
+        {
+          "id": "south_gate",
+          "name": "村南门哨站",
+          "position": { "x": 15, "y": 18 },
+          "size": { "width": 6, "height": 2 },
+          "timeRange": [8, 14],
+          "behavior": "guard",
+          "priority": 2
+        },
+        {
+          "id": "patrol",
+          "name": "村庄巡逻",
+          "position": { "x": 0, "y": 0 },
+          "size": { "width": 30, "height": 25 },
+          "timeRange": [14, 18],
+          "behavior": "patrol",
+          "priority": 3,
+          "route": ["barracks", "west_gate", "square", "east_gate", "south_gate", "barracks"],
+          "loopDuration": 30
+        }
+      ],
+      "dialogueConditions": {
+        "guard_duty": { "condition": "time>=8 and time<14", "location": "south_gate" },
+        "patrol": { "condition": "time>=14 and time<18", "location": "patrol_route" },
+        "blockade": { "condition": "day>=8", "attitude": "alert" }
+      }
+    },
+    {
+      "id": "yeya",
+      "name": "夜鸦",
+      "role": "魔王卧底",
+      "activityType": "surveillance_recon",
+      "personality": "冷静、内心挣扎",
+      "zones": [
+        {
+          "id": "observation",
+          "name": "观察点（屋顶）",
+          "position": { "x": 25, "y": 5 },
+          "size": { "width": 1, "height": 1 },
+          "timeRange": [20, 6],
+          "behavior": "surveillance",
+          "priority": 1
+        },
+        {
+          "id": "intel_drop",
+          "name": "情报传递点",
+          "position": { "x": 20, "y": 5 },
+          "size": { "width": 1, "height": 1 },
+          "timeRange": [2, 3],
+          "behavior": "intel_transfer",
+          "priority": 2
+        },
+        {
+          "id": "rooftops",
+          "name": "全村屋顶",
+          "position": { "x": 0, "y": 0 },
+          "size": { "width": 30, "height": 25 },
+          "timeRange": [6, 20],
+          "behavior": "disguise",
+          "priority": 3
+        }
+      ],
+      "dialogueConditions": {
+        "night_watch": { "condition": "time>=20 or time<6", "location": "observation", "trustRequired": 50 },
+        "approach": { "condition": "day>=3", "attitude": "test" },
+        "reveal": { "condition": "day>=7", "attitude": "honest" }
+      }
+    }
+  ],
+  "globalSettings": {
+    "pathfinding": {
+      "enabled": true,
+      "avoidPlayers": true,
+      "avoidCollisions": true
+    },
+    "weatherInfluence": {
+      "enabled": true,
+      "rain": { "outdoorReduction": 0.5, "indoorPreference": 0.8 },
+      "night": { "visibilityReduction": 0.3 }
+    },
+    "emergencyState": {
+      "day8_blockade": { "panicLevel": 0.5, "outdoorReduction": 0.7 },
+      "day10_battle": { "panicLevel": 1.0, "allGatherToSquare": true }
+    }
+  }
+}
