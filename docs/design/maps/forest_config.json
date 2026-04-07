@@ -1,0 +1,299 @@
+{
+  "_meta": {
+    "document": "森林地图布局设计",
+    "version": "v1.0",
+    "created": "2026-04-07",
+    "author": "AliceDesigner",
+    "issue": "#58 DS-015"
+  },
+  "map": {
+    "id": "mist_forest",
+    "name": "迷雾森林",
+    "description": "村庄南方的神秘森林，魔王军潜伏地，有蘑菇圈、古老树林、萤火虫空地等特征地点",
+    "size": { "width": 40, "height": 30, "unit": "tiles" },
+    "tileSize": 64,
+    "pixelSize": { "width": 2560, "height": 1920 }
+  },
+  "zones": [
+    {
+      "id": "entrance",
+      "name": "入口区",
+      "description": "安全区，光线充足，村民常来采集草药",
+      "position": { "x": 10, "y": 0 },
+      "size": { "width": 15, "height": 10 },
+      "safety": true,
+      "enemies": [],
+      "features": ["herb_spawns", "clear_path", "sparse_trees"],
+      "lighting": "bright",
+      "vegetation": "sparse"
+    },
+    {
+      "id": "deep_forest",
+      "name": "深林区",
+      "description": "神秘区域，有蘑菇圈、古老树林、萤火虫空地",
+      "position": { "x": 5, "y": 5 },
+      "size": { "width": 20, "height": 15 },
+      "safety": false,
+      "enemies": ["demon_scout"],
+      "features": ["mushroom_circle", "ancient_trees", "firefly_clearing", "stream"],
+      "lighting": "dim",
+      "vegetation": "dense"
+    },
+    {
+      "id": "abandoned_camp",
+      "name": "废弃营地",
+      "description": "废弃的冒险者营地，第 8 日后被魔王军占领",
+      "position": { "x": 25, "y": 10 },
+      "size": { "width": 10, "height": 10 },
+      "safety": false,
+      "enemies": ["demon_scout", "demon_guard"],
+      "features": ["tent_ruins", "campfire", "adventurer_diary"],
+      "lighting": "dark",
+      "vegetation": "sparse"
+    }
+  ],
+  "paths": [
+    {
+      "id": "main_path",
+      "name": "主小径",
+      "type": "dirt",
+      "width": 2,
+      "from": { "x": 20, "y": 0 },
+      "to": { "x": 20, "y": 20 },
+      "waypoints": [
+        { "x": 20, "y": 0 },
+        { "x": 18, "y": 5 },
+        { "x": 20, "y": 15 },
+        { "x": 22, "y": 20 }
+      ]
+    },
+    {
+      "id": "branch_mushroom",
+      "name": "蘑菇圈支路",
+      "type": "dirt",
+      "width": 1,
+      "from": { "x": 18, "y": 5 },
+      "to": { "x": 10, "y": 5 }
+    },
+    {
+      "id": "branch_camp",
+      "name": "营地支路",
+      "type": "dirt",
+      "width": 1,
+      "from": { "x": 22, "y": 10 },
+      "to": { "x": 25, "y": 10 }
+    },
+    {
+      "id": "beast_path",
+      "name": "兽径（隐藏）",
+      "type": "grass",
+      "width": 1,
+      "from": { "x": 15, "y": 15 },
+      "to": { "x": 10, "y": 20 },
+      "hidden": true,
+      "discoverCondition": "explore_all_zones"
+    }
+  ],
+  "resources": {
+    "herbs": {
+      "count": 10,
+      "respawnHours": 24,
+      "yield": [1, 3],
+      "locations": [
+        { "x": 12, "y": 3 },
+        { "x": 15, "y": 5 },
+        { "x": 18, "y": 8 },
+        { "x": 20, "y": 12 },
+        { "x": 22, "y": 15 }
+      ],
+      "types": ["healing_herb", "poison_herb", "magic_herb"]
+    },
+    "mushrooms": {
+      "count": 15,
+      "respawnHours": 48,
+      "yield": [1, 2],
+      "type": "glowing",
+      "location": { "x": 10, "y": 5 },
+      "radius": 3,
+      "glowColor": "#00FF00"
+    },
+    "flowers": {
+      "count": 20,
+      "respawnHours": 12,
+      "yield": [1, 3],
+      "location": { "x": 25, "y": 15 },
+      "area": "firefly_clearing",
+      "types": ["blue_flower", "white_flower", "glowing_flower"]
+    }
+  },
+  "water": {
+    "stream": {
+      "id": "forest_stream",
+      "name": "森林小溪",
+      "position": { "x": 20, "y": 10 },
+      "size": { "width": 3, "height": 20 },
+      "flowDirection": "south",
+      "depth": "shallow",
+      "interactions": ["fishing", "water_collection"],
+      "effects": {
+        "flow_animation": true,
+        "reflection": true,
+        "ripple_on_approach": true,
+        "fireflies_at_night": true
+      },
+      "bridge": {
+        "position": { "x": 20, "y": 15 },
+        "type": "wooden",
+        "width": 3,
+        "interactable": true
+      }
+    }
+  },
+  "features": {
+    "mushroom_circle": {
+      "position": { "x": 10, "y": 5 },
+      "radius": 3,
+      "mushroomCount": 15,
+      "glowing": true,
+      "magicEffect": true,
+      "lore": "传说在满月之夜，蘑菇圈会打开通往异世界的大门"
+    },
+    "ancient_trees": {
+      "position": { "x": 25, "y": 5 },
+      "count": 3,
+      "size": "huge",
+      "impassable": true,
+      "secret": {
+        "hasSecret": true,
+        "condition": "day_5_or_later_and_trust_old_john",
+        "reward": "prophecy_fragment"
+      },
+      "lore": "这三棵古树见证了黑潮纪元的开始"
+    },
+    "firefly_clearing": {
+      "position": { "x": 25, "y": 15 },
+      "size": { "width": 5, "height": 5 },
+      "fireflyCount": 50,
+      "visibleAtNight": true,
+      "romanticScene": true,
+      "lore": "萤火虫的歌声能安抚受伤的心灵"
+    },
+    "abandoned_camp": {
+      "position": { "x": 28, "y": 12 },
+      "features": [
+        { "type": "tent_ruins", "count": 3, "searchable": true },
+        { "type": "campfire", "state": "extinguished", "interactable": true },
+        { "type": "adventurer_diary", "pages": 5, "lore": "记录了一支冒险队的最后时光" }
+      ],
+      "occupiedBy": "demon_army",
+      "occupyDay": 8
+    }
+  },
+  "enemies": {
+    "unlockDay": 8,
+    "types": [
+      {
+        "id": "demon_scout",
+        "name": "魔王军侦察兵",
+        "count": 3,
+        "behavior": "patrol",
+        "patrolRoute": [
+          { "x": 15, "y": 10 },
+          { "x": 20, "y": 10 },
+          { "x": 20, "y": 5 }
+        ],
+        "detectionRadius": 5,
+        "alertOnDetection": true
+      },
+      {
+        "id": "demon_guard",
+        "name": "魔王军哨兵",
+        "count": 2,
+        "behavior": "stationary",
+        "position": { "x": 28, "y": 12 },
+        "detectionRadius": 3
+      },
+      {
+        "id": "demon_patrol",
+        "name": "魔王军巡逻队",
+        "count": 2,
+        "groupSize": 2,
+        "behavior": "patrol",
+        "patrolRoute": [
+          { "x": 10, "y": 15 },
+          { "x": 15, "y": 15 },
+          { "x": 15, "y": 20 }
+        ]
+      }
+    ],
+    "encounterZones": [
+      {
+        "zone": "entrance",
+        "triggerDay": 8,
+        "enemyCount": [1, 2],
+        "difficulty": "easy"
+      },
+      {
+        "zone": "deep_forest",
+        "triggerCondition": "detected_by_scout",
+        "enemyCount": [2, 4],
+        "difficulty": "medium"
+      },
+      {
+        "zone": "abandoned_camp",
+        "triggerCondition": "approach_camp",
+        "enemyCount": [3, 5],
+        "difficulty": "hard"
+      }
+    ]
+  },
+  "lighting": {
+    "dayCycle": {
+      "dawn": { "hour": 6, "color": "#8FBC8F", "intensity": 0.6, "fog": 0.3 },
+      "day": { "hour": 12, "color": "#90EE90", "intensity": 0.8, "sunbeams": true },
+      "dusk": { "hour": 18, "color": "#DDA0DD", "intensity": 0.5, "fog": 0.5 },
+      "night": { "hour": 22, "color": "#191970", "intensity": 0.2, "fireflies": true }
+    },
+    "lightSources": [
+      { "type": "mushroom_glow", "position": { "x": 10, "y": 5 }, "radius": 5, "color": "#00FF00" },
+      { "type": "firefly", "position": { "x": 25, "y": 15 }, "radius": 8, "color": "#FFFF00", "activeAtNight": true }
+    ]
+  },
+  "weather": {
+    "supported": ["clear", "rain", "fog"],
+    "effects": {
+      "rain": {
+        "visibilityReduction": 0.3,
+        "sound": "rain_forest",
+        "groundWet": true
+      },
+      "fog": {
+        "visibilityReduction": 0.5,
+        "density": 0.7,
+        "mysterious": true
+      }
+    }
+  },
+  "transitions": [
+    {
+      "id": "forest_to_village",
+      "name": "森林入口→村南门",
+      "position": { "x": 20, "y": 0 },
+      "targetRegion": "twilight_village",
+      "targetPosition": { "x": 15, "y": 19 },
+      "type": "seamless",
+      "blockedDay": 8,
+      "blockedReason": "魔王军封锁森林"
+    }
+  ],
+  "lore": {
+    "name": "迷雾森林",
+    "description": "这片森林自古以来就被迷雾笼罩，村民们很少深入其中。传说森林深处有古老的力量，但没人知道真相。",
+    "secrets": [
+      "蘑菇圈在满月之夜会发光",
+      "古树见证了黑潮纪元的开始",
+      "萤火虫空地能安抚受伤的心灵",
+      "废弃营地曾是一支冒险队的最后据点"
+    ]
+  }
+}
