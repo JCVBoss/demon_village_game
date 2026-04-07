@@ -29,7 +29,7 @@ var is_running: bool = false
 var last_movement_direction: Vector2 = Vector2.DOWN
 
 # ==================== 节点引用 ====================
-@onready var sprite: Sprite2D = $Sprite2D
+@onready var animated_sprite: AnimatedSprite2D = $AnimatedSprite2D
 @onready var interaction_area: Area2D = $InteractionArea
 @onready var interaction_label: Label = $InteractionLabel
 
@@ -184,13 +184,19 @@ func _set_movement_state(new_state: MovementState) -> void:
 		return
 	current_state = new_state
 	movement_state_changed.emit(new_state)
-	# TODO: 更新动画
-	# _update_animation()
+	_update_animation()
 
 
 func _update_animation() -> void:
-	# 暂时禁用动画更新
-	pass
+	if not animated_sprite:
+		return
+
+	var anim_name = _get_animation_name()
+
+	if animated_sprite.animation != anim_name:
+		animated_sprite.play(anim_name)
+
+	animated_sprite.speed_scale = 1.5 if is_running else 1.0
 
 
 func _get_animation_name() -> String:

@@ -1,7 +1,7 @@
 [gd_scene load_steps=4 format=3 uid="uid://cplayer001"]
 
 [ext_resource type="Script" path="res://scripts/characters/Player.gd" id="1_player"]
-[ext_resource type="Texture2D" uid="uid://dvrdyp4qdfrs0" path="res://assets/sprites/characters/player/down_frame0.png" id="2_texture"]
+[ext_resource type="SpriteFrames" uid="uid://q1r2s3t4u5v6w" path="res://resources/characters/player_spriteframes.tres" id="2_frames"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_collision"]
 radius = 16.0
@@ -17,8 +17,10 @@ script = ExtResource("1_player")
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_collision")
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
-texture = ExtResource("2_texture")
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+sprite_frames = ExtResource("2_frames")
+animation = "idle_down"
+autoplay = "idle_down"
 scale = Vector2(2, 2)
 
 [node name="InteractionArea" type="Area2D" parent="."]
