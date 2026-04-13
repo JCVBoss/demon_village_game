@@ -38,18 +38,18 @@ var current_time: TimeOfDay = TimeOfDay.DAY
 # ==================== 配置 ====================
 const VillagerScene = preload("res://scenes/characters/Villager.tscn")
 
-# 村民位置配置 (ID -> 位置) - 地图中心附近
+# 村民位置配置 (ID -> 位置) - 按设计文档瓦片坐标×64+32
 const VILLAGER_POSITIONS: Dictionary = {
-	"chenmo": Vector2(800, 700),
-	"leishu": Vector2(1100, 700),
-	"jinling": Vector2(850, 900),
-	"baizhi": Vector2(1050, 850),
-	"john": Vector2(750, 950),
-	"daxiong": Vector2(1150, 900),
-	"ying": Vector2(900, 1000),
-	"xiaoan": Vector2(1000, 1000),
-	"ahu": Vector2(800, 1100),
-	"yeya": Vector2(1100, 1100)
+	"chenmo": Vector2(352, 352),     # (5,5) 陈默小屋
+	"leishu": Vector2(352, 672),      # (5,10) 铁匠铺
+	"jinling": Vector2(1440, 800),    # (22,12) 商人行会
+	"baizhi": Vector2(352, 992),      # (5,15) 白芷药园
+	"john": Vector2(992, 672),        # (15,10) 教堂
+	"daxiong": Vector2(1440, 672),    # (22,10) 酒馆
+	"ying": Vector2(1632, 992),       # (25,15) 影的住所
+	"xiaoan": Vector2(544, 992),      # (8,15) 学校
+	"ahu": Vector2(1312, 1184),       # (20,18) 守卫营房
+	"yeya": Vector2(1632, 352)        # (25,5) 观察点
 }
 
 # 地图尺寸配置
@@ -182,6 +182,7 @@ func _generate_default_map() -> void:
 	_generate_ground_layer()
 	_generate_roads_layer()
 	_generate_borders()
+	_generate_decorations()
 	print("[Village] 默认地图生成完成")
 
 
@@ -197,24 +198,26 @@ func _generate_ground_layer() -> void:
 
 
 func _generate_roads_layer() -> void:
-	"""生成道路层"""
+	"""生成道路层 - 按设计文档"""
 	if not roads_layer:
 		return
-
-	# 主干道：东西向
+	
+	# 东西向主干道 (3 瓦片宽，y=10-12)
 	for x in range(4, 26):
-		roads_layer.set_cell(Vector2i(x, 12), SOURCE_ROADS, Vector2i(0, 0))
-		roads_layer.set_cell(Vector2i(x, 13), SOURCE_ROADS, Vector2i(1, 0))
-
-	# 主干道：南北向
-	for y in range(14, 24):
-		roads_layer.set_cell(Vector2i(14, y), SOURCE_ROADS, Vector2i(0, 0))
-		roads_layer.set_cell(Vector2i(15, y), SOURCE_ROADS, Vector2i(1, 0))
-
-	# 广场区域
+		for y in range(10, 13):
+			roads_layer.set_cell(Vector2i(x, y), SOURCE_ROADS, Vector2i(0, 0))
+	
+	# 南北向主干道 (3 瓦片宽，x=14-15)
+	for y in range(10, 20):
+		for x in range(14, 17):
+			roads_layer.set_cell(Vector2i(x, y), SOURCE_ROADS, Vector2i(0, 0))
+	
+	# 广场区域 (x=12-18, y=10-14)
 	for x in range(12, 18):
 		for y in range(10, 14):
 			roads_layer.set_cell(Vector2i(x, y), SOURCE_ROADS, Vector2i(2, 0))
+	
+	print("[Village] 道路系统生成完成")
 
 
 func _generate_borders() -> void:
@@ -222,9 +225,9 @@ func _generate_borders() -> void:
 	if not borders_layer:
 		return
 
-	# 北边界
-	for x in range(MAP_WIDTH):
-		borders_layer.set_cell(Vector2i(x, 0), SOURCE_BORDERS, Vector2i(0, 0))
+	# 北边界 - 20 棵松树
+	for x in range(2, 28):
+		borders_layer.set_cell(Vector2i(x, 1), SOURCE_BORDERS, Vector2i(0, 0))
 
 	# 南边界
 	for x in range(MAP_WIDTH):
@@ -237,6 +240,52 @@ func _generate_borders() -> void:
 	# 东边界
 	for y in range(MAP_HEIGHT):
 		borders_layer.set_cell(Vector2i(MAP_WIDTH - 1, y), SOURCE_BORDERS, Vector2i(0, 0))
+	
+	print("[Village] 边界生成完成")
+
+
+func _generate_decorations() -> void:
+	"""生成装饰物 - 按设计文档"""
+	if not decorations_layer:
+		return
+	
+	# 北边界 20 棵松树 (已在 borders 层)
+	# 陈默小屋周围 6 棵松树
+	for x in range(4, 8):
+		for y in range(4, 6):
+			decorations_layer.set_cell(Vector2i(x, y), SOURCE_DECORATIONS, Vector2i(0, 0))
+	
+	# 广场周围 6 棵橡树
+	decorations_layer.set_cell(Vector2i(11, 9), SOURCE_DECORATIONS, Vector2i(1, 0))
+	decorations_layer.set_cell(Vector2i(19, 9), SOURCE_DECORATIONS, Vector2i(1, 0))
+	decorations_layer.set_cell(Vector2i(11, 15), SOURCE_DECORATIONS, Vector2i(1, 0))
+	decorations_layer.set_cell(Vector2i(19, 15), SOURCE_DECORATIONS, Vector2i(1, 0))
+	decorations_layer.set_cell(Vector2i(13, 15), SOURCE_DECORATIONS, Vector2i(1, 0))
+	decorations_layer.set_cell(Vector2i(17, 15), SOURCE_DECORATIONS, Vector2i(1, 0))
+	
+	# 水井 1 个（广场中心 15,12）
+	decorations_layer.set_cell(Vector2i(15, 12), SOURCE_DECORATIONS, Vector2i(2, 0))
+	
+	# 路灯 8 个（主干道两侧）
+	for x in [10, 20]:
+		decorations_layer.set_cell(Vector2i(x, 9), SOURCE_DECORATIONS, Vector2i(3, 0))
+		decorations_layer.set_cell(Vector2i(x, 13), SOURCE_DECORATIONS, Vector2i(3, 0))
+	for y in [11, 18]:
+		decorations_layer.set_cell(Vector2i(13, y), SOURCE_DECORATIONS, Vector2i(3, 0))
+		decorations_layer.set_cell(Vector2i(16, y), SOURCE_DECORATIONS, Vector2i(3, 0))
+	
+	# 花坛 4 个（广场周围）
+	decorations_layer.set_cell(Vector2i(12, 10), SOURCE_DECORATIONS, Vector2i(4, 0))
+	decorations_layer.set_cell(Vector2i(18, 10), SOURCE_DECORATIONS, Vector2i(4, 0))
+	decorations_layer.set_cell(Vector2i(12, 13), SOURCE_DECORATIONS, Vector2i(4, 0))
+	decorations_layer.set_cell(Vector2i(18, 13), SOURCE_DECORATIONS, Vector2i(4, 0))
+	
+	# 长椅 3 个（广场、酒馆前）
+	decorations_layer.set_cell(Vector2i(14, 11), SOURCE_DECORATIONS, Vector2i(5, 0))
+	decorations_layer.set_cell(Vector2i(16, 11), SOURCE_DECORATIONS, Vector2i(5, 0))
+	decorations_layer.set_cell(Vector2i(21, 11), SOURCE_DECORATIONS, Vector2i(5, 0))
+	
+	print("[Village] 装饰物生成完成")
 
 
 # ==================== 村民生成 ====================
