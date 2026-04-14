@@ -38,8 +38,20 @@ func _ready() -> void:
 ## 加载事件数据
 func _load_events() -> void:
 	# TODO: 从 JSON 文件加载事件数据
-	# 目前使用测试数据
+	# 目前使用测试数据，包含触发器引用的事件
 	events = {
+		# 首次进入村庄
+		"first_visit_village": {
+			"id": "first_visit_village",
+			"type": EventType.STORY,
+			"trigger_day": 1,
+			"trigger_conditions": {},
+			"data": {
+				"description": "首次进入暮色村",
+				"message": "欢迎来到暮色村，这是魔王城下的最后村庄...",
+				"villagers_involved": []
+			}
+		},
 		"chenmo_secret_discovered": {
 			"id": "chenmo_secret_discovered",
 			"type": EventType.STORY,
@@ -52,6 +64,83 @@ func _load_events() -> void:
 				"villagers_involved": ["chenmo", "player"]
 			}
 		},
+		"met_chenmo": {
+			"id": "met_chenmo",
+			"type": EventType.DIALOGUE,
+			"trigger_day": 1,
+			"trigger_conditions": {},
+			"data": {
+				"description": "首次与陈默对话",
+				"villagers_involved": ["chenmo"]
+			}
+		},
+		"chenmo_trust_40": {
+			"id": "chenmo_trust_40",
+			"type": EventType.STORY,
+			"trigger_conditions": {
+				"trust_chenmo": 40
+			},
+			"data": {
+				"description": "陈默信任达到40",
+				"villagers_involved": ["chenmo"]
+			}
+		},
+		"day_3_morning": {
+			"id": "day_3_morning",
+			"type": EventType.TIMED,
+			"trigger_day": 3,
+			"trigger_conditions": {},
+			"data": {
+				"description": "第3天早晨事件",
+				"message": "村庄气氛开始变得紧张..."
+			}
+		},
+		"day_5_reached": {
+			"id": "day_5_reached",
+			"type": EventType.TIMED,
+			"trigger_day": 5,
+			"trigger_conditions": {},
+			"data": {
+				"description": "第5天到达",
+				"villagers_involved": []
+			}
+		},
+		"tension_rising": {
+			"id": "tension_rising",
+			"type": EventType.STORY,
+			"trigger_conditions": {},
+			"data": {
+				"description": "紧张局势升级",
+				"message": "魔王军的阴影越来越近..."
+			}
+		},
+		"found_ancient_key": {
+			"id": "found_ancient_key",
+			"type": EventType.STORY,
+			"trigger_conditions": {},
+			"data": {
+				"description": "发现古老钥匙",
+				"unlocks_area": "ancient_ruins"
+			}
+		},
+		"healed_villager": {
+			"id": "healed_villager",
+			"type": EventType.STORY,
+			"trigger_conditions": {},
+			"data": {
+				"description": "治疗村民",
+				"villagers_involved": []
+			}
+		},
+		"secret_revealed_chenmo": {
+			"id": "secret_revealed_chenmo",
+			"type": EventType.STORY,
+			"trigger_conditions": {},
+			"data": {
+				"description": "陈默秘密揭露",
+				"villagers_involved": ["chenmo"]
+			}
+		},
 		"yeya_order_received": {
 			"id": "yeya_order_received",
 			"type": EventType.STORY,
@@ -60,6 +149,25 @@ func _load_events() -> void:
 			"data": {
 				"description": "夜鸦收到魔王军的进攻指令",
 				"villagers_involved": ["yeya"]
+			}
+		},
+		"trusted_ally": {
+			"id": "trusted_ally",
+			"type": EventType.STORY,
+			"trigger_conditions": {},
+			"data": {
+				"description": "成为信任的盟友",
+				"villagers_involved": []
+			}
+		},
+		"final_battle": {
+			"id": "final_battle",
+			"type": EventType.STORY,
+			"trigger_day": 10,
+			"trigger_conditions": {},
+			"data": {
+				"description": "最终战斗",
+				"villagers_involved": ["all"]
 			}
 		},
 		"xiaoan_revelation": {
