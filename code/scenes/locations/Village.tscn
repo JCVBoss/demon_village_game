@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3 uid="uid://cvillage001"]
+[gd_scene load_steps=13 format=3 uid="uid://cvillage001"]
 
 [ext_resource type="Script" path="res://scripts/locations/Village.gd" id="1_village"]
 [ext_resource type="PackedScene" path="res://scenes/characters/Player.tscn" id="2_player"]
@@ -9,8 +9,6 @@
 [ext_resource type="PackedScene" path="res://scenes/ui/EventNotification.tscn" id="7_event"]
 [ext_resource type="PackedScene" path="res://scenes/ui/DaySummary.tscn" id="8_summary"]
 [ext_resource type="TileSet" uid="uid://cvillagetileset001" path="res://resources/tilesets/VillageTileset.tres" id="9_tileset"]
-
-[sub_resource type="CameraAttributesPractical" id="CameraAttributesPractical_1"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_north"]
 size = Vector2(1920, 32)
@@ -28,6 +26,7 @@ size = Vector2(32, 1600)
 script = ExtResource("1_village")
 
 [node name="TileMapRoot" type="Node2D" parent="."]
+# 地面层 - 不参与 Y-sorting，始终在底部
 
 [node name="Ground" type="TileMapLayer" parent="TileMapRoot"]
 tile_set = ExtResource("9_tileset")
@@ -41,19 +40,36 @@ z_index = -8
 tile_set = ExtResource("9_tileset")
 z_index = -5
 
-[node name="Buildings" type="TileMapLayer" parent="TileMapRoot"]
-tile_set = ExtResource("9_tileset")
-z_index = 0
+[node name="YSortRoot" type="Node2D" parent="."]
+y_sort_enabled = true
+# Y-sorting 层 - 建筑、装饰、NPC、玩家按 Y 坐标排序
 
-[node name="Decorations" type="TileMapLayer" parent="TileMapRoot"]
-tile_set = ExtResource("9_tileset")
-z_index = 5
+[node name="Decorations" type="Node2D" parent="YSortRoot"]
+# 装饰物容器（树木、路灯等）- 等待 Sprite 资源
 
-[node name="Borders" type="TileMapLayer" parent="TileMapRoot"]
-tile_set = ExtResource("9_tileset")
-z_index = 10
+[node name="Buildings" type="Node2D" parent="YSortRoot"]
+# 建筑容器 - 等待美工 Sprite 资源
+
+[node name="Villagers" type="Node2D" parent="YSortRoot"]
+# 村民容器 - Y-sorting 自动排序
+
+[node name="Player" parent="YSortRoot" instance=ExtResource("2_player")]
+position = Vector2(960, 800)
+# 玩家 - Y-sorting 自动排序
+
+[node name="Camera2D" type="Camera2D" parent="YSortRoot/Player"]
+enabled = true
+current = true
+zoom = Vector2(1, 1)
+limit_left = 0
+limit_top = 0
+limit_right = 1920
+limit_bottom = 1600
+position_smoothing_enabled = true
+position_smoothing_speed = 8.0
 
 [node name="MapBoundaries" type="Node2D" parent="."]
+# 边界碰撞 - 不参与渲染排序
 
 [node name="NorthWall" type="StaticBody2D" parent="MapBoundaries"]
 collision_layer = 2
@@ -87,27 +103,11 @@ collision_mask = 0
 position = Vector2(1904, 800)
 shape = SubResource("RectangleShape2D_east")
 
-[node name="Villagers" type="Node2D" parent="."]
-
-[node name="Player" parent="." instance=ExtResource("2_player")]
-position = Vector2(960, 800)
-z_index = 100
-
-[node name="Camera2D" type="Camera2D" parent="Player"]
-enabled = true
-current = true
-zoom = Vector2(1, 1)
-limit_left = 0
-limit_top = 0
-limit_right = 1920
-limit_bottom = 1600
-position_smoothing_enabled = true
-position_smoothing_speed = 8.0
-
 [node name="TimeOverlay" type="CanvasModulate" parent="."]
 color = Color(1, 1, 1, 1)
 
 [node name="UIRoot" type="CanvasLayer" parent="."]
+# UI 层 - 不参与 Y-sorting
 
 [node name="TopBar" type="PanelContainer" parent="UIRoot"]
 layout_mode = 1

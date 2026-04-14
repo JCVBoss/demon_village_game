@@ -1,5 +1,5 @@
 ## Village - 村庄主场景
-## 包含村庄 TileMap、村民角色、交互系统
+## 星露谷物语风格地图：Y-sorting 渲染，建筑使用独立 Sprite
 extends Node2D
 
 # ==================== 信号 ====================
@@ -9,15 +9,19 @@ signal villager_selected(villager_id: String)
 @export var village_name: String = "暮色村"
 
 # ==================== 节点引用 ====================
-@onready var tile_map_root: Node2D = $TileMapRoot
+# 地面层 (TileMap) - 不参与 Y-sorting，始终在底部
 @onready var ground_layer: TileMapLayer = $TileMapRoot/Ground
 @onready var roads_layer: TileMapLayer = $TileMapRoot/Roads
-@onready var buildings_layer: TileMapLayer = $TileMapRoot/Buildings
-@onready var decorations_layer: TileMapLayer = $TileMapRoot/Decorations
 @onready var water_layer: TileMapLayer = $TileMapRoot/Water
-@onready var borders_layer: TileMapLayer = $TileMapRoot/Borders
-@onready var villagers_container: Node2D = $Villagers
-@onready var player: CharacterBody2D = $Player
+
+# Y-sorting 层 - 建筑、装饰、NPC、玩家按 Y 坐标排序
+@onready var y_sort_root: Node2D = $YSortRoot
+@onready var decorations_container: Node2D = $YSortRoot/Decorations
+@onready var buildings_container: Node2D = $YSortRoot/Buildings
+@onready var villagers_container: Node2D = $YSortRoot/Villagers
+@onready var player: CharacterBody2D = $YSortRoot/Player
+
+# UI 层
 @onready var dialogue_box: Control = $UIRoot/DialogueBox
 @onready var village_ui: CanvasLayer = $UIRoot
 @onready var pause_menu: Control = $UIRoot/PauseMenu
@@ -60,17 +64,14 @@ const TILE_SIZE: int = 64
 # TileSet 源索引 (与 VillageTileset.tres 一致)
 const SOURCE_GRASS: int = 0
 const SOURCE_ROADS: int = 1
-const SOURCE_BUILDINGS: int = 2
 const SOURCE_WATER: int = 3
-const SOURCE_BORDERS: int = 4
-# 注意: TileSet 暂无 decorations source，装饰物暂时放在 borders 层
 
 # 事件触发器配置
 const TRIGGER_CONFIG_PATH: String = "res://resources/events/village_triggers.json"
 
 
 func _ready() -> void:
-	print("[Village] 进入村庄: %s" % village_name)
+	print("[Village] 进入村庄: %s (Y-sorting 模式)" % village_name)
 
 	# 连接游戏管理器信号
 	_connect_game_manager_signals()
@@ -84,8 +85,9 @@ func _ready() -> void:
 	# 连接UI信号
 	_connect_ui_signals()
 
-	# 生成默认地图
-	_generate_default_map()
+	# 生成地面和道路 (TileMap)
+	_generate_ground_layer()
+	_generate_roads_layer()
 
 	# 生成村民
 	_spawn_villagers()
@@ -102,34 +104,31 @@ func _ready() -> void:
 	# 检查每日事件
 	EventManager.check_events(GameManager.current_day)
 
+	print("[Village] 地图初始化完成 - 建筑待美工资源")
+
 
 # ==================== 信号连接 ====================
 
 func _connect_game_manager_signals() -> void:
-	"""连接游戏管理器信号"""
 	GameManager.day_changed.connect(_on_day_changed)
 	GameManager.action_points_changed.connect(_on_action_points_changed)
 
 
 func _connect_trust_signals() -> void:
-	"""连接信任系统信号"""
 	TrustManager.trust_changed.connect(_on_trust_changed)
 	TrustManager.secret_unlocked.connect(_on_secret_unlocked)
 
+
 func _connect_dialogue_signals() -> void:
-	"""连接对话管理器信号"""
 	DialogueManager.dialogue_line_spoken.connect(_on_dialogue_line)
 	DialogueManager.choice_presented.connect(_on_choices_presented)
 	DialogueManager.dialogue_ended.connect(_on_dialogue_ended)
 
 
 func _connect_ui_signals() -> void:
-	"""连接UI信号"""
-	# 菜单按钮
 	if menu_button:
 		menu_button.pressed.connect(_on_menu_button_pressed)
 
-	# 暂停菜单
 	if pause_menu:
 		pause_menu.resume_pressed.connect(_on_resume_pressed)
 		pause_menu.save_pressed.connect(_on_save_pressed)
@@ -137,7 +136,6 @@ func _connect_ui_signals() -> void:
 		pause_menu.quit_to_menu_pressed.connect(_on_quit_to_menu_pressed)
 		pause_menu.hide()
 
-	# 存档界面
 	if save_load_ui:
 		save_load_ui.save_completed.connect(_on_save_completed)
 		save_load_ui.load_completed.connect(_on_load_completed)
@@ -148,45 +146,26 @@ func _connect_ui_signals() -> void:
 # ==================== 事件触发系统 ====================
 
 func _init_event_trigger_system() -> void:
-	"""初始化事件触发系统"""
 	if not EventTriggerSystem:
 		return
 
-	# 设置玩家引用
 	EventTriggerSystem.set_player(player)
-
-	# 加载触发器配置
 	EventTriggerSystem.load_triggers(TRIGGER_CONFIG_PATH)
-
-	# 连接触发器信号
 	EventTriggerSystem.trigger_activated.connect(_on_trigger_activated)
 
 	print("[Village] 事件触发系统初始化完成")
 
 
 func _on_trigger_activated(trigger_id: String, trigger_data: Dictionary) -> void:
-	"""触发器激活回调"""
 	print("[Village] 触发器激活: %s" % trigger_id)
 
-	# 处理自动对话
 	if trigger_data.get("auto_dialogue", false):
 		var message = trigger_data.get("message", "")
 		if not message.is_empty():
-			# TODO: 显示提示消息
 			print("[Village] 提示: %s" % message)
 
 
-# ==================== 地图生成 ====================
-
-func _generate_default_map() -> void:
-	"""生成默认村庄地图"""
-	_generate_ground_layer()
-	_generate_roads_layer()
-	_generate_buildings_layer()
-	_generate_borders()
-	_generate_decorations()
-	print("[Village] 默认地图生成完成")
-
+# ==================== 地图生成 (TileMap 仅用于地面) ====================
 
 func _generate_ground_layer() -> void:
 	"""生成草地层"""
@@ -197,6 +176,8 @@ func _generate_ground_layer() -> void:
 		for y in range(MAP_HEIGHT):
 			var tile_coords = Vector2i(randi() % 4, 0)
 			ground_layer.set_cell(Vector2i(x, y), SOURCE_GRASS, tile_coords)
+
+	print("[Village] 草地层生成完成")
 
 
 func _generate_roads_layer() -> void:
@@ -209,12 +190,12 @@ func _generate_roads_layer() -> void:
 		for y in range(10, 13):
 			roads_layer.set_cell(Vector2i(x, y), SOURCE_ROADS, Vector2i(0, 0))
 
-	# 南北向主干道 (3 瓦片宽，x=14-15)
+	# 南北向主干道 (3 瓦片宽，x=14-16)
 	for y in range(10, 20):
 		for x in range(14, 17):
 			roads_layer.set_cell(Vector2i(x, y), SOURCE_ROADS, Vector2i(0, 0))
 
-	# 广场区域 (x=12-18, y=10-14)
+	# 广场区域 (x=12-17, y=10-13)
 	for x in range(12, 18):
 		for y in range(10, 14):
 			roads_layer.set_cell(Vector2i(x, y), SOURCE_ROADS, Vector2i(2, 0))
@@ -222,254 +203,46 @@ func _generate_roads_layer() -> void:
 	print("[Village] 道路系统生成完成")
 
 
-func _generate_buildings_layer() -> void:
-	"""生成建筑层 - 按设计文档，使用瓦片模板"""
-	if not buildings_layer:
-		return
+# ==================== 建筑系统 (等待美工 Sprite 资源) ====================
 
-	# 建筑配置 (根据 village_map_config.json)
-	var buildings = [
-		{"id": "chenmo_hut", "pos": Vector2i(5, 5), "size": Vector2i(3, 2), "style": "small"},
-		{"id": "abandoned_warehouse", "pos": Vector2i(20, 5), "size": Vector2i(3, 2), "style": "warehouse"},
-		{"id": "blacksmith", "pos": Vector2i(3, 8), "size": Vector2i(4, 3), "style": "workshop"},
-		{"id": "church", "pos": Vector2i(13, 8), "size": Vector2i(5, 4), "style": "church"},
-		{"id": "tavern", "pos": Vector2i(20, 8), "size": Vector2i(5, 3), "style": "tavern"},
-		{"id": "merchant", "pos": Vector2i(20, 10), "size": Vector2i(4, 3), "style": "shop"},
-		{"id": "school", "pos": Vector2i(6, 13), "size": Vector2i(3, 3), "style": "school"},
-		{"id": "baizhi_garden", "pos": Vector2i(5, 15), "size": Vector2i(4, 3), "style": "garden"},
-		{"id": "ying_home", "pos": Vector2i(25, 15), "size": Vector2i(3, 2), "style": "small"},
-		{"id": "guard_post", "pos": Vector2i(20, 18), "size": Vector2i(4, 3), "style": "military"}
-	]
-
-	# 瓦片模板定义 - 基于 buildings.png 实际布局
-	# 行0 (y=0): 木纹墙壁 (0,0), (1,0), (2,0), (3,0)
-	# 行1 (y=1): (0,1)红色瓦片, (1,1)深色瓦片, (2,1)带门, (3,1)带窗户
-	# 行2 (y=2): 其他装饰
-	# 行3 (y=3): (0,3)平整屋顶, (1,3)灰色地板
-
-	var tile_templates = {
-		# 通用建筑模板
-		"default": {
-			"wall": Vector2i(0, 0),       # 木纹墙壁
-			"wall_alt": Vector2i(1, 0),   # 墙壁变体
-			"door": Vector2i(2, 1),       # 带门
-			"window": Vector2i(3, 1),     # 带窗户
-			"roof": Vector2i(0, 3),       # 平整屋顶
-			"floor": Vector2i(1, 3),      # 灰色地板
-			"accent": Vector2i(0, 1),     # 红色瓦片装饰
-		},
-		# 小型建筑 (陈默小屋、影的住所)
-		"small": {
-			"wall": Vector2i(0, 0),
-			"roof": Vector2i(0, 3),
-			"door": Vector2i(2, 1),
-			"floor": Vector2i(1, 3),
-		},
-		# 仓库 (废弃仓库 - 可能有点破旧)
-		"warehouse": {
-			"wall": Vector2i(1, 0),
-			"roof": Vector2i(0, 3),
-			"door": Vector2i(2, 1),
-			"floor": Vector2i(1, 3),
-		},
-		# 工坊 (铁匠铺)
-		"workshop": {
-			"wall": Vector2i(0, 0),
-			"roof": Vector2i(0, 3),
-			"door": Vector2i(2, 1),
-			"window": Vector2i(3, 1),
-			"floor": Vector2i(1, 3),
-			"accent": Vector2i(0, 1),     # 红色装饰
-		},
-		# 教堂 - 使用红色瓦片作为特色
-		"church": {
-			"wall": Vector2i(0, 0),
-			"roof": Vector2i(0, 1),       # 红色瓦片屋顶
-			"door": Vector2i(2, 1),
-			"window": Vector2i(3, 1),
-			"floor": Vector2i(1, 3),
-		},
-		# 酒馆
-		"tavern": {
-			"wall": Vector2i(0, 0),
-			"roof": Vector2i(0, 3),
-			"door": Vector2i(2, 1),
-			"window": Vector2i(3, 1),
-			"floor": Vector2i(1, 3),
-			"accent": Vector2i(1, 1),     # 深色瓦片装饰
-		},
-		# 商店 (商人行会)
-		"shop": {
-			"wall": Vector2i(0, 0),
-			"roof": Vector2i(0, 3),
-			"door": Vector2i(2, 1),
-			"window": Vector2i(3, 1),
-			"floor": Vector2i(1, 3),
-		},
-		# 学校
-		"school": {
-			"wall": Vector2i(0, 0),
-			"roof": Vector2i(0, 3),
-			"door": Vector2i(2, 1),
-			"window": Vector2i(3, 1),
-			"floor": Vector2i(1, 3),
-		},
-		# 药园
-		"garden": {
-			"wall": Vector2i(0, 0),
-			"roof": Vector2i(0, 3),
-			"door": Vector2i(2, 1),
-			"floor": Vector2i(1, 3),
-			"accent": Vector2i(1, 1),     # 深色作为围栏
-		},
-		# 军事建筑 (守卫营房)
-		"military": {
-			"wall": Vector2i(1, 0),
-			"roof": Vector2i(0, 3),
-			"door": Vector2i(2, 1),
-			"floor": Vector2i(1, 3),
-		}
-	}
-
-	# 生成每栋建筑
-	for building in buildings:
-		var pos = building["pos"]
-		var size = building["size"]
-		var style = building["style"]
-		var template = tile_templates.get(style, tile_templates["default"])
-
-		_draw_building_with_template(pos, size, template, building["id"])
-
-	print("[Village] 建筑层生成完成 (%d 栋建筑)" % buildings.size())
+func spawn_building(building_id: String, position: Vector2, sprite_path: String) -> void:
+	"""动态生成建筑 Sprite - 供美工资源加载后使用"""
+	var building_sprite = Sprite2D.new()
+	building_sprite.name = building_id
+	building_sprite.position = position
+	building_sprite.texture = load(sprite_path)
+	# Y-sorting 自动处理遮挡
+	buildings_container.add_child(building_sprite)
+	print("[Village] 建筑生成: %s at %s" % [building_id, position])
 
 
-func _draw_building_with_template(pos: Vector2i, size: Vector2i, template: Dictionary, _building_id: String) -> void:
-	"""使用瓦片模板绘制建筑 - 区分屋顶、墙壁、门、窗户"""
-	var width = size.x
-	var height = size.y
+func spawn_decoration(decoration_id: String, position: Vector2, sprite_path: String, has_collision: bool = false) -> void:
+	"""动态生成装饰物 Sprite"""
+	var decoration = StaticBody2D.new() if has_collision else Sprite2D.new()
+	decoration.name = decoration_id
+	decoration.position = position
 
-	for x in range(width):
-		for y in range(height):
-			var tile_pos = Vector2i(pos.x + x, pos.y + y)
-			var tile_atlas: Vector2i
+	if has_collision:
+		var sprite = Sprite2D.new()
+		sprite.texture = load(sprite_path)
+		decoration.add_child(sprite)
+		# TODO: 添加碰撞形状
+	else:
+		decoration.texture = load(sprite_path)
 
-			# 顶行 =屋顶
-			if y == 0:
-				tile_atlas = template.get("roof", Vector2i(0, 3))
-
-			# 底行 =门位置
-			elif y == height - 1:
-				var door_x = width / 2
-				if width % 2 == 0:
-					door_x = width / 2 - 1  # 偏左的门位置
-
-				if x == door_x:
-					tile_atlas = template.get("door", Vector2i(2, 1))
-				else:
-					tile_atlas = template.get("wall", Vector2i(0, 0))
-
-			# 中间行 = 墙壁和窗户
-			else:
-				# 如果建筑宽度足够，在中间行添加窗户
-				var has_window = template.has("window") and width >= 3
-
-				if has_window:
-					# 窗户在两侧（避开中间）
-					if x == 0 or x == width - 1:
-						tile_atlas = template.get("window", Vector2i(3, 1))
-					else:
-						tile_atlas = template.get("floor", Vector2i(1, 3))
-				else:
-					# 没有窗户，使用墙壁或地板
-					if x == 0 or x == width - 1:
-						tile_atlas = template.get("wall", Vector2i(0, 0))
-					else:
-						tile_atlas = template.get("floor", Vector2i(1, 3))
-
-			buildings_layer.set_cell(tile_pos, SOURCE_BUILDINGS, tile_atlas)
-
-
-func _generate_borders() -> void:
-	"""生成边界（树木装饰，无碰撞）"""
-	if not borders_layer:
-		return
-
-	# 北边界 - 20 棵松树
-	for x in range(2, 28):
-		borders_layer.set_cell(Vector2i(x, 1), SOURCE_BORDERS, Vector2i(0, 0))
-
-	# 南边界
-	for x in range(MAP_WIDTH):
-		borders_layer.set_cell(Vector2i(x, MAP_HEIGHT - 1), SOURCE_BORDERS, Vector2i(0, 0))
-
-	# 西边界
-	for y in range(MAP_HEIGHT):
-		borders_layer.set_cell(Vector2i(0, y), SOURCE_BORDERS, Vector2i(0, 0))
-
-	# 东边界
-	for y in range(MAP_HEIGHT):
-		borders_layer.set_cell(Vector2i(MAP_WIDTH - 1, y), SOURCE_BORDERS, Vector2i(0, 0))
-	
-	print("[Village] 边界生成完成")
-
-
-func _generate_decorations() -> void:
-	"""生成装饰物 - 按设计文档"""
-	if not decorations_layer:
-		return
-
-	# 注意: TileSet 暂无 decorations source，装饰物使用 borders source
-	# 陈默小屋周围 6 棵松树
-	for x in range(4, 8):
-		for y in range(4, 6):
-			decorations_layer.set_cell(Vector2i(x, y), SOURCE_BORDERS, Vector2i(0, 0))
-
-	# 广场周围 6 棵橡树
-	decorations_layer.set_cell(Vector2i(11, 9), SOURCE_BORDERS, Vector2i(1, 0))
-	decorations_layer.set_cell(Vector2i(19, 9), SOURCE_BORDERS, Vector2i(1, 0))
-	decorations_layer.set_cell(Vector2i(11, 15), SOURCE_BORDERS, Vector2i(1, 0))
-	decorations_layer.set_cell(Vector2i(19, 15), SOURCE_BORDERS, Vector2i(1, 0))
-	decorations_layer.set_cell(Vector2i(13, 15), SOURCE_BORDERS, Vector2i(1, 0))
-	decorations_layer.set_cell(Vector2i(17, 15), SOURCE_BORDERS, Vector2i(1, 0))
-
-	# 水井 1 个（广场中心 15,12）
-	decorations_layer.set_cell(Vector2i(15, 12), SOURCE_BORDERS, Vector2i(2, 0))
-
-	# 路灯 8 个（主干道两侧）
-	for x in [10, 20]:
-		decorations_layer.set_cell(Vector2i(x, 9), SOURCE_BORDERS, Vector2i(3, 0))
-		decorations_layer.set_cell(Vector2i(x, 13), SOURCE_BORDERS, Vector2i(3, 0))
-	for y in [11, 18]:
-		decorations_layer.set_cell(Vector2i(13, y), SOURCE_BORDERS, Vector2i(3, 0))
-		decorations_layer.set_cell(Vector2i(16, y), SOURCE_BORDERS, Vector2i(3, 0))
-
-	# 花坛 4 个（广场周围）
-	decorations_layer.set_cell(Vector2i(12, 10), SOURCE_BORDERS, Vector2i(0, 0))
-	decorations_layer.set_cell(Vector2i(18, 10), SOURCE_BORDERS, Vector2i(0, 0))
-	decorations_layer.set_cell(Vector2i(12, 13), SOURCE_BORDERS, Vector2i(0, 0))
-	decorations_layer.set_cell(Vector2i(18, 13), SOURCE_BORDERS, Vector2i(0, 0))
-
-	# 长椅 3 个（广场、酒馆前）
-	decorations_layer.set_cell(Vector2i(14, 11), SOURCE_BORDERS, Vector2i(0, 0))
-	decorations_layer.set_cell(Vector2i(16, 11), SOURCE_BORDERS, Vector2i(0, 0))
-	decorations_layer.set_cell(Vector2i(21, 11), SOURCE_BORDERS, Vector2i(0, 0))
-
-	print("[Village] 装饰物生成完成")
+	decorations_container.add_child(decoration)
+	print("[Village] 装饰物生成: %s at %s" % [decoration_id, position])
 
 
 # ==================== 村民生成 ====================
 
 func _spawn_villagers() -> void:
-	"""根据配置生成所有村民"""
 	for villager_id in VILLAGER_POSITIONS:
 		var villager = VillagerScene.instantiate()
 		villager.villager_id = villager_id
 		villager.position = VILLAGER_POSITIONS[villager_id]
-
-		# 连接对话信号
 		villager.dialogue_started.connect(_on_villager_dialogue_started)
 		villager.dialogue_ended.connect(_on_villager_dialogue_ended)
-
 		villagers_container.add_child(villager)
 
 	print("[Village] 已生成 %d 位村民" % VILLAGER_POSITIONS.size())
@@ -478,83 +251,58 @@ func _spawn_villagers() -> void:
 # ==================== 对话系统回调 ====================
 
 func _on_villager_dialogue_started(villager_id: String) -> void:
-	"""村民对话开始"""
 	print("[Village] 村民 %s 开始对话" % villager_id)
 	villager_selected.emit(villager_id)
-
-	# 显示对话框
 	if dialogue_box:
 		dialogue_box.show()
-
-	# 记录今日互动次数
 	daily_interactions += 1
 
 
 func _on_villager_dialogue_ended() -> void:
-	"""村民对话结束（备用）"""
 	pass
 
 
 func _consume_action_point() -> void:
-	"""消耗行动点并检查是否进入下一天"""
 	GameManager.action_points -= 1
 	GameManager.action_points_changed.emit(GameManager.action_points)
 	_update_ui()
 	print("[Village] 消耗 1 行动点，剩余 %d" % GameManager.action_points)
 
-	# 检查是否需要进入下一天
 	if GameManager.action_points <= 0:
-		# 先显示每日总结，等待玩家确认后再进入下一天
 		_show_day_summary_and_advance()
 
 
 func _show_day_summary_and_advance() -> void:
-	"""显示每日总结并进入下一天"""
 	var completed_day = GameManager.current_day
 
-	# 显示每日总结
 	if day_summary:
 		day_summary.show_summary(completed_day, daily_interactions, daily_trust_changes)
-		# 等待玩家点击继续
 		await day_summary.continue_pressed
 
-	# 重置每日统计
 	_reset_daily_stats()
-
-	# 进入下一天
 	GameManager.advance_day()
 	_update_ui()
-
-	# 检查新一天的事件
 	EventManager.check_events(GameManager.current_day)
 
 
 func _on_dialogue_line(_speaker: String, _text: String) -> void:
-	"""对话行显示 - 由 DialogueBox 处理"""
 	pass
 
 
 func _on_choices_presented(_choices: Array) -> void:
-	"""选项显示 - 由 DialogueBox 处理"""
 	pass
 
 
 func _on_dialogue_ended(_villager_id: String) -> void:
-	"""对话结束回调 - DialogueManager 信号"""
 	print("[Village] 对话结束 (DialogueManager)")
-	# 隐藏对话框
 	if dialogue_box:
 		dialogue_box.hide()
-
-	# 对话结束后消耗行动点
 	_consume_action_point()
 
 
 # ==================== UI 更新 ====================
 
 func _update_ui() -> void:
-	"""更新 UI 显示"""
-	# 更新天数和行动点显示
 	var day_label = get_node_or_null("UIRoot/TopBar/HBoxContainer/DayLabel")
 	var action_label = get_node_or_null("UIRoot/TopBar/HBoxContainer/ActionPointsLabel")
 	var village_label = get_node_or_null("UIRoot/TopBar/HBoxContainer/VillageNameLabel")
@@ -572,33 +320,19 @@ func _update_ui() -> void:
 # ==================== 游戏流程 ====================
 
 func _on_day_changed(new_day: int) -> void:
-	"""天数变化回调 - 由其他来源触发的天数变化"""
 	print("[Village] 进入第 %d 天" % new_day)
-	# 重置为白天
 	current_time = TimeOfDay.DAY
 	_update_ui()
 	_update_time_overlay()
-
-	# 检查新一天的事件
 	EventManager.check_events(new_day)
 
 
-func _show_day_summary(completed_day: int) -> void:
-	"""显示每日总结（备用）"""
-	if day_summary:
-		day_summary.show_summary(completed_day, daily_interactions, daily_trust_changes)
-		await day_summary.continue_pressed
-	_reset_daily_stats()
-
-
 func _reset_daily_stats() -> void:
-	"""重置每日统计"""
 	daily_interactions = 0
 	daily_trust_changes.clear()
 
 
 func _on_action_points_changed(new_points: int) -> void:
-	"""行动点变化回调"""
 	_update_ui()
 	_update_time_from_action_points(new_points)
 	if new_points <= 0:
@@ -606,7 +340,6 @@ func _on_action_points_changed(new_points: int) -> void:
 
 
 func _update_time_overlay() -> void:
-	"""根据时间段更新光照叠加层"""
 	if not time_overlay:
 		return
 
@@ -620,7 +353,6 @@ func _update_time_overlay() -> void:
 
 
 func _update_time_from_action_points(points: int) -> void:
-	"""根据行动点数更新时间段"""
 	var max_points = GameManager.MAX_ACTION_POINTS
 	var old_time = current_time
 
@@ -636,52 +368,33 @@ func _update_time_from_action_points(points: int) -> void:
 
 
 func _on_trust_changed(villager_id: String, _old_value: int, new_value: int) -> void:
-	"""信任值变化回调"""
 	print("[Village] %s 信任值更新为 %d" % [villager_id, new_value])
 
-	# 记录今日信任变化
 	if not daily_trust_changes.has(villager_id):
 		daily_trust_changes[villager_id] = 0
-	# 计算实际变化量
-	var change = new_value - _old_value
-	daily_trust_changes[villager_id] += change
-
-	# 更新对应村民的信任值显示
+	daily_trust_changes[villager_id] += new_value - _old_value
 	_update_villager_trust_display(villager_id, new_value)
 
 
 func _on_secret_unlocked(villager_id: String, secret_id: String) -> void:
-	"""秘密解锁回调"""
 	print("[Village] 解锁 %s 的秘密: %s" % [villager_id, secret_id])
-	# TODO: 显示秘密解锁提示
 
 
 func _update_villager_trust_display(villager_id: String, trust_value: int) -> void:
-	"""更新村民信任值显示"""
 	if villagers_container:
 		for child in villagers_container.get_children():
 			if child.villager_id == villager_id:
 				child.set_trust_value(trust_value)
 
 
-func advance_to_next_day() -> void:
-	"""进入下一天（已由 GameManager 自动处理）"""
-	_update_ui()
-	EventManager.check_events(GameManager.current_day)
-	print("[Village] 进入第 %d 天" % GameManager.current_day)
-
-
 # ==================== 输入处理 ====================
 
 func _input(event: InputEvent) -> void:
-	"""处理输入"""
-	# ESC 键打开菜单
 	if event.is_action_pressed("ui_cancel"):
 		_on_menu_button_pressed()
 
 
 func _on_menu_button_pressed() -> void:
-	"""菜单按钮按下"""
 	print("[Village] 打开菜单")
 	_pause_game()
 	if pause_menu:
@@ -691,19 +404,16 @@ func _on_menu_button_pressed() -> void:
 # ==================== 暂停菜单回调 ====================
 
 func _pause_game() -> void:
-	"""暂停游戏"""
 	is_paused = true
 	get_tree().paused = true
 
 
 func _resume_game() -> void:
-	"""恢复游戏"""
 	is_paused = false
 	get_tree().paused = false
 
 
 func _on_resume_pressed() -> void:
-	"""继续游戏"""
 	print("[Village] 继续游戏")
 	_resume_game()
 	if pause_menu:
@@ -711,7 +421,6 @@ func _on_resume_pressed() -> void:
 
 
 func _on_save_pressed() -> void:
-	"""打开保存界面"""
 	print("[Village] 打开保存界面")
 	if pause_menu:
 		pause_menu.hide_menu()
@@ -720,7 +429,6 @@ func _on_save_pressed() -> void:
 
 
 func _on_load_pressed() -> void:
-	"""打开读取界面"""
 	print("[Village] 打开读取界面")
 	if pause_menu:
 		pause_menu.hide_menu()
@@ -729,7 +437,6 @@ func _on_load_pressed() -> void:
 
 
 func _on_quit_to_menu_pressed() -> void:
-	"""返回主菜单"""
 	print("[Village] 返回主菜单")
 	_resume_game()
 	var result = get_tree().change_scene_to_file("res://scenes/Main.tscn")
@@ -740,7 +447,6 @@ func _on_quit_to_menu_pressed() -> void:
 # ==================== 存档界面回调 ====================
 
 func _on_save_completed(_slot_index: int) -> void:
-	"""存档完成"""
 	print("[Village] 存档完成")
 	if save_load_ui:
 		save_load_ui.hide()
@@ -749,26 +455,22 @@ func _on_save_completed(_slot_index: int) -> void:
 
 
 func _on_load_completed(_slot_index: int) -> void:
-	"""读档完成"""
 	print("[Village] 读档完成")
 	_resume_game()
 	if save_load_ui:
 		save_load_ui.hide()
 	_update_ui()
 
-	# 恢复玩家位置
 	if GameManager.player_data.has("saved_position"):
 		var saved_pos = GameManager.player_data.saved_position
 		player.global_position = saved_pos
 		print("[Village] 恢复玩家位置: %s" % str(saved_pos))
 		GameManager.player_data.erase("saved_position")
 
-	# 重新生成村民位置
 	_spawn_villagers_after_load()
 
 
 func _on_save_load_cancelled() -> void:
-	"""取消存档操作"""
 	print("[Village] 取消存档操作")
 	if save_load_ui:
 		save_load_ui.hide()
@@ -777,10 +479,7 @@ func _on_save_load_cancelled() -> void:
 
 
 func _spawn_villagers_after_load() -> void:
-	"""加载后刷新村民"""
-	# 清除现有村民
 	if villagers_container:
 		for child in villagers_container.get_children():
 			child.queue_free()
-	# 重新生成
 	_spawn_villagers()
