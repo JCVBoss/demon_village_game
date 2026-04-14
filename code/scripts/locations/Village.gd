@@ -223,52 +223,172 @@ func _generate_roads_layer() -> void:
 
 
 func _generate_buildings_layer() -> void:
-	"""生成建筑层 - 按设计文档"""
+	"""生成建筑层 - 按设计文档，使用瓦片模板"""
 	if not buildings_layer:
 		return
 
 	# 建筑配置 (根据 village_map_config.json)
+	# 每个建筑包含: id, pos, size, style (决定使用的瓦片模板)
 	var buildings = [
-		{"id": "chenmo_hut", "pos": Vector2i(5, 5), "size": Vector2i(3, 2)},
-		{"id": "abandoned_warehouse", "pos": Vector2i(20, 5), "size": Vector2i(3, 2)},
-		{"id": "blacksmith", "pos": Vector2i(3, 8), "size": Vector2i(4, 3)},
-		{"id": "church", "pos": Vector2i(13, 8), "size": Vector2i(5, 4)},
-		{"id": "tavern", "pos": Vector2i(20, 8), "size": Vector2i(5, 3)},
-		{"id": "merchant", "pos": Vector2i(20, 10), "size": Vector2i(4, 3)},
-		{"id": "school", "pos": Vector2i(6, 13), "size": Vector2i(3, 3)},
-		{"id": "baizhi_garden", "pos": Vector2i(5, 15), "size": Vector2i(4, 3)},
-		{"id": "ying_home", "pos": Vector2i(25, 15), "size": Vector2i(3, 2)},
-		{"id": "guard_post", "pos": Vector2i(20, 18), "size": Vector2i(4, 3)}
+		{"id": "chenmo_hut", "pos": Vector2i(5, 5), "size": Vector2i(3, 2), "style": "small_hut"},
+		{"id": "abandoned_warehouse", "pos": Vector2i(20, 5), "size": Vector2i(3, 2), "style": "warehouse"},
+		{"id": "blacksmith", "pos": Vector2i(3, 8), "size": Vector2i(4, 3), "style": "workshop"},
+		{"id": "church", "pos": Vector2i(13, 8), "size": Vector2i(5, 4), "style": "church"},
+		{"id": "tavern", "pos": Vector2i(20, 8), "size": Vector2i(5, 3), "style": "tavern"},
+		{"id": "merchant", "pos": Vector2i(20, 10), "size": Vector2i(4, 3), "style": "shop"},
+		{"id": "school", "pos": Vector2i(6, 13), "size": Vector2i(3, 3), "style": "school"},
+		{"id": "baizhi_garden", "pos": Vector2i(5, 15), "size": Vector2i(4, 3), "style": "garden"},
+		{"id": "ying_home", "pos": Vector2i(25, 15), "size": Vector2i(3, 2), "style": "small_hut"},
+		{"id": "guard_post", "pos": Vector2i(20, 18), "size": Vector2i(4, 3), "style": "military"}
 	]
+
+	# 瓦片模板定义 - 基于建筑的不同部分
+	# buildings.png 是 4x4 atlas (256x256px, 每瓦片64x64)
+	# 假设布局：
+	# Row 0 (y=0): 基础墙壁/屋顶样式 (不同建筑风格)
+	# Row 1 (y=1): 门、窗户、细节
+	# Row 2 (y=2): 特殊装饰/损坏样式
+	# Row 3 (y=3): 填充/地板样式
+
+	var tile_templates = {
+		# 小屋样式 - 使用瓦片行 0
+		"small_hut": {
+			"wall": Vector2i(0, 0),      # 墙壁基础
+			"roof": Vector2i(1, 0),      # 屋顶
+			"door": Vector2i(0, 1),      # 门
+			"fill": Vector2i(2, 3),      # 内部填充
+			"corner": Vector2i(2, 0)     # 角落
+		},
+		# 工坊样式 (铁匠铺) - 使用瓦片行 1
+		"workshop": {
+			"wall": Vector2i(0, 0),
+			"roof": Vector2i(1, 0),
+			"door": Vector2i(1, 1),      # 工坊门
+			"window": Vector2i(2, 1),    # 窗户
+			"fill": Vector2i(3, 3),
+			"corner": Vector2i(3, 0)
+		},
+		# 教堂样式 - 使用瓦片行 2
+		"church": {
+			"wall": Vector2i(0, 2),
+			"roof": Vector2i(1, 2),
+			"door": Vector2i(0, 1),
+			"steeple": Vector2i(2, 2),   # 尖塔
+			"fill": Vector2i(3, 3),
+			"corner": Vector2i(3, 2)
+		},
+		# 酒馆样式
+		"tavern": {
+			"wall": Vector2i(0, 0),
+			"roof": Vector2i(1, 0),
+			"door": Vector2i(1, 1),
+			"sign": Vector2i(2, 2),      # 酒馆招牌
+			"fill": Vector2i(3, 3),
+			"corner": Vector2i(2, 0)
+		},
+		# 商店样式
+		"shop": {
+			"wall": Vector2i(0, 0),
+			"roof": Vector2i(2, 0),
+			"door": Vector2i(1, 1),
+			"counter": Vector2i(3, 1),   #柜台
+			"fill": Vector2i(3, 3),
+			"corner": Vector2i(3, 0)
+		},
+		# 学校样式
+		"school": {
+			"wall": Vector2i(0, 0),
+			"roof": Vector2i(2, 0),
+			"door": Vector2i(0, 1),
+			"window": Vector2i(2, 1),
+			"fill": Vector2i(3, 3),
+			"corner": Vector2i(3, 0)
+		},
+		# 药园样式
+		"garden": {
+			"wall": Vector2i(0, 0),
+			"roof": Vector2i(2, 0),
+			"door": Vector2i(1, 1),
+			"plants": Vector2i(0, 3),    # 植物
+			"fill": Vector2i(1, 3),      # 草地填充
+			"corner": Vector2i(3, 0)
+		},
+		# 军事建筑样式
+		"military": {
+			"wall": Vector2i(0, 0),
+			"roof": Vector2i(3, 0),
+			"door": Vector2i(2, 1),
+			"flag": Vector2i(3, 2),      #旗帜
+			"fill": Vector2i(3, 3),
+			"corner": Vector2i(3, 0)
+		},
+		# 仓库样式
+		"warehouse": {
+			"wall": Vector2i(0, 2),
+			"roof": Vector2i(1, 2),
+			"door": Vector2i(2, 2),      # 仓库门(可能有锁)
+			"fill": Vector2i(2, 3),
+			"corner": Vector2i(3, 2),
+			"damaged": Vector2i(0, 3)    # 损坏部分
+		}
+	}
 
 	# 生成每栋建筑
 	for building in buildings:
 		var pos = building["pos"]
 		var size = building["size"]
-		# 建筑使用不同的 tile 样式（根据建筑类型）
-		var tile_variant = _get_building_tile_variant(building["id"])
+		var style = building["style"]
+		var template = tile_templates.get(style, tile_templates["small_hut"])
 
-		for x in range(pos.x, pos.x + size.x):
-			for y in range(pos.y, pos.y + size.y):
-				buildings_layer.set_cell(Vector2i(x, y), SOURCE_BUILDINGS, tile_variant)
+		_draw_building_with_template(pos, size, template, building["id"])
 
 	print("[Village] 建筑层生成完成 (%d 栋建筑)" % buildings.size())
 
 
-func _get_building_tile_variant(building_id: String) -> Vector2i:
-	"""根据建筑类型返回不同的 tile 样式"""
-	match building_id:
-		"blacksmith": return Vector2i(0, 0)  # 铁匠铺样式
-		"church": return Vector2i(1, 0)      # 教堂样式
-		"tavern": return Vector2i(2, 0)      # 酒馆样式
-		"merchant": return Vector2i(3, 0)    # 商人行会样式
-		"school": return Vector2i(0, 1)      # 学校样式
-		"chenmo_hut": return Vector2i(1, 1)  # 小屋样式
-		"baizhi_garden": return Vector2i(2, 1)  # 药园样式
-		"guard_post": return Vector2i(3, 1)  # 营房样式
-		"abandoned_warehouse": return Vector2i(0, 2)  # 废弃仓库样式
-		"ying_home": return Vector2i(1, 2)  # 影的住所样式
-		_: return Vector2i(0, 0)  # 默认样式
+func _draw_building_with_template(pos: Vector2i, size: Vector2i, template: Dictionary, building_id: String) -> void:
+	"""使用瓦片模板绘制建筑"""
+	var width = size.x
+	var height = size.y
+
+	# 绘制建筑的各个部分
+	for x in range(width):
+		for y in range(height):
+			var tile_pos = Vector2i(pos.x + x, pos.y + y)
+			var tile_atlas: Vector2i
+
+			# 根据位置决定使用哪个瓦片
+			# 顶行 - 屋顶
+			if y == 0:
+				if x == 0 or x == width - 1:
+					tile_atlas = template.get("corner", template["roof"])
+				else:
+					tile_atlas = template["roof"]
+			# 底行 - 有门的位置
+			elif y == height - 1:
+				var door_x = width / 2  # 门在底部中间
+				if x == door_x or (width > 3 and x == door_x + 1):
+					tile_atlas = template.get("door", template["wall"])
+				elif x == 0 or x == width - 1:
+					tile_atlas = template.get("corner", template["wall"])
+				else:
+					tile_atlas = template["wall"]
+			# 中间行 - 墙壁和窗户
+			else:
+				# 添加窗户（如果模板有窗户且建筑足够大）
+				if template.has("window") and width > 2 and y == 1:
+					var window_x = 1 if x == 1 else (width - 2 if x == width - 2 else -1)
+					if x == window_x:
+						tile_atlas = template["window"]
+					elif x == 0 or x == width - 1:
+						tile_atlas = template["wall"]
+					else:
+						tile_atlas = template.get("fill", template["wall"])
+				elif x == 0 or x == width - 1:
+					tile_atlas = template["wall"]
+				else:
+					tile_atlas = template.get("fill", template["wall"])
+
+			buildings_layer.set_cell(tile_pos, SOURCE_BUILDINGS, tile_atlas)
 
 
 func _generate_borders() -> void:
