@@ -205,33 +205,34 @@ func _generate_roads_layer() -> void:
 
 # ==================== 建筑系统 (等待美工 Sprite 资源) ====================
 
-func spawn_building(building_id: String, position: Vector2, sprite_path: String) -> void:
+func spawn_building(building_id: String, pos: Vector2, sprite_path: String) -> void:
 	"""动态生成建筑 Sprite - 供美工资源加载后使用"""
 	var building_sprite = Sprite2D.new()
 	building_sprite.name = building_id
-	building_sprite.position = position
+	building_sprite.position = pos
 	building_sprite.texture = load(sprite_path)
 	# Y-sorting 自动处理遮挡
 	buildings_container.add_child(building_sprite)
-	print("[Village] 建筑生成: %s at %s" % [building_id, position])
+	print("[Village] 建筑生成: %s at %s" % [building_id, pos])
 
 
-func spawn_decoration(decoration_id: String, position: Vector2, sprite_path: String, has_collision: bool = false) -> void:
+func spawn_decoration(decoration_id: String, pos: Vector2, sprite_path: String, has_collision: bool = false) -> void:
 	"""动态生成装饰物 Sprite"""
-	var decoration = StaticBody2D.new() if has_collision else Sprite2D.new()
-	decoration.name = decoration_id
-	decoration.position = position
-
+	var decoration: Node2D
 	if has_collision:
+		decoration = StaticBody2D.new()
 		var sprite = Sprite2D.new()
 		sprite.texture = load(sprite_path)
 		decoration.add_child(sprite)
 		# TODO: 添加碰撞形状
 	else:
+		decoration = Sprite2D.new()
 		decoration.texture = load(sprite_path)
 
+	decoration.name = decoration_id
+	decoration.position = pos
 	decorations_container.add_child(decoration)
-	print("[Village] 装饰物生成: %s at %s" % [decoration_id, position])
+	print("[Village] 装饰物生成: %s at %s" % [decoration_id, pos])
 
 
 # ==================== 村民生成 ====================

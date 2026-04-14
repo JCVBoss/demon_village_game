@@ -26,7 +26,6 @@ size = Vector2(32, 1600)
 script = ExtResource("1_village")
 
 [node name="TileMapRoot" type="Node2D" parent="."]
-# 地面层 - 不参与 Y-sorting，始终在底部
 
 [node name="Ground" type="TileMapLayer" parent="TileMapRoot"]
 tile_set = ExtResource("9_tileset")
@@ -42,20 +41,15 @@ z_index = -5
 
 [node name="YSortRoot" type="Node2D" parent="."]
 y_sort_enabled = true
-# Y-sorting 层 - 建筑、装饰、NPC、玩家按 Y 坐标排序
 
 [node name="Decorations" type="Node2D" parent="YSortRoot"]
-# 装饰物容器（树木、路灯等）- 等待 Sprite 资源
 
 [node name="Buildings" type="Node2D" parent="YSortRoot"]
-# 建筑容器 - 等待美工 Sprite 资源
 
 [node name="Villagers" type="Node2D" parent="YSortRoot"]
-# 村民容器 - Y-sorting 自动排序
 
 [node name="Player" parent="YSortRoot" instance=ExtResource("2_player")]
 position = Vector2(960, 800)
-# 玩家 - Y-sorting 自动排序
 
 [node name="Camera2D" type="Camera2D" parent="YSortRoot/Player"]
 enabled = true
@@ -69,7 +63,6 @@ position_smoothing_enabled = true
 position_smoothing_speed = 8.0
 
 [node name="MapBoundaries" type="Node2D" parent="."]
-# 边界碰撞 - 不参与渲染排序
 
 [node name="NorthWall" type="StaticBody2D" parent="MapBoundaries"]
 collision_layer = 2
@@ -107,7 +100,6 @@ shape = SubResource("RectangleShape2D_east")
 color = Color(1, 1, 1, 1)
 
 [node name="UIRoot" type="CanvasLayer" parent="."]
-# UI 层 - 不参与 Y-sorting
 
 [node name="TopBar" type="PanelContainer" parent="UIRoot"]
 layout_mode = 1
