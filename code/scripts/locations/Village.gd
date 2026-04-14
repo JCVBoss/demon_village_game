@@ -61,8 +61,9 @@ const TILE_SIZE: int = 64
 const SOURCE_GRASS: int = 0
 const SOURCE_ROADS: int = 1
 const SOURCE_BUILDINGS: int = 2
-const SOURCE_WATER: int = 3
-const SOURCE_BORDERS: int = 4
+const SOURCE_DECORATIONS: int = 3
+const SOURCE_WATER: int = 4
+const SOURCE_BORDERS: int = 5
 
 # 事件触发器配置
 const TRIGGER_CONFIG_PATH: String = "res://resources/events/village_triggers.json"
