@@ -9,14 +9,16 @@ signal villager_selected(villager_id: String)
 @export var village_name: String = "暮色村"
 
 # ==================== 节点引用 ====================
-# 地面层 (TileMap) - 不参与 Y-sorting，始终在底部
+# 地面层 (TileMap) - 不参与 Y-sorting
 @onready var ground_layer: TileMapLayer = $TileMapRoot/Ground
 @onready var roads_layer: TileMapLayer = $TileMapRoot/Roads
 @onready var water_layer: TileMapLayer = $TileMapRoot/Water
+@onready var borders_layer: TileMapLayer = $TileMapRoot/Borders
+@onready var decorations_layer: TileMapLayer = $TileMapRoot/Decorations
 
 # Y-sorting 层 - 建筑、装饰、NPC、玩家按 Y 坐标排序
 @onready var y_sort_root: Node2D = $YSortRoot
-@onready var decorations_container: Node2D = $YSortRoot/Decorations
+@onready var decorations_container: Node2D = $YSortRoot/SpritesDecorations
 @onready var buildings_container: Node2D = $YSortRoot/Buildings
 @onready var villagers_container: Node2D = $YSortRoot/Villagers
 @onready var player: CharacterBody2D = $YSortRoot/Player
@@ -64,7 +66,9 @@ const TILE_SIZE: int = 64
 # TileSet 源索引 (与 VillageTileset.tres 一致)
 const SOURCE_GRASS: int = 0
 const SOURCE_ROADS: int = 1
+const SOURCE_BUILDINGS: int = 2
 const SOURCE_WATER: int = 3
+const SOURCE_BORDERS: int = 4
 
 # 事件触发器配置
 const TRIGGER_CONFIG_PATH: String = "res://resources/events/village_triggers.json"
@@ -88,6 +92,8 @@ func _ready() -> void:
 	# 生成地面和道路 (TileMap)
 	_generate_ground_layer()
 	_generate_roads_layer()
+	_generate_borders_layer()
+	_generate_decorations_layer()
 
 	# 生成村民
 	_spawn_villagers()
@@ -168,12 +174,11 @@ func _on_trigger_activated(trigger_id: String, trigger_data: Dictionary) -> void
 # ==================== 地图生成 (TileMap 仅用于地面) ====================
 
 func _generate_ground_layer() -> void:
-	"""生成草地层 - 使用统一瓦片避免分界线"""
+	"""生成草地层 - 使用统一瓦片"""
 	if not ground_layer:
 		return
 
-	# 使用统一的草地瓦片样式，避免相邻瓦片有明显分界
-	# grass.png 是 4x4 atlas，使用 (0,0) 作为基础草地
+	# 使用统一的草地瓦片
 	var base_grass = Vector2i(0, 0)
 
 	for x in range(MAP_WIDTH):
@@ -184,26 +189,100 @@ func _generate_ground_layer() -> void:
 
 
 func _generate_roads_layer() -> void:
-	"""生成道路层 - 按设计文档"""
+	"""生成道路层 - 按设计文档布局草图"""
 	if not roads_layer:
 		return
 
-	# 东西向主干道 (3 瓦片宽，y=10-12)
+	# 道路瓦片样式
+	var road_normal = Vector2i(0, 0)  # 普通道路
+	var road_square = Vector2i(1, 0)  # 广场/交汇处道路
+
+	# ===== 东西向主干道 =====
+	# 从西侧 (x=4) 到东侧 (x=25)，3瓦片宽 (y=10,11,12)
 	for x in range(4, 26):
 		for y in range(10, 13):
-			roads_layer.set_cell(Vector2i(x, y), SOURCE_ROADS, Vector2i(0, 0))
+			roads_layer.set_cell(Vector2i(x, y), SOURCE_ROADS, road_normal)
 
-	# 南北向主干道 (3 瓦片宽，x=14-16)
-	for y in range(10, 20):
+	# ===== 南北向主干道 =====
+	# 从广场中心 (y=10) 向南到村南门 (y=22)，3瓦片宽 (x=14,15,16)
+	for y in range(13, 23):
 		for x in range(14, 17):
-			roads_layer.set_cell(Vector2i(x, y), SOURCE_ROADS, Vector2i(0, 0))
+			roads_layer.set_cell(Vector2i(x, y), SOURCE_ROADS, road_normal)
 
-	# 广场区域 (x=12-17, y=10-13)
+	# ===== 广场区域 =====
+	# 中央交汇广场，比普通道路稍大
+	# x=12-17 (6瓦片), y=9-13 (5瓦片)
 	for x in range(12, 18):
-		for y in range(10, 14):
-			roads_layer.set_cell(Vector2i(x, y), SOURCE_ROADS, Vector2i(2, 0))
+		for y in range(9, 14):
+			roads_layer.set_cell(Vector2i(x, y), SOURCE_ROADS, road_square)
+
+	# ===== 村南门区域 =====
+	# 通往森林的出口，x=13-17, y=22-23
+	for x in range(13, 18):
+		for y in range(22, 24):
+			roads_layer.set_cell(Vector2i(x, y), SOURCE_ROADS, road_square)
+
+	# ===== 支路连接 =====
+	# 铁匠铺前支路 (向西)
+	for x in range(1, 5):
+		for y in range(10, 12):
+			roads_layer.set_cell(Vector2i(x, y), SOURCE_ROADS, road_normal)
+
+	# 酒馆/商人行会前支路 (向东)
+	for x in range(26, 29):
+		for y in range(10, 12):
+			roads_layer.set_cell(Vector2i(x, y), SOURCE_ROADS, road_normal)
 
 	print("[Village] 道路系统生成完成")
+
+
+func _generate_borders_layer() -> void:
+	"""生成边界层 - 按设计文档（树木边界）"""
+	if not borders_layer:
+		return
+
+	var tree_tile = Vector2i(0, 0)  # 松树/边界树
+
+	# ===== 北边界 =====
+	# 行0-1，密集树木（黑潮方向）
+	for y in range(0, 2):
+		for x in range(MAP_WIDTH):
+			borders_layer.set_cell(Vector2i(x, y), SOURCE_BORDERS, tree_tile)
+
+	# ===== 西边界 =====
+	# 列0-1，树木边界
+	for x in range(0, 2):
+		for y in range(2, MAP_HEIGHT):
+			borders_layer.set_cell(Vector2i(x, y), SOURCE_BORDERS, tree_tile)
+
+	# ===== 东边界 =====
+	# 列28-29，树木边界
+	for x in range(28, 30):
+		for y in range(2, MAP_HEIGHT):
+			borders_layer.set_cell(Vector2i(x, y), SOURCE_BORDERS, tree_tile)
+
+	# ===== 南边界两侧 =====
+	# 村南门两侧的边界（中间是道路出口）
+	# 左侧 x=0-12, 右侧 x=18-29
+	for x in range(0, 13):
+		for y in range(24, 25):
+			borders_layer.set_cell(Vector2i(x, y), SOURCE_BORDERS, tree_tile)
+	for x in range(18, 30):
+		for y in range(24, 25):
+			borders_layer.set_cell(Vector2i(x, y), SOURCE_BORDERS, tree_tile)
+
+	print("[Village] 边界生成完成")
+
+
+func _generate_decorations_layer() -> void:
+	"""生成装饰物层 - 按设计文档"""
+	if not decorations_layer:
+		return
+
+	# 暂时用瓦片占位，等待美工 Sprite 资源
+	# 装饰物应该在 YSortRoot 中用 Sprite 渲染
+
+	print("[Village] 装饰物层待美工 Sprite 资源")
 
 
 # ==================== 建筑系统 (等待美工 Sprite 资源) ====================
