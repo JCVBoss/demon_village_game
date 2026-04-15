@@ -31,6 +31,39 @@ web_fetch failed (403): SECURITY NOTICE
 
 ---
 
+## 2026-04-15 - 文件路径错误 (cd 后未切换目录)
+
+### 错误描述
+```
+tile_0.png: cannot open `tile_0.png' (No such file or directory)
+```
+
+### 触发场景
+在 `/home/ubuntu/demon_village_game/code/assets/sprites/tilesets/` 目录下执行命令，但文件实际在 `opengameart_temp/` 子目录中
+
+### 原因分析
+- `cd opengameart_temp && ...` 后，后续命令仍在原目录执行
+- shell 命令链中 cd 只影响子 shell
+- 文件路径引用错误
+
+### 解决方案
+```bash
+# 错误：cd 后直接引用文件
+cd opengameart_temp && ... && file tile_0.png  # tile_0.png 在当前目录找
+
+# 正确：使用完整路径或确认当前目录
+cd opengameart_temp && file tile_0.png  # 单独命令
+# 或
+file opengameart_temp/tile_0.png  # 完整路径
+```
+
+### 经验教训
+- 命令链中的 `cd` 只影响该子 shell
+- 多步骤操作时，使用绝对路径更安全
+- 或者每个命令单独执行并确认目录
+
+---
+
 ## 通用错误处理指南
 
 ### exec 命令失败
