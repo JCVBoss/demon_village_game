@@ -168,14 +168,17 @@ func _on_trigger_activated(trigger_id: String, trigger_data: Dictionary) -> void
 # ==================== 地图生成 (TileMap 仅用于地面) ====================
 
 func _generate_ground_layer() -> void:
-	"""生成草地层"""
+	"""生成草地层 - 使用统一瓦片避免分界线"""
 	if not ground_layer:
 		return
 
+	# 使用统一的草地瓦片样式，避免相邻瓦片有明显分界
+	# grass.png 是 4x4 atlas，使用 (0,0) 作为基础草地
+	var base_grass = Vector2i(0, 0)
+
 	for x in range(MAP_WIDTH):
 		for y in range(MAP_HEIGHT):
-			var tile_coords = Vector2i(randi() % 4, 0)
-			ground_layer.set_cell(Vector2i(x, y), SOURCE_GRASS, tile_coords)
+			ground_layer.set_cell(Vector2i(x, y), SOURCE_GRASS, base_grass)
 
 	print("[Village] 草地层生成完成")
 
