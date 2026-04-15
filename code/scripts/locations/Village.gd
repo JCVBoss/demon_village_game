@@ -186,12 +186,13 @@ func _generate_ground_layer() -> void:
 		for y in range(MAP_HEIGHT):
 			ground_layer.set_cell(Vector2i(x, y), SOURCE_GRASS, base_grass)
 
-	print("[Village] 草地层生成完成")
+	print("[Village] 草地层生成完成: %d tiles, source=%d, atlas=%s" % [MAP_WIDTH * MAP_HEIGHT, SOURCE_GRASS, Vector2i(0, 0)])
 
 
 func _generate_roads_layer() -> void:
 	"""生成道路层 - 按设计文档布局草图"""
 	if not roads_layer:
+		print("[Village] ERROR: roads_layer is null!")
 		return
 
 	# 道路瓦片样式
@@ -234,7 +235,7 @@ func _generate_roads_layer() -> void:
 		for y in range(10, 12):
 			roads_layer.set_cell(Vector2i(x, y), SOURCE_ROADS, road_normal)
 
-	print("[Village] 道路系统生成完成")
+	print("[Village] 道路系统生成完成: ~150 tiles, source=%d" % SOURCE_ROADS)
 
 
 func _generate_borders_layer() -> void:
@@ -272,7 +273,7 @@ func _generate_borders_layer() -> void:
 		for y in range(24, 25):
 			borders_layer.set_cell(Vector2i(x, y), SOURCE_BORDERS, tree_tile)
 
-	print("[Village] 边界生成完成")
+	print("[Village] 边界生成完成: source=%d" % SOURCE_BORDERS)
 
 
 func _generate_decorations_layer() -> void:

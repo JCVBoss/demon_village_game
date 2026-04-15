@@ -161,7 +161,7 @@ func _generate_borders() -> void:
 
 	# 西边界
 	for y in range(map_size.y):
-		borders_layer.set_cell(Vector2i(0, y), SOURCE_BORDERS, Vector2I(0, 0))
+		borders_layer.set_cell(Vector2i(0, y), SOURCE_BORDERS, Vector2i(0, 0))
 		borders_layer.set_cell(Vector2i(1, y), SOURCE_BORDERS, Vector2i(1, 0))
 
 	# 东边界
@@ -171,7 +171,7 @@ func _generate_borders() -> void:
 
 # ==================== 建筑生成 ====================
 
-func place_building(building_id: String, pos: Vector2i, size: Vector2i, has_collision: bool = true) -> void:
+func place_building(_building_id: String, pos: Vector2i, size: Vector2i, _has_collision: bool = true) -> void:
 	"""放置建筑"""
 	if not buildings_layer:
 		return
