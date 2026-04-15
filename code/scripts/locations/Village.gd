@@ -9,16 +9,17 @@ signal villager_selected(villager_id: String)
 @export var village_name: String = "暮色村"
 
 # ==================== 节点引用 ====================
-# 地面层 (TileMap) - 不参与 Y-sorting
+# TileMap 图层 (按设计文档 z-index 规范)
 @onready var ground_layer: TileMapLayer = $TileMapRoot/Ground
 @onready var roads_layer: TileMapLayer = $TileMapRoot/Roads
+@onready var ground_decoration_layer: TileMapLayer = $TileMapRoot/GroundDecoration
 @onready var water_layer: TileMapLayer = $TileMapRoot/Water
+@onready var buildings_layer: TileMapLayer = $TileMapRoot/Buildings
 @onready var borders_layer: TileMapLayer = $TileMapRoot/Borders
-@onready var decorations_layer: TileMapLayer = $TileMapRoot/Decorations
 
-# Y-sorting 层 - 建筑、装饰、NPC、玩家按 Y 坐标排序
+# Objects 层 (YSort) - Sprite 实现，按 Y 坐标排序 (z=10)
 @onready var y_sort_root: Node2D = $YSortRoot
-@onready var decorations_container: Node2D = $YSortRoot/SpritesDecorations
+@onready var objects_container: Node2D = $YSortRoot/Objects
 @onready var buildings_container: Node2D = $YSortRoot/Buildings
 @onready var villagers_container: Node2D = $YSortRoot/Villagers
 @onready var player: CharacterBody2D = $YSortRoot/Player
@@ -275,14 +276,15 @@ func _generate_borders_layer() -> void:
 
 
 func _generate_decorations_layer() -> void:
-	"""生成装饰物层 - 按设计文档"""
-	if not decorations_layer:
+	"""生成地面装饰层 - 按设计文档"""
+	if not ground_decoration_layer:
 		return
 
-	# 暂时用瓦片占位，等待美工 Sprite 资源
-	# 装饰物应该在 YSortRoot 中用 Sprite 渲染
+	# 暂时留空，等待美工 Sprite 资源
+	# 地面装饰（花朵、石子）应该在 GroundDecoration TileMapLayer
+	# 或者作为 Sprite 在 Objects 层
 
-	print("[Village] 装饰物层待美工 Sprite 资源")
+	print("[Village] 地面装饰层待实现")
 
 
 # ==================== 建筑系统 (等待美工 Sprite 资源) ====================
@@ -313,7 +315,7 @@ func spawn_decoration(decoration_id: String, pos: Vector2, sprite_path: String, 
 
 	decoration.name = decoration_id
 	decoration.position = pos
-	decorations_container.add_child(decoration)
+	objects_container.add_child(decoration)
 	print("[Village] 装饰物生成: %s at %s" % [decoration_id, pos])
 
 
