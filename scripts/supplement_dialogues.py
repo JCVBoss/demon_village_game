@@ -333,6 +333,378 @@ def add_john_nodes(data):
     print("✅ 老约翰对话树补充完成：+8 节点")
     return data
 
+def add_xiaoan_nodes(data):
+    """补充小安的对话树（情感核心）"""
+    xiaoan = data['xiaoan']
+    nodes = xiaoan['dialogue_nodes']
+    
+    # 阶段 2：熟悉（信任 31-60）
+    nodes['meet_again'] = {
+        "node_id": "xiaoan_meet_again",
+        "trust_required": 31,
+        "day_range": [3, 5],
+        "lines": [
+            {"speaker": "xiaoan", "text": "（看到你，眼睛一亮）"},
+            {"speaker": "xiaoan", "text": "勇者哥哥/姐姐！你又来啦！"},
+            {"speaker": "xiaoan", "text": "（跑过来）我刚才在想你呢！"}
+        ],
+        "choices": [
+            {"text": "我也在想你", "trust_change": 10, "next_node": "miss_you"},
+            {"text": "今天玩了什么？", "trust_change": 5, "next_node": "play_today"},
+            {"text": "给你带了礼物", "trust_change": 15, "next_node": "give_gift"}
+        ]
+    }
+    
+    nodes['ask_father_detail'] = {
+        "node_id": "xiaoan_ask_father_detail",
+        "trust_required": 31,
+        "lines": [
+            {"speaker": "player", "text": "你爸爸...是什么样的人？"},
+            {"speaker": "xiaoan", "text": "（眼睛亮晶晶的）"},
+            {"speaker": "xiaoan", "text": "爸爸是英雄！他很厉害很厉害！"},
+            {"speaker": "xiaoan", "text": "（声音变小）但是...他去了很远的地方..."},
+            {"speaker": "xiaoan", "text": "（抬头看你）勇者哥哥/姐姐，爸爸会回来吗？"}
+        ],
+        "choices": [
+            {"text": "他会在天上守护你", "trust_change": 5, "next_node": "father_watch"},
+            {"text": "我不知道...", "trust_change": -5, "next_node": "honest_answer"},
+            {"text": "我会保护你的，像你爸爸一样", "trust_change": 15, "next_node": "protect_promise"}
+        ]
+    }
+    
+    nodes['play_together'] = {
+        "node_id": "xiaoan_play_together",
+        "trust_required": 31,
+        "lines": [
+            {"speaker": "xiaoan", "text": "（拿出石子）"},
+            {"speaker": "xiaoan", "text": "我们来玩游戏吧！"},
+            {"speaker": "xiaoan", "text": "（天真地笑）我教你！"}
+        ],
+        "choices": [
+            {"text": "好啊", "trust_change": 10, "next_node": None, "rewards": {"item": "pretty_stone"}},
+            {"text": "下次吧", "trust_change": -3, "next_node": None}
+        ]
+    }
+    
+    # 阶段 3：依赖（信任 61-100）
+    nodes['deep_talk'] = {
+        "node_id": "xiaoan_deep_talk",
+        "trust_required": 61,
+        "lines": [
+            {"speaker": "xiaoan", "text": "（突然安静下来）"},
+            {"speaker": "xiaoan", "text": "勇者哥哥/姐姐..."},
+            {"speaker": "xiaoan", "text": "（小声）我觉得...陈默叔叔在骗我。"},
+            {"speaker": "xiaoan", "text": "他说爸爸去了很远的地方..."},
+            {"speaker": "xiaoan", "text": "（眼泪在眼眶里打转）但是...爸爸是不是...回不来了？"}
+        ],
+        "choices": [
+            {"text": "（摸摸她的头）你很聪明", "trust_change": 10, "next_node": "truth_hint"},
+            {"text": "不要胡思乱想", "trust_change": -5, "next_node": "avoid_truth"},
+            {"text": "陈默叔叔是最爱你的人", "trust_change": 15, "next_node": "chenmo_love"}
+        ]
+    }
+    
+    nodes['truth_reveal_setup'] = {
+        "node_id": "xiaoan_truth_reveal_setup",
+        "trust_required": 81,
+        "event_flags_required": ["chenmo_secret_revealed"],
+        "lines": [
+            {"speaker": "xiaoan", "text": "（哭泣）"},
+            {"speaker": "xiaoan", "text": "原来...爸爸已经..."},
+            {"speaker": "xiaoan", "text": "（扑进你怀里）"},
+            {"speaker": "xiaoan", "text": "陈默叔叔...他一直都在保护我对不对？"},
+            {"speaker": "xiaoan", "text": "（抬起头）那我...也要保护陈默叔叔！"}
+        ],
+        "choices": [
+            {"text": "你已经是勇敢的孩子了", "trust_change": 15, "next_node": "brave_child"},
+            {"text": "我们一起守护彼此", "trust_change": 10, "next_node": None}
+        ]
+    }
+    
+    # 特殊节点：第 5 日村庄广场
+    nodes['day5_square_question'] = {
+        "node_id": "xiaoan_day5_square_question",
+        "trust_required": 31,
+        "day_range": [5, 5],
+        "lines": [
+            {"speaker": "xiaoan", "text": "（在广场上找你）"},
+            {"speaker": "xiaoan", "text": "勇者哥哥/姐姐！"},
+            {"speaker": "xiaoan", "text": "（认真地看着你）"},
+            {"speaker": "xiaoan", "text": "你说...长大以后，我能成为像爸爸那样的英雄吗？"}
+        ],
+        "choices": [
+            {"text": "你已经是小英雄了", "trust_change": 10, "next_node": None},
+            {"text": "英雄不是打打杀杀", "trust_change": 5, "next_node": "hero_meaning"}
+        ]
+    }
+    
+    # 特殊节点：第 8 日身世揭露
+    nodes['day8_revelation'] = {
+        "node_id": "xiaoan_day8_revelation",
+        "trust_required": 61,
+        "day_range": [8, 8],
+        "event_flags_required": ["xiaoan_secret_revealed"],
+        "lines": [
+            {"speaker": "xiaoan", "text": "（眼睛红肿）"},
+            {"speaker": "xiaoan", "text": "我都知道了..."},
+            {"speaker": "xiaoan", "text": "（小声）陈默叔叔...是我爸爸的战友。"},
+            {"speaker": "xiaoan", "text": "（擦干眼泪）他一直在保护我...一个人承受了这么多..."}
+        ],
+        "choices": [
+            {"text": "他是个好人", "trust_change": 5, "next_node": None},
+            {"text": "去抱抱他吧", "trust_change": 10, "next_node": "hug_chenmo"}
+        ]
+    }
+    
+    # 特殊节点：第 10 日决战后
+    nodes['day10_aftermath'] = {
+        "node_id": "xiaoan_day10_aftermath",
+        "trust_required": 81,
+        "day_range": [10, 10],
+        "lines": [
+            {"speaker": "xiaoan", "text": "（站在广场上）"},
+            {"speaker": "xiaoan", "text": "勇者哥哥/姐姐..."},
+            {"speaker": "xiaoan", "text": "（微笑，但眼里有泪光）"},
+            {"speaker": "xiaoan", "text": "谢谢你。"},
+            {"speaker": "xiaoan", "text": "我会...好好活下去的。"}
+        ],
+        "choices": [
+            {"text": "你爸爸会为你骄傲", "trust_change": 0, "next_node": None, "ending_influence": "good"},
+            {"text": "未来还很长", "trust_change": 0, "next_node": None}
+        ]
+    }
+    
+    print("✅ 小安对话树补充完成：+8 节点")
+    return data
+
+def add_yeya_nodes(data):
+    """补充夜鸦的对话树（魔王卧底，剧情反转）"""
+    yeya = data['yeya']
+    nodes = yeya['dialogue_nodes']
+    
+    # 阶段 2：试探（信任 21-40）
+    nodes['suspicious_question'] = {
+        "node_id": "yeya_suspicious_question",
+        "trust_required": 21,
+        "lines": [
+            {"speaker": "yeya", "text": "（放下书）"},
+            {"speaker": "yeya", "text": "你...不像是普通的勇者。"},
+            {"speaker": "yeya", "text": "（目光锐利）你在隐瞒什么？"}
+        ],
+        "choices": [
+            {"text": "你也一样", "trust_change": 5, "next_node": "mutual_secret"},
+            {"text": "我没有隐瞒", "trust_change": -3, "next_node": "deny"},
+            {"text": "这不重要", "trust_change": 0, "next_node": None}
+        ]
+    }
+    
+    nodes['library_visit'] = {
+        "node_id": "yeya_library_visit",
+        "trust_required": 21,
+        "lines": [
+            {"speaker": "yeya", "text": "又来看书？"},
+            {"speaker": "yeya", "text": "（递给你一本旧书）"},
+            {"speaker": "yeya", "text": "这本...或许对你有帮助。"},
+            {"speaker": "narrator", "text": "（书中记载着魔王军的历史）"}
+        ],
+        "choices": [
+            {"text": "谢谢", "trust_change": 10, "next_node": None, "rewards": {"item": "old_book"}},
+            {"text": "为什么帮我？", "trust_change": 5, "next_node": "why_help"}
+        ]
+    }
+    
+    # 阶段 3：动摇（信任 41-60）
+    nodes['inner_conflict'] = {
+        "node_id": "yeya_inner_conflict",
+        "trust_required": 41,
+        "lines": [
+            {"speaker": "yeya", "text": "（看着村庄的灯火）"},
+            {"speaker": "yeya", "text": "有时候...我在想。"},
+            {"speaker": "yeya", "text": "（声音低沉）这样的平静，还能持续多久？"},
+            {"speaker": "narrator", "text": "（他的眼神复杂）"}
+        ],
+        "choices": [
+            {"text": "你在担心什么？", "trust_change": 5, "next_node": "worry_what"},
+            {"text": "我们会守护它", "trust_change": 10, "next_node": "protect_village"},
+            {"text": "你知道些什么？", "trust_change": 3, "next_node": "know_something"}
+        ]
+    }
+    
+    nodes['demon_army_truth'] = {
+        "node_id": "yeya_demon_army_truth",
+        "trust_required": 41,
+        "lines": [
+            {"speaker": "yeya", "text": "（沉默很久）"},
+            {"speaker": "yeya", "text": "魔王军...不全是怪物。"},
+            {"speaker": "yeya", "text": "（看着你）很多人...只是被卷入了战争。"},
+            {"speaker": "yeya", "text": "就像这个村子里的人一样。"}
+        ],
+        "choices": [
+            {"text": "你是魔王军的人？", "trust_change": -5, "next_node": "confront_identity"},
+            {"text": "我明白你的意思", "trust_change": 10, "next_node": "understand"}
+        ]
+    }
+    
+    # 阶段 4：抉择（信任 61-100）
+    nodes['receive_order'] = {
+        "node_id": "yeya_receive_order",
+        "trust_required": 61,
+        "day_range": [7, 7],
+        "lines": [
+            {"speaker": "yeya", "text": "（脸色苍白）"},
+            {"speaker": "yeya", "text": "我收到了...进攻的命令。"},
+            {"speaker": "yeya", "text": "（看着你）第十日...魔王军会进攻村子。"},
+            {"speaker": "yeya", "text": "（声音颤抖）我...该怎么办？"}
+        ],
+        "choices": [
+            {"text": "背叛他们，加入我们", "trust_change": 15, "next_node": "join_us"},
+            {"text": "逃离这里", "trust_change": 5, "next_node": "escape"},
+            {"text": "我不知道...", "trust_change": -5, "next_node": None}
+        ]
+    }
+    
+    nodes['identity_reveal'] = {
+        "node_id": "yeya_identity_reveal",
+        "trust_required": 81,
+        "event_flags_required": ["yeya_order_received"],
+        "lines": [
+            {"speaker": "yeya", "text": "（深吸一口气）"},
+            {"speaker": "yeya", "text": "是时候告诉你真相了。"},
+            {"speaker": "yeya", "text": "（直视你的眼睛）"},
+            {"speaker": "yeya", "text": "我是魔王军的情报官，代号'夜鸦'。"},
+            {"speaker": "yeya", "text": "（苦笑）很讽刺吧？"}
+        ],
+        "choices": [
+            {"text": "我早就知道了", "trust_change": 5, "next_node": "already_knew"},
+            {"text": "但你已经选择了", "trust_change": 15, "next_node": "chosen_side"},
+            {"text": "我不在乎", "trust_change": 10, "next_node": "dont_care"}
+        ]
+    }
+    
+    nodes['final_choice'] = {
+        "node_id": "yeya_final_choice",
+        "trust_required": 81,
+        "day_range": [9, 9],
+        "lines": [
+            {"speaker": "yeya", "text": "明天...就是决战。"},
+            {"speaker": "yeya", "text": "（他看着你）"},
+            {"speaker": "yeya", "text": "我已经做出了选择。"},
+            {"speaker": "yeya", "text": "我会...倒戈。"},
+            {"speaker": "yeya", "text": "（微笑）这或许是我第一次为自己而活。"}
+        ],
+        "choices": [
+            {"text": "欢迎加入", "trust_change": 20, "next_node": None, "rewards": {"ally": "yeya"}},
+            {"text": "谢谢你", "trust_change": 15, "next_node": None}
+        ]
+    }
+    
+    # 特殊节点：第 10 日多结局
+    nodes['day10_ending_branch'] = {
+        "node_id": "yeya_day10_ending_branch",
+        "trust_required": 81,
+        "day_range": [10, 10],
+        "lines": [
+            {"speaker": "yeya", "text": "（站在战场上）"},
+            {"speaker": "yeya", "text": "（看向你，点头）"},
+            {"speaker": "narrator", "text": "（他拔剑，指向魔王军）"}
+        ],
+        "choices": [
+            {"text": "并肩作战", "trust_change": 0, "next_node": None, "ending_influence": "yeya_defect"},
+            {"text": "活下去", "trust_change": 0, "next_node": None}
+        ]
+    }
+    
+    print("✅ 夜鸦对话树补充完成：+10 节点")
+    return data
+
+def add_ying_nodes(data):
+    """补充影的对话树（前情报官，隐藏任务）"""
+    ying = data['ying']
+    nodes = ying['dialogue_nodes']
+    
+    # 阶段 2：试探（信任 21-40）
+    nodes['stranger_warning'] = {
+        "node_id": "ying_stranger_warning",
+        "trust_required": 21,
+        "lines": [
+            {"speaker": "ying", "text": "（警惕地看着你）"},
+            {"speaker": "ying", "text": "你不该来这里。"},
+            {"speaker": "ying", "text": "（指向村外）回去吧。"}
+        ],
+        "choices": [
+            {"text": "为什么？", "trust_change": 0, "next_node": "why_here"},
+            {"text": "我只是路过", "trust_change": 2, "next_node": "just_passing"},
+            {"text": "你在隐藏什么？", "trust_change": -5, "next_node": "hide_something"}
+        ]
+    }
+    
+    nodes['intelligence_hint'] = {
+        "node_id": "ying_intelligence_hint",
+        "trust_required": 21,
+        "lines": [
+            {"speaker": "ying", "text": "（沉默片刻）"},
+            {"speaker": "ying", "text": "有些事情...不知道比知道好。"},
+            {"speaker": "ying", "text": "（转身）但如果你真的想知道..."},
+            {"speaker": "ying", "text": "去问老约翰。他知道的比我多。"}
+        ],
+        "choices": [
+            {"text": "谢谢提醒", "trust_change": 5, "next_node": None},
+            {"text": "你为什么不告诉我？", "trust_change": -3, "next_node": "why_not_tell"}
+        ]
+    }
+    
+    # 阶段 3：信任（信任 41-100）
+    nodes['secret_mission'] = {
+        "node_id": "ying_secret_mission",
+        "trust_required": 41,
+        "lines": [
+            {"speaker": "ying", "text": "（环顾四周，确认无人）"},
+            {"speaker": "ying", "text": "（低声）听着。"},
+            {"speaker": "ying", "text": "村子里...有魔王军的卧底。"},
+            {"speaker": "ying", "text": "（看着你）但不是你以为的那个人。"}
+        ],
+        "choices": [
+            {"text": "是谁？", "trust_change": 0, "next_node": "who_is_spy"},
+            {"text": "你为什么知道？", "trust_change": 5, "next_node": "why_know"},
+            {"text": "谢谢你的信任", "trust_change": 10, "next_node": "trust_thanks"}
+        ]
+    }
+    
+    nodes['demon_army_real_goal'] = {
+        "node_id": "ying_demon_army_real_goal",
+        "trust_required": 61,
+        "lines": [
+            {"speaker": "ying", "text": "（深吸一口气）"},
+            {"speaker": "ying", "text": "魔王军的目的...不是毁灭村子。"},
+            {"speaker": "ying", "text": "（压低声音）他们在找一样东西。"},
+            {"speaker": "ying", "text": "一件...封印在村子地下的神器。"}
+        ],
+        "choices": [
+            {"text": "什么神器？", "trust_change": 5, "next_node": "what_artifact"},
+            {"text": "谢谢你告诉我", "trust_change": 10, "next_node": None, "rewards": {"info": "demon_goal"}}
+        ]
+    }
+    
+    # 特殊节点：隐藏任务触发
+    nodes['hidden_mission'] = {
+        "node_id": "ying_hidden_mission",
+        "trust_required": 81,
+        "event_flags_required": ["ying_trust_max"],
+        "lines": [
+            {"speaker": "ying", "text": "（递给你一个信封）"},
+            {"speaker": "ying", "text": "如果你真的想帮忙..."},
+            {"speaker": "ying", "text": "把这个交给影的联络人。"},
+            {"speaker": "ying", "text": "（神秘地笑）在魔王的书房里。"}
+        ],
+        "choices": [
+            {"text": "我会的", "trust_change": 0, "next_node": None, "rewards": {"quest": "spy_letter"}},
+            {"text": "这太危险了", "trust_change": -5, "next_node": None}
+        ]
+    }
+    
+    print("✅ 影对话树补充完成：+5 节点")
+    return data
+
 def main():
     print("正在加载对话树...")
     data = load_dialogues()
@@ -342,7 +714,9 @@ def main():
     
     data = add_chenmo_nodes(data)
     data = add_john_nodes(data)
-    # 继续补充小安、夜鸦、影...
+    data = add_xiaoan_nodes(data)
+    data = add_yeya_nodes(data)
+    data = add_ying_nodes(data)
     
     print("\n保存对话树...")
     save_dialogues(data)
