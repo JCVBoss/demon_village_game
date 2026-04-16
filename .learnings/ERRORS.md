@@ -64,6 +64,52 @@ file opengameart_temp/tile_0.png  # 完整路径
 
 ---
 
+## 2026-04-16 - 瓦片边缘渐变导致平铺分界线
+
+### 错误描述
+草地瓦片大规模平铺时呈现"瓷砖片"效果，有明显的分界线
+
+### 触发场景
+使用 `tools/generate_tilesets.py` v1.0 生成的草地/道路/水域/边界瓦片
+
+### 原因分析
+```python
+# 错误的代码（v1.0）
+# 边缘稍微暗一点 ← 这就是问题！
+dist_from_edge = min(x, y, TILE_SIZE-1-x, TILE_SIZE-1-y)
+edge_factor = 1.0 - (dist_from_edge / (TILE_SIZE/2)) * 0.2
+```
+- 每个瓦片边缘都比中心暗
+- 多个瓦片拼接时，边缘形成暗线网格
+- 视觉效果像瓷砖地板，不自然
+
+### 解决方案
+```python
+# 正确的代码（v2.0）
+# 使用正弦波平滑噪声，边缘像素值一致
+noise = (
+    math.sin(x * 0.1) * math.cos(y * 0.1) +
+    math.sin(x * 0.05 + 1) * math.cos(y * 0.05 + 2)
+) * noise_scale
+
+# 细节装饰远离边缘（4-6px 留白）
+margin = 4
+x = random.randint(margin, TILE_SIZE - 1 - margin)
+```
+
+### 修复文件
+- `grass.png` - 草地瓦片
+- `roads.png` - 道路瓦片
+- `water.png` - 水域瓦片
+- `borders.png` - 边界瓦片
+
+### 经验教训
+- **无缝瓦片关键**: 边缘像素值必须一致，不能有渐变
+- **装饰细节**: 要远离边缘，避免拼接时穿帮
+- **测试方法**: 生成后立即在 Godot 中大规模平铺测试
+
+---
+
 ## 通用错误处理指南
 
 ### exec 命令失败
