@@ -45,31 +45,29 @@ var current_time: TimeOfDay = TimeOfDay.DAY
 # ==================== 配置 ====================
 const VillagerScene = preload("res://scenes/characters/Villager.tscn")
 
-# 村民位置配置 (ID -> 位置) - 按设计文档瓦片坐标×64+32
+# 村民位置配置 (ID -> 位置) - 16x16 瓦片坐标
 const VILLAGER_POSITIONS: Dictionary = {
-	"chenmo": Vector2(352, 352),     # (5,5) 陈默小屋
-	"leishu": Vector2(352, 672),      # (5,10) 铁匠铺
-	"jinling": Vector2(1440, 800),    # (22,12) 商人行会
-	"baizhi": Vector2(352, 992),      # (5,15) 白芷药园
-	"john": Vector2(992, 672),        # (15,10) 教堂
-	"daxiong": Vector2(1440, 672),    # (22,10) 酒馆
-	"ying": Vector2(1632, 992),       # (25,15) 影的住所
-	"xiaoan": Vector2(544, 992),      # (8,15) 学校
-	"ahu": Vector2(1312, 1184),       # (20,18) 守卫营房
-	"yeya": Vector2(1632, 352)        # (25,5) 观察点
+	"chenmo": Vector2(88, 88),       # (5,5) 陈默小屋
+	"leishu": Vector2(88, 168),      # (5,10) 铁匠铺
+	"jinling": Vector2(360, 200),    # (22,12) 商人行会
+	"baizhi": Vector2(88, 248),      # (5,15) 白芷药园
+	"john": Vector2(248, 168),       # (15,10) 教堂
+	"daxiong": Vector2(360, 168),    # (22,10) 酒馆
+	"ying": Vector2(408, 248),       # (25,15) 影的住所
+	"xiaoan": Vector2(136, 248),     # (8,15) 学校
+	"ahu": Vector2(328, 296),        # (20,18) 守卫营房
+	"yeya": Vector2(408, 88)         # (25,5) 观察点
 }
 
 # 地图尺寸配置
-const MAP_WIDTH: int = 30
-const MAP_HEIGHT: int = 25
-const TILE_SIZE: int = 64
+const MAP_WIDTH: int = 120
+const MAP_HEIGHT: int = 100
+const TILE_SIZE: int = 16
 
 # TileSet 源索引 (与 VillageTileset.tres 一致)
 const SOURCE_GRASS: int = 0
 const SOURCE_ROADS: int = 1
-const SOURCE_BUILDINGS: int = 2
-const SOURCE_WATER: int = 3
-const SOURCE_BORDERS: int = 4
+const SOURCE_WATER: int = 2
 
 # 事件触发器配置
 const TRIGGER_CONFIG_PATH: String = "res://resources/events/village_triggers.json"
@@ -190,7 +188,7 @@ func _generate_ground_layer() -> void:
 
 
 func _generate_roads_layer() -> void:
-	"""生成道路层 - 按设计文档布局草图"""
+	"""生成道路层 - 按设计文档布局草图 (16x16 瓦片)"""
 	if not roads_layer:
 		print("[Village] ERROR: roads_layer is null!")
 		return
@@ -200,28 +198,28 @@ func _generate_roads_layer() -> void:
 	var road_square = Vector2i(1, 0)  # 广场/交汇处道路
 
 	# ===== 东西向主干道 =====
-	# 从西侧 (x=4) 到东侧 (x=25)，3瓦片宽 (y=10,11,12)
-	for x in range(4, 26):
+	# 从西侧 (x=4) 到东侧 (x=26)，3瓦片宽 (y=10,11,12)
+	for x in range(4, 27):
 		for y in range(10, 13):
 			roads_layer.set_cell(Vector2i(x, y), SOURCE_ROADS, road_normal)
 
 	# ===== 南北向主干道 =====
-	# 从广场中心 (y=10) 向南到村南门 (y=22)，3瓦片宽 (x=14,15,16)
-	for y in range(13, 23):
+	# 从广场中心 (y=13) 向南到村南门 (y=23)，3瓦片宽 (x=14,15,16)
+	for y in range(13, 24):
 		for x in range(14, 17):
 			roads_layer.set_cell(Vector2i(x, y), SOURCE_ROADS, road_normal)
 
 	# ===== 广场区域 =====
 	# 中央交汇广场，比普通道路稍大
-	# x=12-17 (6瓦片), y=9-13 (5瓦片)
-	for x in range(12, 18):
-		for y in range(9, 14):
+	# x=12-18 (6瓦片), y=9-14 (5瓦片)
+	for x in range(12, 19):
+		for y in range(9, 15):
 			roads_layer.set_cell(Vector2i(x, y), SOURCE_ROADS, road_square)
 
 	# ===== 村南门区域 =====
-	# 通往森林的出口，x=13-17, y=22-23
-	for x in range(13, 18):
-		for y in range(22, 24):
+	# 通往森林的出口，x=13-18, y=22-24
+	for x in range(13, 19):
+		for y in range(22, 25):
 			roads_layer.set_cell(Vector2i(x, y), SOURCE_ROADS, road_square)
 
 	# ===== 支路连接 =====
@@ -231,11 +229,11 @@ func _generate_roads_layer() -> void:
 			roads_layer.set_cell(Vector2i(x, y), SOURCE_ROADS, road_normal)
 
 	# 酒馆/商人行会前支路 (向东)
-	for x in range(26, 29):
+	for x in range(27, 30):
 		for y in range(10, 12):
 			roads_layer.set_cell(Vector2i(x, y), SOURCE_ROADS, road_normal)
 
-	print("[Village] 道路系统生成完成: ~150 tiles, source=%d" % SOURCE_ROADS)
+	print("[Village] 道路系统生成完成")
 
 
 func _generate_borders_layer() -> void:
@@ -249,31 +247,31 @@ func _generate_borders_layer() -> void:
 	# 行0-1，密集树木（黑潮方向）
 	for y in range(0, 2):
 		for x in range(MAP_WIDTH):
-			borders_layer.set_cell(Vector2i(x, y), SOURCE_BORDERS, tree_tile)
+			borders_layer.set_cell(Vector2i(x, y), SOURCE_GRASS, tree_tile)
 
 	# ===== 西边界 =====
 	# 列0-1，树木边界
 	for x in range(0, 2):
 		for y in range(2, MAP_HEIGHT):
-			borders_layer.set_cell(Vector2i(x, y), SOURCE_BORDERS, tree_tile)
+			borders_layer.set_cell(Vector2i(x, y), SOURCE_GRASS, tree_tile)
 
 	# ===== 东边界 =====
-	# 列28-29，树木边界
-	for x in range(28, 30):
+	# 列118-119，树木边界
+	for x in range(MAP_WIDTH - 2, MAP_WIDTH):
 		for y in range(2, MAP_HEIGHT):
-			borders_layer.set_cell(Vector2i(x, y), SOURCE_BORDERS, tree_tile)
+			borders_layer.set_cell(Vector2i(x, y), SOURCE_GRASS, tree_tile)
 
 	# ===== 南边界两侧 =====
 	# 村南门两侧的边界（中间是道路出口）
-	# 左侧 x=0-12, 右侧 x=18-29
+	# 左侧 x=0-12, 右侧 x=18-119
 	for x in range(0, 13):
-		for y in range(24, 25):
-			borders_layer.set_cell(Vector2i(x, y), SOURCE_BORDERS, tree_tile)
-	for x in range(18, 30):
-		for y in range(24, 25):
-			borders_layer.set_cell(Vector2i(x, y), SOURCE_BORDERS, tree_tile)
+		for y in range(MAP_HEIGHT - 1, MAP_HEIGHT):
+			borders_layer.set_cell(Vector2i(x, y), SOURCE_GRASS, tree_tile)
+	for x in range(18, MAP_WIDTH):
+		for y in range(MAP_HEIGHT - 1, MAP_HEIGHT):
+			borders_layer.set_cell(Vector2i(x, y), SOURCE_GRASS, tree_tile)
 
-	print("[Village] 边界生成完成: source=%d" % SOURCE_BORDERS)
+	print("[Village] 边界生成完成")
 
 
 func _generate_decorations_layer() -> void:

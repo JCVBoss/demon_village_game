@@ -81,7 +81,7 @@ collision_layer = 2
 collision_mask = 0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="MapBoundaries/NorthWall"]
-position = Vector2(960, 16)
+position = Vector2(960, 8)
 shape = SubResource("RectangleShape2D_north")
 
 [node name="SouthWall" type="StaticBody2D" parent="MapBoundaries"]
@@ -89,7 +89,7 @@ collision_layer = 2
 collision_mask = 0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="MapBoundaries/SouthWall"]
-position = Vector2(960, 1584)
+position = Vector2(960, 1592)
 shape = SubResource("RectangleShape2D_south")
 
 [node name="WestWall" type="StaticBody2D" parent="MapBoundaries"]
@@ -97,7 +97,7 @@ collision_layer = 2
 collision_mask = 0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="MapBoundaries/WestWall"]
-position = Vector2(16, 800)
+position = Vector2(8, 800)
 shape = SubResource("RectangleShape2D_west")
 
 [node name="EastWall" type="StaticBody2D" parent="MapBoundaries"]
@@ -105,7 +105,7 @@ collision_layer = 2
 collision_mask = 0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="MapBoundaries/EastWall"]
-position = Vector2(1904, 800)
+position = Vector2(1912, 800)
 shape = SubResource("RectangleShape2D_east")
 
 [node name="TimeOverlay" type="CanvasModulate" parent="."]

@@ -1,120 +1,35 @@
-[gd_resource type="TileSet" load_steps=6 format=3 uid="uid://cvillagetileset001"]
+[gd_resource type="TileSet" load_steps=3 format=3 uid="uid://cvillagetileset001"]
 
-[ext_resource type="Texture2D" path="res://assets/sprites/tilesets/grass_opengameart.png" id="1_grass"]
-[ext_resource type="Texture2D" path="res://assets/sprites/tilesets/roads.png" id="2_roads"]
-[ext_resource type="Texture2D" path="res://assets/sprites/tilesets/buildings.png" id="3_buildings"]
-[ext_resource type="Texture2D" path="res://assets/sprites/tilesets/water.png" id="4_water"]
-[ext_resource type="Texture2D" path="res://assets/sprites/tilesets/borders.png" id="5_borders"]
+[ext_resource type="Texture2D" path="res://assets/sprites/tilesets/openrpg_downloaded/1.png" id="1_openrpg"]
+[ext_resource type="Texture2D" path="res://assets/sprites/tilesets/openrpg_downloaded/2.png" id="2_openrpg2"]
+[ext_resource type="Texture2D" path="res://assets/sprites/tilesets/openrpg_downloaded/5.png" id="3_openrpg5"]
 
 [sub_resource type="TileSetAtlasSource" id="source_grass"]
-texture = ExtResource("1_grass")
-texture_region_size = Vector2i(64, 64)
+texture = ExtResource("1_openrpg")
+texture_region_size = Vector2i(16, 16)
+# Grass tiles from OpenRPG 1.png - rows 1-4, cols 1-4
 0:0/0 = 0
 1:0/0 = 0
+2:0/0 = 0
+3:0/0 = 0
 0:1/0 = 0
 1:1/0 = 0
+2:1/0 = 0
+3:1/0 = 0
 
 [sub_resource type="TileSetAtlasSource" id="source_roads"]
-texture = ExtResource("2_roads")
-texture_region_size = Vector2i(64, 64)
+texture = ExtResource("2_openrpg2")
+texture_region_size = Vector2i(16, 16)
+# Road/dirt tiles from OpenRPG 2.png
 0:0/0 = 0
 1:0/0 = 0
 2:0/0 = 0
 3:0/0 = 0
-0:1/0 = 0
-1:1/0 = 0
-2:1/0 = 0
-3:1/0 = 0
-0:2/0 = 0
-1:2/0 = 0
-2:2/0 = 0
-3:2/0 = 0
-0:3/0 = 0
-1:3/0 = 0
-2:3/0 = 0
-3:3/0 = 0
-
-[sub_resource type="TileSetAtlasSource" id="source_buildings"]
-texture = ExtResource("3_buildings")
-texture_region_size = Vector2i(64, 64)
-0:0/0 = 0
-0:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-32, -32, 32, -32, 32, 32, -32, 32)
-1:0/0 = 0
-1:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-32, -32, 32, -32, 32, 32, -32, 32)
-2:0/0 = 0
-2:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-32, -32, 32, -32, 32, 32, -32, 32)
-3:0/0 = 0
-3:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-32, -32, 32, -32, 32, 32, -32, 32)
-0:1/0 = 0
-0:1/0/physics_layer_0/polygon_0/points = PackedVector2Array(-32, -32, 32, -32, 32, 32, -32, 32)
-1:1/0 = 0
-1:1/0/physics_layer_0/polygon_0/points = PackedVector2Array(-32, -32, 32, -32, 32, 32, -32, 32)
-2:1/0 = 0
-3:1/0 = 0
-0:2/0 = 0
-0:2/0/physics_layer_0/polygon_0/points = PackedVector2Array(-32, -32, 32, -32, 32, 32, -32, 32)
-1:2/0 = 0
-1:2/0/physics_layer_0/polygon_0/points = PackedVector2Array(-32, -32, 32, -32, 32, 32, -32, 32)
-2:2/0 = 0
-2:2/0/physics_layer_0/polygon_0/points = PackedVector2Array(-32, -32, 32, -32, 32, 32, -32, 32)
-3:2/0 = 0
-3:2/0/physics_layer_0/polygon_0/points = PackedVector2Array(-32, -32, 32, -32, 32, 32, -32, 32)
-0:3/0 = 0
-0:3/0/physics_layer_0/polygon_0/points = PackedVector2Array(-32, -32, 32, -32, 32, 32, -32, 32)
-1:3/0 = 0
-1:3/0/physics_layer_0/polygon_0/points = PackedVector2Array(-32, -32, 32, -32, 32, 32, -32, 32)
-2:3/0 = 0
-2:3/0/physics_layer_0/polygon_0/points = PackedVector2Array(-32, -32, 32, -32, 32, 32, -32, 32)
-3:3/0 = 0
-3:3/0/physics_layer_0/polygon_0/points = PackedVector2Array(-32, -32, 32, -32, 32, 32, -32, 32)
 
 [sub_resource type="TileSetAtlasSource" id="source_water"]
-texture = ExtResource("4_water")
-texture_region_size = Vector2i(64, 64)
-0:0/0 = 0
-0:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-32, -32, 32, -32, 32, 32, -32, 32)
-1:0/0 = 0
-1:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-32, -32, 32, -32, 32, 32, -32, 32)
-2:0/0 = 0
-2:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-32, -32, 32, -32, 32, 32, -32, 32)
-3:0/0 = 0
-3:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-32, -32, 32, -32, 32, 32, -32, 32)
-0:1/0 = 0
-0:1/0/physics_layer_0/polygon_0/points = PackedVector2Array(-32, -32, 32, -32, 32, 32, -32, 32)
-1:1/0 = 0
-1:1/0/physics_layer_0/polygon_0/points = PackedVector2Array(-32, -32, 32, -32, 32, 32, -32, 32)
-2:1/0 = 0
-2:1/0/physics_layer_0/polygon_0/points = PackedVector2Array(-32, -32, 32, -32, 32, 32, -32, 32)
-3:1/0 = 0
-3:1/0/physics_layer_0/polygon_0/points = PackedVector2Array(-32, -32, 32, -32, 32, 32, -32, 32)
-0:2/0 = 0
-0:2/0/physics_layer_0/polygon_0/points = PackedVector2Array(-32, -32, 32, -32, 32, 32, -32, 32)
-1:2/0 = 0
-1:2/0/physics_layer_0/polygon_0/points = PackedVector2Array(-32, -32, 32, -32, 32, 32, -32, 32)
-2:2/0 = 0
-2:2/0/physics_layer_0/polygon_0/points = PackedVector2Array(-32, -32, 32, -32, 32, 32, -32, 32)
-3:2/0 = 0
-3:2/0/physics_layer_0/polygon_0/points = PackedVector2Array(-32, -32, 32, -32, 32, 32, -32, 32)
-0:3/0 = 0
-0:3/0/physics_layer_0/polygon_0/points = PackedVector2Array(-32, -32, 32, -32, 32, 32, -32, 32)
-1:3/0 = 0
-1:3/0/physics_layer_0/polygon_0/points = PackedVector2Array(-32, -32, 32, -32, 32, 32, -32, 32)
-2:3/0 = 0
-2:3/0/physics_layer_0/polygon_0/points = PackedVector2Array(-32, -32, 32, -32, 32, 32, -32, 32)
-3:3/0 = 0
-3:3/0/physics_layer_0/polygon_0/points = PackedVector2Array(-32, -32, 32, -32, 32, 32, -32, 32)
-
-[sub_resource type="TileSetAtlasSource" id="source_borders"]
-texture = ExtResource("5_borders")
-texture_region_size = Vector2i(64, 64)
-0:0/0 = 0
-1:0/0 = 0
-2:0/0 = 0
-3:0/0 = 0
-0:1/0 = 0
-1:1/0 = 0
-2:1/0 = 0
-3:1/0 = 0
+texture = ExtResource("1_openrpg")
+texture_region_size = Vector2i(16, 16)
+# Water tiles from OpenRPG 1.png - rows 7-10, cols 6-9
 0:2/0 = 0
 1:2/0 = 0
 2:2/0 = 0
@@ -125,10 +40,8 @@ texture_region_size = Vector2i(64, 64)
 3:3/0 = 0
 
 [resource]
-tile_size = Vector2i(64, 64)
+tile_size = Vector2i(16, 16)
 physics_layer_0/collision_layer = 2
 sources/0 = SubResource("source_grass")
 sources/1 = SubResource("source_roads")
-sources/2 = SubResource("source_buildings")
-sources/3 = SubResource("source_water")
-sources/4 = SubResource("source_borders")
+sources/2 = SubResource("source_water")
