@@ -1,0 +1,339 @@
+{
+  "name": "像素艺术风格",
+  "version": "1.0",
+  "author": "游戏开发团队",
+  "description": "复古像素艺术风格",
+  "tile_size": 64,
+  "tilesets": {
+    "grass": {
+      "path": "tilesets/grass.png",
+      "columns": 4,
+      "rows": 1,
+      "placeholder": true
+    },
+    "roads": {
+      "path": "tilesets/roads.png",
+      "columns": 4,
+      "rows": 1,
+      "placeholder": true
+    },
+    "water": {
+      "path": "tilesets/water.png",
+      "columns": 4,
+      "rows": 1,
+      "placeholder": true
+    },
+    "borders": {
+      "path": "tilesets/borders.png",
+      "columns": 4,
+      "rows": 1,
+      "placeholder": true
+    }
+  },
+  "buildings": {
+    "blacksmith": {
+      "path": "buildings/building_blacksmith.png",
+      "size": [
+        256,
+        192
+      ],
+      "offset": [
+        0,
+        -96
+      ],
+      "placeholder": true
+    },
+    "church": {
+      "path": "buildings/building_church.png",
+      "size": [
+        320,
+        256
+      ],
+      "offset": [
+        0,
+        -128
+      ],
+      "placeholder": true
+    },
+    "tavern": {
+      "path": "buildings/building_tavern.png",
+      "size": [
+        320,
+        192
+      ],
+      "offset": [
+        0,
+        -96
+      ],
+      "placeholder": true
+    },
+    "merchant": {
+      "path": "buildings/building_merchant.png",
+      "size": [
+        256,
+        192
+      ],
+      "offset": [
+        0,
+        -96
+      ],
+      "placeholder": true
+    },
+    "school": {
+      "path": "buildings/building_school.png",
+      "size": [
+        192,
+        192
+      ],
+      "offset": [
+        0,
+        -96
+      ],
+      "placeholder": true
+    },
+    "chenmo_hut": {
+      "path": "buildings/building_chenmo_hut.png",
+      "size": [
+        192,
+        128
+      ],
+      "offset": [
+        0,
+        -64
+      ],
+      "placeholder": true
+    },
+    "baizhi_garden": {
+      "path": "buildings/building_baizhi_garden.png",
+      "size": [
+        256,
+        192
+      ],
+      "offset": [
+        0,
+        -96
+      ],
+      "placeholder": true
+    },
+    "guard_post": {
+      "path": "buildings/building_guard_post.png",
+      "size": [
+        256,
+        192
+      ],
+      "offset": [
+        0,
+        -96
+      ],
+      "placeholder": true
+    },
+    "abandoned_warehouse": {
+      "path": "buildings/building_abandoned_warehouse.png",
+      "size": [
+        192,
+        128
+      ],
+      "offset": [
+        0,
+        -64
+      ],
+      "placeholder": true
+    },
+    "ying_home": {
+      "path": "buildings/building_ying_home.png",
+      "size": [
+        192,
+        128
+      ],
+      "offset": [
+        0,
+        -64
+      ],
+      "placeholder": true
+    }
+  },
+  "decorations": {
+    "tree_pine": {
+      "path": "decorations/tree_pine.png",
+      "size": [
+        64,
+        128
+      ],
+      "has_collision": true,
+      "placeholder": true
+    },
+    "tree_oak": {
+      "path": "decorations/tree_oak.png",
+      "size": [
+        64,
+        96
+      ],
+      "has_collision": true,
+      "placeholder": true
+    },
+    "tree_fruit": {
+      "path": "decorations/tree_fruit.png",
+      "size": [
+        64,
+        96
+      ],
+      "has_collision": true,
+      "placeholder": true
+    },
+    "street_light": {
+      "path": "decorations/street_light.png",
+      "size": [
+        32,
+        96
+      ],
+      "has_collision": true,
+      "placeholder": true
+    },
+    "flower_bed": {
+      "path": "decorations/flower_bed.png",
+      "size": [
+        64,
+        64
+      ],
+      "has_collision": false,
+      "placeholder": true
+    },
+    "bench": {
+      "path": "decorations/bench.png",
+      "size": [
+        96,
+        32
+      ],
+      "has_collision": true,
+      "placeholder": true
+    },
+    "well": {
+      "path": "decorations/well.png",
+      "size": [
+        64,
+        96
+      ],
+      "has_collision": true,
+      "placeholder": true
+    },
+    "barrel": {
+      "path": "decorations/barrel.png",
+      "size": [
+        32,
+        32
+      ],
+      "has_collision": false,
+      "placeholder": true
+    }
+  },
+  "characters": {
+    "player": {
+      "path": "characters/player.png",
+      "size": [
+        64,
+        64
+      ],
+      "frames": 4,
+      "placeholder": true
+    },
+    "chenmo": {
+      "path": "characters/chenmo.png",
+      "size": [
+        64,
+        64
+      ],
+      "frames": 4,
+      "placeholder": true
+    },
+    "leishu": {
+      "path": "characters/leishu.png",
+      "size": [
+        64,
+        64
+      ],
+      "frames": 4,
+      "placeholder": true
+    },
+    "jinling": {
+      "path": "characters/jinling.png",
+      "size": [
+        64,
+        64
+      ],
+      "frames": 4,
+      "placeholder": true
+    },
+    "baizhi": {
+      "path": "characters/baizhi.png",
+      "size": [
+        64,
+        64
+      ],
+      "frames": 4,
+      "placeholder": true
+    },
+    "john": {
+      "path": "characters/john.png",
+      "size": [
+        64,
+        64
+      ],
+      "frames": 4,
+      "placeholder": true
+    },
+    "daxiong": {
+      "path": "characters/daxiong.png",
+      "size": [
+        64,
+        64
+      ],
+      "frames": 4,
+      "placeholder": true
+    },
+    "ying": {
+      "path": "characters/ying.png",
+      "size": [
+        64,
+        64
+      ],
+      "frames": 4,
+      "placeholder": true
+    },
+    "xiaoan": {
+      "path": "characters/xiaoan.png",
+      "size": [
+        64,
+        64
+      ],
+      "frames": 4,
+      "placeholder": true
+    },
+    "ahu": {
+      "path": "characters/ahu.png",
+      "size": [
+        64,
+        64
+      ],
+      "frames": 4,
+      "placeholder": true
+    },
+    "yeya": {
+      "path": "characters/yeya.png",
+      "size": [
+        64,
+        64
+      ],
+      "frames": 4,
+      "placeholder": true
+    }
+  },
+  "ui": {
+    "dialogue_box": "ui/dialogue_box.png",
+    "button_normal": "ui/button_normal.png",
+    "button_hover": "ui/button_hover.png",
+    "button_pressed": "ui/button_pressed.png"
+  },
+  "backgrounds": {
+    "village": "backgrounds/village_background.png"
+  }
+}

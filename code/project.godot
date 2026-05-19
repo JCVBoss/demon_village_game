@@ -26,6 +26,9 @@ TrustManager="*res://scripts/core/TrustManager.gd"
 EventManager="*res://scripts/core/EventManager.gd"
 EventTriggerSystem="*res://scripts/core/EventTriggerSystem.gd"
 SaveSystem="*res://scripts/core/SaveSystem.gd"
+ArtStyleManager="*res://scripts/core/ArtStyleManager.gd"
+DynamicTileSetManager="*res://scripts/core/DynamicTileSetManager.gd"
+ArtStyleIntegration="*res://scripts/core/ArtStyleIntegration.gd"
 
 [display]
 

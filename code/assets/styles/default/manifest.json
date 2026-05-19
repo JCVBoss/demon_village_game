@@ -1,0 +1,343 @@
+{
+  "name": "默认风格",
+  "version": "1.0",
+  "author": "游戏开发团队",
+  "description": "游戏默认的像素风格美术资源",
+  "tile_size": 64,
+  "tilesets": {
+    "grass": {
+      "path": "tilesets/grass.png",
+      "columns": 4,
+      "rows": 1
+    },
+    "roads": {
+      "path": "tilesets/roads.png",
+      "columns": 4,
+      "rows": 1
+    },
+    "water": {
+      "path": "tilesets/water.png",
+      "columns": 4,
+      "rows": 1
+    },
+    "borders": {
+      "path": "tilesets/borders.png",
+      "columns": 4,
+      "rows": 1
+    }
+  },
+  "buildings": {
+    "blacksmith": {
+      "path": "buildings/building_blacksmith.png",
+      "size": [
+        256,
+        192
+      ],
+      "offset": [
+        0,
+        -96
+      ]
+    },
+    "church": {
+      "path": "buildings/building_church.png",
+      "size": [
+        320,
+        256
+      ],
+      "offset": [
+        0,
+        -128
+      ]
+    },
+    "tavern": {
+      "path": "buildings/building_tavern.png",
+      "size": [
+        320,
+        192
+      ],
+      "offset": [
+        0,
+        -96
+      ]
+    },
+    "merchant": {
+      "path": "buildings/building_merchant.png",
+      "size": [
+        256,
+        192
+      ],
+      "offset": [
+        0,
+        -96
+      ]
+    },
+    "school": {
+      "path": "buildings/building_school.png",
+      "size": [
+        192,
+        192
+      ],
+      "offset": [
+        0,
+        -96
+      ]
+    },
+    "chenmo_hut": {
+      "path": "buildings/building_chenmo_hut.png",
+      "size": [
+        192,
+        128
+      ],
+      "offset": [
+        0,
+        -64
+      ]
+    },
+    "baizhi_garden": {
+      "path": "buildings/building_baizhi_garden.png",
+      "size": [
+        256,
+        192
+      ],
+      "offset": [
+        0,
+        -96
+      ]
+    },
+    "guard_post": {
+      "path": "buildings/building_guard_post.png",
+      "size": [
+        256,
+        192
+      ],
+      "offset": [
+        0,
+        -96
+      ]
+    },
+    "abandoned_warehouse": {
+      "path": "buildings/building_abandoned_warehouse.png",
+      "size": [
+        192,
+        128
+      ],
+      "offset": [
+        0,
+        -64
+      ]
+    },
+    "ying_home": {
+      "path": "buildings/building_ying_home.png",
+      "size": [
+        192,
+        128
+      ],
+      "offset": [
+        0,
+        -64
+      ]
+    }
+  },
+  "decorations": {
+    "tree_pine": {
+      "path": "decorations/tree_pine.png",
+      "size": [
+        64,
+        128
+      ],
+      "has_collision": true
+    },
+    "tree_oak": {
+      "path": "decorations/tree_oak.png",
+      "size": [
+        64,
+        96
+      ],
+      "has_collision": true
+    },
+    "tree_fruit": {
+      "path": "decorations/tree_fruit.png",
+      "size": [
+        64,
+        96
+      ],
+      "has_collision": true
+    },
+    "street_light": {
+      "path": "decorations/street_light.png",
+      "size": [
+        32,
+        96
+      ],
+      "has_collision": true
+    },
+    "flower_bed": {
+      "path": "decorations/flower_bed.png",
+      "size": [
+        64,
+        64
+      ],
+      "has_collision": false
+    },
+    "bench": {
+      "path": "decorations/bench.png",
+      "size": [
+        96,
+        32
+      ],
+      "has_collision": true
+    },
+    "well": {
+      "path": "decorations/well.png",
+      "size": [
+        64,
+        96
+      ],
+      "has_collision": true
+    },
+    "barrel": {
+      "path": "decorations/barrel.png",
+      "size": [
+        32,
+        32
+      ],
+      "has_collision": false
+    }
+  },
+  "characters": {
+    "player": {
+      "path": "characters/player.png",
+      "size": [
+        64,
+        64
+      ],
+      "frames": 4
+    },
+    "chenmo": {
+      "path": "characters/chenmo.png",
+      "size": [
+        64,
+        64
+      ],
+      "frames": 4
+    },
+    "leishu": {
+      "path": "characters/leishu.png",
+      "size": [
+        64,
+        64
+      ],
+      "frames": 4
+    },
+    "jinling": {
+      "path": "characters/jinling.png",
+      "size": [
+        64,
+        64
+      ],
+      "frames": 4
+    },
+    "baizhi": {
+      "path": "characters/baizhi.png",
+      "size": [
+        64,
+        64
+      ],
+      "frames": 4
+    },
+    "john": {
+      "path": "characters/john.png",
+      "size": [
+        64,
+        64
+      ],
+      "frames": 4
+    },
+    "daxiong": {
+      "path": "characters/daxiong.png",
+      "size": [
+        64,
+        64
+      ],
+      "frames": 4
+    },
+    "ying": {
+      "path": "characters/ying.png",
+      "size": [
+        64,
+        64
+      ],
+      "frames": 4
+    },
+    "xiaoan": {
+      "path": "characters/xiaoan.png",
+      "size": [
+        64,
+        64
+      ],
+      "frames": 4
+    },
+    "ahu": {
+      "path": "characters/ahu.png",
+      "size": [
+        64,
+        64
+      ],
+      "frames": 4
+    },
+    "yeya": {
+      "path": "characters/yeya.png",
+      "size": [
+        64,
+        64
+      ],
+      "frames": 4
+    }
+  },
+  "ui": {
+    "dialogue_box": {
+      "path": "ui/dialogue_box.png"
+    },
+    "button_normal": {
+      "path": "ui/button_normal.png"
+    },
+    "button_hover": {
+      "path": "ui/button_hover.png"
+    },
+    "button_pressed": {
+      "path": "ui/button_pressed.png"
+    },
+    "icon_dialogue": {
+      "path": "ui/icon_dialogue.png"
+    },
+    "icon_map": {
+      "path": "ui/icon_map.png"
+    },
+    "icon_save": {
+      "path": "ui/icon_save.png"
+    },
+    "icon_settings": {
+      "path": "ui/icon_settings.png"
+    }
+  },
+  "backgrounds": {
+    "village_day": {
+      "path": "backgrounds/village_day.png"
+    },
+    "village_twilight": {
+      "path": "backgrounds/village_twilight.png"
+    },
+    "village_night": {
+      "path": "backgrounds/village_night.png"
+    },
+    "forest_day": {
+      "path": "backgrounds/forest_day.png"
+    },
+    "forest_twilight": {
+      "path": "backgrounds/forest_twilight.png"
+    },
+    "forest_night": {
+      "path": "backgrounds/forest_night.png"
+    }
+  }
+}

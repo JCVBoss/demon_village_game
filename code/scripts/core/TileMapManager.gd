@@ -1,5 +1,6 @@
 ## TileMapManager - TileMap 地图管理器
 ## 负责加载地图配置、生成 TileMap、管理碰撞和区域切换
+## 集成 DynamicTileSetManager 支持美术风格切换
 extends Node
 class_name TileMapManager
 
@@ -24,20 +25,63 @@ var map_name: String = ""
 var map_size: Vector2i = Vector2i.ZERO
 var tile_size: int = 64
 
-# TileSet 源索引
-const SOURCE_GRASS: int = 0
-const SOURCE_ROADS: int = 1
-const SOURCE_BUILDINGS: int = 2
-const SOURCE_WATER: int = 3
-const SOURCE_BORDERS: int = 4
+# TileSet 源索引（由 DynamicTileSetManager 动态分配）
+var source_grass: int = -1
+var source_roads: int = -1
+var source_water: int = -1
+var source_borders: int = -1
+
+# TileSet 引用
+var current_tile_set: TileSet = null
 
 
 func _ready() -> void:
 	print("[TileMapManager] 初始化地图管理器")
+	_initialize_tile_set_from_style()
 	load_map_config(map_config_path)
 
 
 # ==================== 配置加载 ====================
+
+func _initialize_tile_set_from_style() -> void:
+	"""从当前美术风格初始化 TileSet"""
+	print("[TileMapManager] 从风格系统初始化 TileSet...")
+
+	if not DynamicTileSetManager:
+		print("[TileMapManager] DynamicTileSetManager 不可用，使用默认 TileSet")
+		return
+
+	current_tile_set = DynamicTileSetManager.create_tile_set_from_style()
+
+	# 记录源 ID 映射
+	source_grass = DynamicTileSetManager.get_tile_source_id("grass")
+	source_roads = DynamicTileSetManager.get_tile_source_id("roads")
+	source_water = DynamicTileSetManager.get_tile_source_id("water")
+	source_borders = DynamicTileSetManager.get_tile_source_id("borders")
+
+	print("[TileMapManager] TileSet 初始化完成 - grass:%d roads:%d water:%d borders:%d" % [
+		source_grass, source_roads, source_water, source_borders
+	])
+
+	# 连接风格切换信号
+	if ArtStyleManager:
+		ArtStyleManager.style_changed.connect(_on_art_style_changed_for_tilemap)
+
+
+func _on_art_style_changed_for_tilemap(new_style: String) -> void:
+	"""美术风格切换时重新初始化 TileSet"""
+	print("[TileMapManager] 风格切换，重新初始化 TileSet: %s" % new_style)
+
+	# 清除现有地图
+	clear_all_layers()
+
+	# 重新初始化 TileSet
+	_initialize_tile_set_from_style()
+
+	# 重新生成地图
+	if not map_config.is_empty():
+		generate_default_map()
+
 
 func load_map_config(path: String) -> bool:
 	"""加载地图配置文件"""
@@ -115,58 +159,76 @@ func _generate_ground_layer() -> void:
 	"""生成草地层"""
 	if not ground_layer:
 		return
+	if source_grass < 0:
+		push_warning("[TileMapManager] 草地 TileSet 源不可用")
+		return
 
 	# 填充整个地图为草地
 	for x in range(map_size.x):
 		for y in range(map_size.y):
 			# 使用随机草地瓦片增加变化
 			var tile_coords = Vector2i(randi() % 4, 0)
-			ground_layer.set_cell(Vector2i(x, y), SOURCE_GRASS, tile_coords)
+			ground_layer.set_cell(Vector2i(x, y), source_grass, tile_coords)
 
 
 func _generate_roads_layer() -> void:
 	"""生成道路层"""
 	if not roads_layer:
 		return
+	if source_roads < 0:
+		push_warning("[TileMapManager] 道路 TileSet 源不可用")
+		return
 
 	# 主干道：东西向 (y=12, 13)
 	for x in range(4, 26):
-		roads_layer.set_cell(Vector2i(x, 12), SOURCE_ROADS, Vector2i(0, 0))
-		roads_layer.set_cell(Vector2i(x, 13), SOURCE_ROADS, Vector2i(1, 0))
+		roads_layer.set_cell(Vector2i(x, 12), source_roads, Vector2i(0, 0))
+		roads_layer.set_cell(Vector2i(x, 13), source_roads, Vector2i(1, 0))
 
 	# 主干道：南北向 (x=14, 15)
 	for y in range(14, 24):
-		roads_layer.set_cell(Vector2i(14, y), SOURCE_ROADS, Vector2i(0, 0))
-		roads_layer.set_cell(Vector2i(15, y), SOURCE_ROADS, Vector2i(1, 0))
+		roads_layer.set_cell(Vector2i(14, y), source_roads, Vector2i(0, 0))
+		roads_layer.set_cell(Vector2i(15, y), source_roads, Vector2i(1, 0))
 
 	# 广场区域 (中心)
 	for x in range(12, 18):
 		for y in range(10, 14):
-			roads_layer.set_cell(Vector2i(x, y), SOURCE_ROADS, Vector2i(2, 0))
+			roads_layer.set_cell(Vector2i(x, y), source_roads, Vector2i(2, 0))
 
 
 func _generate_borders() -> void:
 	"""生成边界（树木）"""
 	if not borders_layer:
 		return
+	if source_borders < 0:
+		push_warning("[TileMapManager] 边界 TileSet 源不可用，使用草地源替代")
+		if source_grass < 0:
+			return
+		# 回退到草地源
+		for x in range(map_size.x):
+			borders_layer.set_cell(Vector2i(x, 0), source_grass, Vector2i(0, 1))
+			borders_layer.set_cell(Vector2i(x, 1), source_grass, Vector2i(0, 1))
+		for y in range(map_size.y):
+			borders_layer.set_cell(Vector2i(0, y), source_grass, Vector2i(0, 1))
+			borders_layer.set_cell(Vector2i(map_size.x - 1, y), source_grass, Vector2i(0, 1))
+		return
 
 	# 北边界
 	for x in range(map_size.x):
-		borders_layer.set_cell(Vector2i(x, 0), SOURCE_BORDERS, Vector2i(0, 0))
-		borders_layer.set_cell(Vector2i(x, 1), SOURCE_BORDERS, Vector2i(1, 0))
+		borders_layer.set_cell(Vector2i(x, 0), source_borders, Vector2i(0, 0))
+		borders_layer.set_cell(Vector2i(x, 1), source_borders, Vector2i(1, 0))
 
 	# 南边界
 	for x in range(map_size.x):
-		borders_layer.set_cell(Vector2i(x, map_size.y - 1), SOURCE_BORDERS, Vector2i(0, 0))
+		borders_layer.set_cell(Vector2i(x, map_size.y - 1), source_borders, Vector2i(0, 0))
 
 	# 西边界
 	for y in range(map_size.y):
-		borders_layer.set_cell(Vector2i(0, y), SOURCE_BORDERS, Vector2i(0, 0))
-		borders_layer.set_cell(Vector2i(1, y), SOURCE_BORDERS, Vector2i(1, 0))
+		borders_layer.set_cell(Vector2i(0, y), source_borders, Vector2i(0, 0))
+		borders_layer.set_cell(Vector2i(1, y), source_borders, Vector2i(1, 0))
 
 	# 东边界
 	for y in range(map_size.y):
-		borders_layer.set_cell(Vector2i(map_size.x - 1, y), SOURCE_BORDERS, Vector2i(0, 0))
+		borders_layer.set_cell(Vector2i(map_size.x - 1, y), source_borders, Vector2i(0, 0))
 
 
 # ==================== 建筑生成 ====================

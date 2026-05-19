@@ -88,11 +88,18 @@ func _ready() -> void:
 	# 连接UI信号
 	_connect_ui_signals()
 
+	# 连接美术风格切换信号
+	_connect_art_style_signals()
+
 	# 生成地面和道路 (TileMap)
 	_generate_ground_layer()
 	_generate_roads_layer()
 	_generate_borders_layer()
 	_generate_decorations_layer()
+
+	# 从美术风格系统生成建筑和装饰物
+	_spawn_buildings_from_style()
+	_spawn_decorations_from_style()
 
 	# 生成村民
 	_spawn_villagers()
@@ -109,7 +116,7 @@ func _ready() -> void:
 	# 检查每日事件
 	EventManager.check_events(GameManager.current_day)
 
-	print("[Village] 地图初始化完成 - 建筑待美工资源")
+	print("[Village] 地图初始化完成 - 当前风格: %s" % ArtStyleManager.current_style)
 
 
 # ==================== 信号连接 ====================
@@ -146,6 +153,140 @@ func _connect_ui_signals() -> void:
 		save_load_ui.load_completed.connect(_on_load_completed)
 		save_load_ui.cancelled.connect(_on_save_load_cancelled)
 		save_load_ui.hide()
+
+
+func _connect_art_style_signals() -> void:
+	"""连接美术风格切换信号"""
+	if ArtStyleManager:
+		ArtStyleManager.style_changed.connect(_on_art_style_changed)
+
+
+# ==================== 美术风格系统集成 ====================
+
+func _spawn_buildings_from_style() -> void:
+	"""从当前美术风格生成所有建筑 Sprite"""
+	print("[Village] 从风格系统生成建筑...")
+
+	var building_configs: Dictionary = {
+		"blacksmith": Vector2(352, 672),
+		"church": Vector2(992, 672),
+		"tavern": Vector2(1440, 672),
+		"merchant": Vector2(1440, 800),
+		"school": Vector2(544, 992),
+		"chenmo_hut": Vector2(352, 352),
+		"baizhi_garden": Vector2(352, 992),
+		"guard_post": Vector2(1312, 1184),
+		"abandoned_warehouse": Vector2(1632, 352),
+		"ying_home": Vector2(1632, 992),
+	}
+
+	var spawned_count = 0
+	for building_id, pos in building_configs:
+		var building_data = ArtStyleManager.get_resource_data("building", building_id)
+		if building_data.is_empty():
+			print("[Village] 跳过建筑 %s: 资源数据为空" % building_id)
+			continue
+
+		var texture_path = building_data.get("full_path", "")
+		if texture_path.is_empty() or not ResourceLoader.exists(texture_path):
+			print("[Village] 跳过建筑 %s: 纹理不存在 %s" % [building_id, texture_path])
+			continue
+
+		var texture = load(texture_path)
+		if not texture:
+			continue
+
+		var offset = building_data.get("offset", [0, 0])
+		var final_pos = pos + Vector2(offset[0], offset[1])
+
+		var building_sprite = Sprite2D.new()
+		building_sprite.name = building_id
+		building_sprite.position = final_pos
+		building_sprite.texture = texture
+		building_sprite.z_index = 5  # 建筑在 Y-sort 中正确排序
+
+		buildings_container.add_child(building_sprite)
+		spawned_count += 1
+		print("[Village] 生成建筑: %s at %s" % [building_id, final_pos])
+
+	print("[Village] 建筑生成完成: %d/%d" % [spawned_count, building_configs.size()])
+
+
+func _spawn_decorations_from_style() -> void:
+	"""从当前美术风格生成装饰物 Sprite"""
+	print("[Village] 从风格系统生成装饰物...")
+
+	var decoration_configs: Array = [
+		{"type": "tree_pine", "pos": Vector2(200, 200), "collision": true},
+		{"type": "tree_pine", "pos": Vector2(400, 150), "collision": true},
+		{"type": "tree_oak", "pos": Vector2(600, 250), "collision": true},
+		{"type": "tree_oak", "pos": Vector2(800, 300), "collision": true},
+		{"type": "tree_fruit", "pos": Vector2(1000, 350), "collision": true},
+		{"type": "street_light", "pos": Vector2(500, 500), "collision": true},
+		{"type": "street_light", "pos": Vector2(700, 600), "collision": true},
+		{"type": "bench", "pos": Vector2(650, 520), "collision": true},
+		{"type": "well", "pos": Vector2(750, 550), "collision": true},
+		{"type": "flower_bed", "pos": Vector2(550, 480), "collision": false},
+		{"type": "flower_bed", "pos": Vector2(850, 580), "collision": false},
+		{"type": "barrel", "pos": Vector2(400, 700), "collision": false},
+	]
+
+	var spawned_count = 0
+	for deco_cfg in decoration_configs:
+		var deco_type = deco_cfg["type"]
+		var pos = deco_cfg["pos"]
+		var has_collision = deco_cfg.get("collision", false)
+
+		var resource_data = ArtStyleManager.get_resource_data("decoration", deco_type)
+		if resource_data.is_empty():
+			continue
+
+		var texture_path = resource_data.get("full_path", "")
+		if texture_path.is_empty() or not ResourceLoader.exists(texture_path):
+			continue
+
+		var texture = load(texture_path)
+		if not texture:
+			continue
+
+		var decoration: Node2D
+		if has_collision:
+			decoration = StaticBody2D.new()
+			var sprite = Sprite2D.new()
+			sprite.texture = texture
+			decoration.add_child(sprite)
+
+			var collision = CollisionShape2D.new()
+			var shape = RectangleShape2D.new()
+			var size = resource_data.get("size", [32, 32])
+			shape.size = Vector2(size[0], size[1])
+			collision.shape = shape
+			decoration.add_child(collision)
+		else:
+			decoration = Sprite2D.new()
+			decoration.texture = texture
+
+		decoration.name = deco_type + "_" + str(spawned_count)
+		decoration.position = pos
+		objects_container.add_child(decoration)
+		spawned_count += 1
+
+	print("[Village] 装饰物生成完成: %d 个" % spawned_count)
+
+
+func _on_art_style_changed(new_style: String) -> void:
+	"""美术风格切换时的回调"""
+	print("[Village] 风格切换到: %s，刷新建筑和装饰物..." % new_style)
+
+	# 清除现有的建筑和装饰物
+	for child in buildings_container.get_children():
+		child.queue_free()
+	for child in objects_container.get_children():
+		child.queue_free()
+
+	# 重新生成
+	_spawn_buildings_from_style()
+	_spawn_decorations_from_style()
 
 
 # ==================== 事件触发系统 ====================
