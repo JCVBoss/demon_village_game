@@ -45,21 +45,21 @@ var current_time: TimeOfDay = TimeOfDay.DAY
 # ==================== 配置 ====================
 const VillagerScene = preload("res://scenes/characters/Villager.tscn")
 
-# 村民位置配置 (ID -> 位置) - 16x16 瓦片坐标
+# 村民位置配置 (ID -> 位置) - 16x16 瓦片坐标 -> 像素坐标
 const VILLAGER_POSITIONS: Dictionary = {
-	"chenmo": Vector2(88, 88),       # (5,5) 陈默小屋
-	"leishu": Vector2(88, 168),      # (5,10) 铁匠铺
-	"jinling": Vector2(360, 200),    # (22,12) 商人行会
-	"baizhi": Vector2(88, 248),      # (5,15) 白芷药园
-	"john": Vector2(248, 168),       # (15,10) 教堂
-	"daxiong": Vector2(360, 168),    # (22,10) 酒馆
-	"ying": Vector2(408, 248),       # (25,15) 影的住所
-	"xiaoan": Vector2(136, 248),     # (8,15) 学校
-	"ahu": Vector2(328, 296),        # (20,18) 守卫营房
-	"yeya": Vector2(408, 88)         # (25,5) 观察点
+	"chenmo": Vector2(320, 320),    # (20,20) 陈默小屋
+	"leishu": Vector2(160, 480),    # (10,30) 铁匠铺
+	"jinling": Vector2(880, 560),   # (55,35) 商人行会
+	"baizhi": Vector2(160, 800),    # (10,50) 白芷药园
+	"john": Vector2(600, 440),      # (37.5,27.5) 教堂
+	"daxiong": Vector2(880, 440),   # (55,27.5) 酒馆
+	"ying": Vector2(1040, 800),     # (65,50) 影的住所
+	"xiaoan": Vector2(320, 720),    # (20,45) 学校
+	"ahu": Vector2(800, 960),       # (50,60) 守卫营房
+	"yeya": Vector2(1040, 320)      # (65,20) 观察点
 }
 
-# 地图尺寸配置
+# 地图尺寸配置 (16px 瓦片 = 1920x1600px 像素)
 const MAP_WIDTH: int = 120
 const MAP_HEIGHT: int = 100
 const TILE_SIZE: int = 16
@@ -173,117 +173,127 @@ func _on_trigger_activated(trigger_id: String, trigger_data: Dictionary) -> void
 # ==================== 地图生成 (TileMap 仅用于地面) ====================
 
 func _generate_ground_layer() -> void:
-	"""生成草地层 - 使用统一瓦片"""
+	"""生成草地层 - 使用 OpenRPG 瓦片"""
 	if not ground_layer:
 		return
 
-	# 使用统一的草地瓦片
-	var base_grass = Vector2i(0, 0)
-
+	# 使用随机草地瓦片增加变化
 	for x in range(MAP_WIDTH):
 		for y in range(MAP_HEIGHT):
-			ground_layer.set_cell(Vector2i(x, y), SOURCE_GRASS, base_grass)
+			var tile_variant = randi() % 4
+			ground_layer.set_cell(Vector2i(x, y), SOURCE_GRASS, Vector2i(tile_variant, 0))
 
-	print("[Village] 草地层生成完成: %d tiles, source=%d, atlas=%s" % [MAP_WIDTH * MAP_HEIGHT, SOURCE_GRASS, Vector2i(0, 0)])
+	print("[Village] 草地层生成完成: %dx%d tiles" % [MAP_WIDTH, MAP_HEIGHT])
 
 
 func _generate_roads_layer() -> void:
-	"""生成道路层 - 按设计文档布局草图 (16x16 瓦片)"""
+	"""生成道路层 - 按照设计文档布局 (16px 瓦片)"""
 	if not roads_layer:
 		print("[Village] ERROR: roads_layer is null!")
 		return
 
-	# 道路瓦片样式
+	# 道路瓦片样式 (OpenRPG 瓦片)
 	var road_normal = Vector2i(0, 0)  # 普通道路
 	var road_square = Vector2i(1, 0)  # 广场/交汇处道路
 
 	# ===== 东西向主干道 =====
-	# 从西侧 (x=4) 到东侧 (x=26)，3瓦片宽 (y=10,11,12)
-	for x in range(4, 27):
-		for y in range(10, 13):
+	# 从西侧 (x=16) 到东侧 (x=104)，12 瓦片宽 (y=40-51)
+	for x in range(16, 105):
+		for y in range(40, 52):
 			roads_layer.set_cell(Vector2i(x, y), SOURCE_ROADS, road_normal)
 
 	# ===== 南北向主干道 =====
-	# 从广场中心 (y=13) 向南到村南门 (y=23)，3瓦片宽 (x=14,15,16)
-	for y in range(13, 24):
-		for x in range(14, 17):
+	# 从广场中心 (y=32) 向南到村南门 (y=80)，12 瓦片宽 (x=56-67)
+	for y in range(32, 81):
+		for x in range(56, 68):
 			roads_layer.set_cell(Vector2i(x, y), SOURCE_ROADS, road_normal)
 
 	# ===== 广场区域 =====
 	# 中央交汇广场，比普通道路稍大
-	# x=12-18 (6瓦片), y=9-14 (5瓦片)
-	for x in range(12, 19):
-		for y in range(9, 15):
+	# x=48-72 (24 瓦片), y=36-56 (20 瓦片)
+	for x in range(48, 73):
+		for y in range(36, 57):
 			roads_layer.set_cell(Vector2i(x, y), SOURCE_ROADS, road_square)
 
 	# ===== 村南门区域 =====
-	# 通往森林的出口，x=13-18, y=22-24
-	for x in range(13, 19):
-		for y in range(22, 25):
+	# 通往森林的出口，x=52-68, y=88-96
+	for x in range(52, 69):
+		for y in range(88, 97):
 			roads_layer.set_cell(Vector2i(x, y), SOURCE_ROADS, road_square)
 
 	# ===== 支路连接 =====
-	# 铁匠铺前支路 (向西)
-	for x in range(1, 5):
-		for y in range(10, 12):
+	# 铁匠铺支路 (向西)
+	for x in range(4, 17):
+		for y in range(40, 48):
 			roads_layer.set_cell(Vector2i(x, y), SOURCE_ROADS, road_normal)
 
-	# 酒馆/商人行会前支路 (向东)
-	for x in range(27, 30):
-		for y in range(10, 12):
+	# 酒馆/商人行会支路 (向东)
+	for x in range(104, 117):
+		for y in range(40, 48):
+			roads_layer.set_cell(Vector2i(x, y), SOURCE_ROADS, road_normal)
+
+	# 学校支路 (向西南)
+	for x in range(24, 36):
+		for y in range(52, 64):
 			roads_layer.set_cell(Vector2i(x, y), SOURCE_ROADS, road_normal)
 
 	print("[Village] 道路系统生成完成")
 
 
 func _generate_borders_layer() -> void:
-	"""生成边界层 - 按设计文档（树木边界）"""
+	"""生成边界层 - 按照设计文档 (树木边界)"""
 	if not borders_layer:
 		return
 
-	var tree_tile = Vector2i(0, 0)  # 松树/边界树
+	var tree_tile = Vector2i(0, 1)  # 松树/边界树 (OpenRPG 瓦片)
 
 	# ===== 北边界 =====
-	# 行0-1，密集树木（黑潮方向）
-	for y in range(0, 2):
+	# 行 0-7，密集树木（黑潮方向）
+	for y in range(0, 8):
 		for x in range(MAP_WIDTH):
 			borders_layer.set_cell(Vector2i(x, y), SOURCE_GRASS, tree_tile)
 
 	# ===== 西边界 =====
-	# 列0-1，树木边界
-	for x in range(0, 2):
-		for y in range(2, MAP_HEIGHT):
+	# 列 0-7，树木边界
+	for x in range(0, 8):
+		for y in range(8, MAP_HEIGHT):
 			borders_layer.set_cell(Vector2i(x, y), SOURCE_GRASS, tree_tile)
 
 	# ===== 东边界 =====
-	# 列118-119，树木边界
-	for x in range(MAP_WIDTH - 2, MAP_WIDTH):
-		for y in range(2, MAP_HEIGHT):
+	# 列 112-119，树木边界
+	for x in range(MAP_WIDTH - 8, MAP_WIDTH):
+		for y in range(8, MAP_HEIGHT):
 			borders_layer.set_cell(Vector2i(x, y), SOURCE_GRASS, tree_tile)
 
 	# ===== 南边界两侧 =====
 	# 村南门两侧的边界（中间是道路出口）
-	# 左侧 x=0-12, 右侧 x=18-119
-	for x in range(0, 13):
-		for y in range(MAP_HEIGHT - 1, MAP_HEIGHT):
+	# 左侧 x=0-48, 右侧 x=72-119
+	for x in range(0, 49):
+		for y in range(MAP_HEIGHT - 8, MAP_HEIGHT):
 			borders_layer.set_cell(Vector2i(x, y), SOURCE_GRASS, tree_tile)
-	for x in range(18, MAP_WIDTH):
-		for y in range(MAP_HEIGHT - 1, MAP_HEIGHT):
+	for x in range(72, MAP_WIDTH):
+		for y in range(MAP_HEIGHT - 8, MAP_HEIGHT):
 			borders_layer.set_cell(Vector2i(x, y), SOURCE_GRASS, tree_tile)
 
 	print("[Village] 边界生成完成")
 
 
 func _generate_decorations_layer() -> void:
-	"""生成地面装饰层 - 按设计文档"""
+	"""生成地面装饰层 - 按照设计文档"""
 	if not ground_decoration_layer:
 		return
 
-	# 暂时留空，等待美工 Sprite 资源
-	# 地面装饰（花朵、石子）应该在 GroundDecoration TileMapLayer
-	# 或者作为 Sprite 在 Objects 层
+	# 添加一些花朵装饰在广场周围
+	var flower_tile = Vector2i(2, 0)
+	# 广场周围的花朵
+	for x in range(44, 76, 4):
+		ground_decoration_layer.set_cell(Vector2i(x, 32), SOURCE_GRASS, flower_tile)
+		ground_decoration_layer.set_cell(Vector2i(x, 60), SOURCE_GRASS, flower_tile)
+	for y in range(32, 60, 4):
+		ground_decoration_layer.set_cell(Vector2i(44, y), SOURCE_GRASS, flower_tile)
+		ground_decoration_layer.set_cell(Vector2i(76, y), SOURCE_GRASS, flower_tile)
 
-	print("[Village] 地面装饰层待实现")
+	print("[Village] 地面装饰层生成完成")
 
 
 # ==================== 建筑系统 (等待美工 Sprite 资源) ====================
