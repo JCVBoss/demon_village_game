@@ -181,7 +181,8 @@ func _spawn_buildings_from_style() -> void:
 	}
 
 	var spawned_count = 0
-	for building_id, pos in building_configs:
+	for building_id in building_configs:
+		var pos = building_configs[building_id]
 		var building_data = ArtStyleManager.get_resource_data("building", building_id)
 		if building_data.is_empty():
 			print("[Village] 跳过建筑 %s: 资源数据为空" % building_id)

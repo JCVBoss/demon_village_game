@@ -1,7 +1,6 @@
 ## DynamicTileSetManager - 动态瓦片集管理器
 ## 从风格目录动态创建和管理 TileSet
 extends Node
-class_name DynamicTileSetManager
 
 ## 瓦片集缓存
 var tile_sets: Dictionary = {}

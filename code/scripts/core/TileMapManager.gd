@@ -238,11 +238,13 @@ func place_building(_building_id: String, pos: Vector2i, size: Vector2i, _has_co
 	if not buildings_layer:
 		return
 
+	# 建筑使用动态分配的 TileSet 源
+	var source_id = source_roads if source_roads >= 0 else 0
 	for x in range(size.x):
 		for y in range(size.y):
 			var tile_pos = Vector2i(pos.x + x, pos.y + y)
 			var tile_coords = Vector2i(x % 4, y % 4)
-			buildings_layer.set_cell(tile_pos, SOURCE_BUILDINGS, tile_coords)
+			buildings_layer.set_cell(tile_pos, source_id, tile_coords)
 
 
 # ==================== 查询功能 ====================

@@ -1,7 +1,6 @@
 ## ArtStyleManager - 美术风格管理器
 ## 管理美术风格切换和资源加载
 extends Node
-class_name ArtStyleManager
 signal style_changed(new_style: String)
 
 ## 当前激活的风格
