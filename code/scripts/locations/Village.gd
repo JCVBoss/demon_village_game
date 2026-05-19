@@ -45,18 +45,18 @@ var current_time: TimeOfDay = TimeOfDay.DAY
 # ==================== 配置 ====================
 const VillagerScene = preload("res://scenes/characters/Villager.tscn")
 
-# 村民位置配置 (ID -> 位置) - 16x16 瓦片坐标 -> 像素坐标
+# 村民位置配置 (ID -> 位置) - 对齐设计文档 NPC 活动范围
 const VILLAGER_POSITIONS: Dictionary = {
-	"chenmo": Vector2(320, 320),    # (20,20) 陈默小屋
-	"leishu": Vector2(160, 480),    # (10,30) 铁匠铺
-	"jinling": Vector2(880, 560),   # (55,35) 商人行会
-	"baizhi": Vector2(160, 800),    # (10,50) 白芷药园
-	"john": Vector2(600, 440),      # (37.5,27.5) 教堂
-	"daxiong": Vector2(880, 440),   # (55,27.5) 酒馆
-	"ying": Vector2(1040, 800),     # (65,50) 影的住所
-	"xiaoan": Vector2(320, 720),    # (20,45) 学校
-	"ahu": Vector2(800, 960),       # (50,60) 守卫营房
-	"yeya": Vector2(1040, 320)      # (65,20) 观察点
+	"chenmo": Vector2(352, 352),    # 陈默小屋前
+	"leishu": Vector2(224, 544),    # 铁匠铺前
+	"jinling": Vector2(1344, 704),  # 商人行会前
+	"baizhi": Vector2(352, 1024),   # 药园中
+	"john": Vector2(960, 640),      # 教堂前/广场
+	"daxiong": Vector2(1344, 544),  # 酒馆前
+	"ying": Vector2(1632, 1024),    # 影的住所前
+	"xiaoan": Vector2(448, 864),    # 学校前
+	"ahu": Vector2(1312, 1184),     # 守卫营房前
+	"yeya": Vector2(1632, 352)      # 观察点/废弃仓库附近
 }
 
 # 地图尺寸配置 (16px 瓦片 = 1920x1600px 像素)
@@ -168,16 +168,16 @@ func _spawn_buildings_from_style() -> void:
 	print("[Village] 从风格系统生成建筑...")
 
 	var building_configs: Dictionary = {
-		"blacksmith": Vector2(352, 672),
-		"church": Vector2(992, 672),
-		"tavern": Vector2(1440, 672),
-		"merchant": Vector2(1440, 800),
-		"school": Vector2(544, 992),
-		"chenmo_hut": Vector2(352, 352),
-		"baizhi_garden": Vector2(352, 992),
-		"guard_post": Vector2(1312, 1184),
-		"abandoned_warehouse": Vector2(1632, 352),
-		"ying_home": Vector2(1632, 992),
+		"blacksmith": Vector2(192, 512),
+		"church": Vector2(832, 512),
+		"tavern": Vector2(1280, 512),
+		"merchant": Vector2(1280, 640),
+		"school": Vector2(384, 832),
+		"chenmo_hut": Vector2(320, 320),
+		"baizhi_garden": Vector2(320, 960),
+		"guard_post": Vector2(1280, 1152),
+		"abandoned_warehouse": Vector2(1280, 320),
+		"ying_home": Vector2(1600, 960),
 	}
 
 	var spawned_count = 0
@@ -315,69 +315,101 @@ func _on_trigger_activated(trigger_id: String, trigger_data: Dictionary) -> void
 # ==================== 地图生成 (TileMap 仅用于地面) ====================
 
 func _generate_ground_layer() -> void:
-	"""生成草地层 - 使用 OpenRPG 瓦片"""
+	"""生成草地层 - 按区域使用不同变体（中心明亮，边缘渐暗）"""
 	if not ground_layer:
 		return
 
-	# 使用随机草地瓦片增加变化
 	for x in range(MAP_WIDTH):
 		for y in range(MAP_HEIGHT):
-			var tile_variant = randi() % 4
+			var tile_variant: int
+
+			# 村庄中心（广场周围）用明亮草地变体 (0-1)
+			var dist_from_center = abs(x - 60) + abs(y - 48)
+			if dist_from_center < 30:
+				tile_variant = randi() % 2  # 0-1 明亮
+			elif dist_from_center < 55:
+				tile_variant = randi() % 4  # 0-3 混合
+			else:
+				# 边缘用深色变体 (2-3)
+				tile_variant = 2 + randi() % 2
+
 			ground_layer.set_cell(Vector2i(x, y), SOURCE_GRASS, Vector2i(tile_variant, 0))
 
-	print("[Village] 草地层生成完成: %dx%d tiles" % [MAP_WIDTH, MAP_HEIGHT])
+	print("[Village] 草地层生成完成: %dx%d tiles (区域渐变)" % [MAP_WIDTH, MAP_HEIGHT])
 
 
 func _generate_roads_layer() -> void:
-	"""生成道路层 - 按照设计文档布局 (16px 瓦片)"""
+	"""生成道路层 - 十字主干道 + 广场 + 支路 + 村南门"""
 	if not roads_layer:
 		print("[Village] ERROR: roads_layer is null!")
 		return
 
-	# 道路瓦片样式 (OpenRPG 瓦片)
-	var road_normal = Vector2i(0, 0)  # 普通道路
-	var road_square = Vector2i(1, 0)  # 广场/交汇处道路
+	# 使用全部 4x4 = 16 种道路变体
+	var road_variants = []
+	for rx in range(4):
+		for ry in range(4):
+			road_variants.append(Vector2i(rx, ry))
 
-	# ===== 东西向主干道 =====
-	# 从西侧 (x=16) 到东侧 (x=104)，12 瓦片宽 (y=40-51)
+	var road_square = Vector2i(1, 0)  # 广场用较宽变体
+
+	# ===== 东西向主干道 (12 瓦片宽) =====
 	for x in range(16, 105):
 		for y in range(40, 52):
-			roads_layer.set_cell(Vector2i(x, y), SOURCE_ROADS, road_normal)
+			var variant = road_variants[randi() % road_variants.size()]
+			roads_layer.set_cell(Vector2i(x, y), SOURCE_ROADS, variant)
 
-	# ===== 南北向主干道 =====
-	# 从广场中心 (y=32) 向南到村南门 (y=80)，12 瓦片宽 (x=56-67)
-	for y in range(32, 81):
+	# ===== 南北向主干道 (12 瓦片宽) =====
+	for y in range(20, 81):
 		for x in range(56, 68):
-			roads_layer.set_cell(Vector2i(x, y), SOURCE_ROADS, road_normal)
+			var variant = road_variants[randi() % road_variants.size()]
+			roads_layer.set_cell(Vector2i(x, y), SOURCE_ROADS, variant)
 
-	# ===== 广场区域 =====
-	# 中央交汇广场，比普通道路稍大
-	# x=48-72 (24 瓦片), y=36-56 (20 瓦片)
+	# ===== 中央广场区域 =====
 	for x in range(48, 73):
 		for y in range(36, 57):
 			roads_layer.set_cell(Vector2i(x, y), SOURCE_ROADS, road_square)
 
-	# ===== 村南门区域 =====
-	# 通往森林的出口，x=52-68, y=88-96
-	for x in range(52, 69):
-		for y in range(88, 97):
+	# ===== 村南门（缩小为通道，非巨大方块） =====
+	for x in range(54, 66):
+		for y in range(82, 92):
 			roads_layer.set_cell(Vector2i(x, y), SOURCE_ROADS, road_square)
 
 	# ===== 支路连接 =====
 	# 铁匠铺支路 (向西)
 	for x in range(4, 17):
-		for y in range(40, 48):
-			roads_layer.set_cell(Vector2i(x, y), SOURCE_ROADS, road_normal)
+		for y in range(42, 50):
+			var variant = road_variants[randi() % road_variants.size()]
+			roads_layer.set_cell(Vector2i(x, y), SOURCE_ROADS, variant)
 
 	# 酒馆/商人行会支路 (向东)
 	for x in range(104, 117):
-		for y in range(40, 48):
-			roads_layer.set_cell(Vector2i(x, y), SOURCE_ROADS, road_normal)
+		for y in range(42, 50):
+			var variant = road_variants[randi() % road_variants.size()]
+			roads_layer.set_cell(Vector2i(x, y), SOURCE_ROADS, variant)
 
 	# 学校支路 (向西南)
 	for x in range(24, 36):
-		for y in range(52, 64):
-			roads_layer.set_cell(Vector2i(x, y), SOURCE_ROADS, road_normal)
+		for y in range(52, 60):
+			var variant = road_variants[randi() % road_variants.size()]
+			roads_layer.set_cell(Vector2i(x, y), SOURCE_ROADS, variant)
+
+	# 药园支路 (向西)
+	for x in range(4, 20):
+		for y in range(60, 68):
+			var variant = road_variants[randi() % road_variants.size()]
+			roads_layer.set_cell(Vector2i(x, y), SOURCE_ROADS, variant)
+
+	# 影的住所支路 (向东)
+	for x in range(104, 117):
+		for y in range(60, 68):
+			var variant = road_variants[randi() % road_variants.size()]
+			roads_layer.set_cell(Vector2i(x, y), SOURCE_ROADS, variant)
+
+	# 废弃仓库支路 (向东北)
+	for x in range(96, 117):
+		for y in range(20, 28):
+			var variant = road_variants[randi() % road_variants.size()]
+			roads_layer.set_cell(Vector2i(x, y), SOURCE_ROADS, variant)
 
 	print("[Village] 道路系统生成完成")
 
