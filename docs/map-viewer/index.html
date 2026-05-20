@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>魔王城下的最后村庄 - 地图可视化</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🗺️ 魔王城下的最后村庄 - 地图可视化</h1>
+            <p>选择地图，查看详细布局</p>
+        </header>
+
+        <div class="controls">
+            <label for="map-select">选择地图：</label>
+            <select id="map-select">
+                <option value="village">暮色村</option>
+                <option value="forest">迷雾森林</option>
+                <option value="world">世界地图</option>
+            </select>
+
+            <div class="zoom-controls">
+                <button id="zoom-out">-</button>
+                <span id="zoom-level">100%</span>
+                <button id="zoom-in">+</button>
+            </div>
+        </div>
+
+        <div class="map-container">
+            <canvas id="map-canvas"></canvas>
+            <div class="info-panel">
+                <h3 id="info-title">地图信息</h3>
+                <div id="info-content"></div>
+            </div>
+        </div>
+
+        <div class="legend">
+            <h3>图例</h3>
+            <div class="legend-items">
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #4a7c59;"></div>
+                    <span>草地/森林</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #8b7355;"></div>
+                    <span>道路</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #8b4513;"></div>
+                    <span>建筑</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #ff6b6b;"></div>
+                    <span>NPC</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #ffd93d;"></div>
+                    <span>事件点</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #6bcb77;"></div>
+                    <span>安全区</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #ff4444;"></div>
+                    <span>危险区</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

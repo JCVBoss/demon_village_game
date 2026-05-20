@@ -1,0 +1,179 @@
+{
+  "_meta": {
+    "document": "区域切换点设计",
+    "version": "v1.0",
+    "created": "2026-04-07",
+    "author": "AliceDesigner",
+    "issue": "#73 DS-018"
+  },
+  "transitions": [
+    {
+      "id": "village_to_forest",
+      "name": "村南门→森林入口",
+      "from": {
+        "region": "twilight_village",
+        "position": { "x": 15, "y": 20 },
+        "triggerRadius": 2
+      },
+      "to": {
+        "region": "mist_forest",
+        "position": { "x": 20, "y": 1 },
+        "facing": "north"
+      },
+      "type": "seamless",
+      "animation": {
+        "fadeOut": 0.3,
+        "fadeIn": 0.3,
+        "color": "#000000"
+      },
+      "structure": {
+        "gate": {
+          "position": { "x": 15, "y": 20 },
+          "size": { "width": 3, "height": 2 },
+          "material": "wood",
+          "hasRoof": true
+        },
+        "guardTowers": [
+          { "position": { "x": 12, "y": 18 }, "size": { "width": 2, "height": 2 } },
+          { "position": { "x": 18, "y": 18 }, "size": { "width": 2, "height": 2 } }
+        ],
+        "barrier": {
+          "position": { "x": 15, "y": 20 },
+          "size": { "width": 3, "height": 1 },
+          "liftable": true
+        }
+      },
+      "conditions": [
+        { "dayRange": [1, 7], "status": "open" },
+        { "dayRange": [8, 9], "status": "blocked", "reason": "魔王军封锁森林" },
+        { "day": 10, "status": "battlefield", "event": "final_battle" }
+      ],
+      "events": [
+        {
+          "id": "first_enter_forest",
+          "condition": "first_time_enter",
+          "trigger": "dialogue",
+          "npc": "老约翰",
+          "dialogue": "森林里有你需要的答案...但要小心。"
+        },
+        {
+          "id": "forest_blockade",
+          "condition": "day_8_approach",
+          "trigger": "cutscene",
+          "cutscene": "demon_army_blockade"
+        }
+      ]
+    },
+    {
+      "id": "forest_to_village",
+      "name": "森林入口→村南门",
+      "from": {
+        "region": "mist_forest",
+        "position": { "x": 20, "y": 0 },
+        "triggerRadius": 2
+      },
+      "to": {
+        "region": "twilight_village",
+        "position": { "x": 15, "y": 19 },
+        "facing": "south"
+      },
+      "type": "seamless",
+      "animation": {
+        "fadeOut": 0.3,
+        "fadeIn": 0.3,
+        "color": "#000000"
+      },
+      "conditions": [
+        { "dayRange": [1, 7], "status": "open" },
+        { "dayRange": [8, 9], "status": "blocked", "reason": "魔王军封锁森林" },
+        { "day": 10, "status": "battlefield", "event": "final_battle" }
+      ],
+      "events": [
+        {
+          "id": "return_to_village",
+          "condition": "enter_with_item",
+          "trigger": "dialogue",
+          "npc": "大熊",
+          "dialogue": "你回来了！森林里有什么发现吗？"
+        }
+      ]
+    }
+  ],
+  "blockade": {
+    "triggerDay": 8,
+    "triggerTime": "00:00",
+    "type": "enemy_force",
+    "position": { "x": 20, "y": 2 },
+    "enemies": [
+      { "type": "demon_scout", "count": 5, "description": "魔王军侦察兵" },
+      { "type": "demon_soldier", "count": 3, "description": "魔王军士兵" }
+    ],
+    "npcReaction": {
+      "npc": "阿虎",
+      "action": "try_block",
+      "result": "injured",
+      "dialogue": [
+        "别过去！魔王军...他们封锁了森林！",
+        "我一个人...挡不住他们...",
+        "快回村子里去！"
+      ]
+    }
+  },
+  "finalBattle": {
+    "triggerDay": 10,
+    "triggerTime": "00:00",
+    "location": "twilight_village",
+    "phases": [
+      {
+        "phase": 1,
+        "name": "敌军涌出",
+        "durationSeconds": 30,
+        "description": "魔王军从森林涌出，村民撤退到广场",
+        "events": [
+          "播放过场动画",
+          "村民 NPC 移动到广场",
+          "敌人出现在南门区域"
+        ]
+      },
+      {
+        "phase": 2,
+        "name": "三路进攻",
+        "durationSeconds": 60,
+        "description": "西门、南门、东门同时遭受攻击",
+        "attackRoutes": [
+          { "gate": "west", "target": "blacksmith", "force": "small" },
+          { "gate": "south", "target": "village_center", "force": "main" },
+          { "gate": "east", "target": "merchant_guild", "force": "small" }
+        ]
+      },
+      {
+        "phase": 3,
+        "name": "最终对决",
+        "durationSeconds": -1,
+        "description": "玩家在广场中心做出最终选择",
+        "location": { "x": 15, "y": 12 },
+        "choices": [
+          "与魔王对话",
+          "击败魔王",
+          "推翻王国"
+        ]
+      }
+    ]
+  },
+  "cameraBehavior": {
+    "onTransition": {
+      "followPlayer": true,
+      "smoothTransition": true,
+      "resetOnComplete": true
+    },
+    "onBlockade": {
+      "focusOn": "gate",
+      "zoomLevel": 1.0
+    },
+    "onFinalBattle": {
+      "focusOn": "village_center",
+      "zoomLevel": 0.8,
+      "allowPan": true
+    }
+  }
+}

@@ -1,0 +1,182 @@
+{
+  "_meta": {
+    "document": "室内地图设计",
+    "version": "v1.0",
+    "created": "2026-04-07",
+    "author": "AliceDesigner",
+    "issue": "#72 DS-017"
+  },
+  "interiors": [
+    {
+      "id": "blacksmith",
+      "name": "铁匠铺",
+      "description": "雷叔的工作场所，可锻造、升级、修理装备",
+      "size": { "width": 8, "height": 6, "unit": "tiles" },
+      "pixelSize": { "width": 512, "height": 384 },
+      "npc": "leishu",
+      "functions": ["craft", "upgrade", "repair"],
+      "entrance": { "position": { "x": 4, "y": 1 }, "facing": "south", "outdoorPosition": { "x": 5, "y": 10 } },
+      "exit": { "position": { "x": 4, "y": 1 }, "facing": "north" },
+      "floor": { "type": "wood_dark", "pattern": "planks" },
+      "walls": { "type": "stone_brick", "color": "#808080" },
+      "objects": [
+        { "id": "counter", "name": "柜台", "type": "dialogue", "position": { "x": 2, "y": 2 }, "size": { "width": 2, "height": 1 }, "collidable": true },
+        { "id": "furnace", "name": "熔炉", "type": "craft", "position": { "x": 6, "y": 2 }, "size": { "width": 1, "height": 1 }, "collidable": true, "effect": "glow_orange" },
+        { "id": "workbench", "name": "工作台", "type": "upgrade", "position": { "x": 2, "y": 4 }, "size": { "width": 2, "height": 1 }, "collidable": true },
+        { "id": "weapon_rack", "name": "武器架", "type": "view", "position": { "x": 6, "y": 4 }, "size": { "width": 1, "height": 1 }, "collidable": false },
+        { "id": "armor_rack", "name": "防具架", "type": "view", "position": { "x": 7, "y": 4 }, "size": { "width": 1, "height": 1 }, "collidable": false },
+        { "id": "material_chest", "name": "材料箱", "type": "view", "position": { "x": 7, "y": 2 }, "size": { "width": 1, "height": 1 }, "collidable": false }
+      ],
+      "lighting": {
+        "furnace_glow": { "position": { "x": 6, "y": 2 }, "radius": 3, "color": "#FF4500", "intensity": 0.8, "flicker": false },
+        "window_light": { "position": { "x": 4, "y": 1 }, "radius": 4, "color": "#FFFFFF", "intensity": 0.6, "activeHours": [6, 18] }
+      },
+      "specialEffects": ["furnace_particles", "spark_from_anvil"],
+      "ambientSound": "blacksmith_ambient",
+      "music": "tavern_calm"
+    },
+    {
+      "id": "church",
+      "name": "教堂",
+      "description": "老约翰的祈祷场所，存档点、解锁预言",
+      "size": { "width": 10, "height": 8, "unit": "tiles" },
+      "pixelSize": { "width": 640, "height": 512 },
+      "npc": "john",
+      "functions": ["pray", "save", "prophecy"],
+      "entrance": { "position": { "x": 5, "y": 1 }, "facing": "south", "outdoorPosition": { "x": 15, "y": 10 } },
+      "exit": { "position": { "x": 5, "y": 1 }, "facing": "north" },
+      "floor": { "type": "stone", "pattern": "tiles", "carpet": { "position": { "x": 5, "y": 4 }, "size": { "width": 4, "height": 2 } } },
+      "walls": { "type": "stone_brick", "color": "#A0A0A0", "stainedGlass": [ { "position": { "x": 3, "y": 0 }, "color": "#FF69B4" }, { "position": { "x": 7, "y": 0 }, "color": "#4169E1" } ] },
+      "objects": [
+        { "id": "altar", "name": "祭坛", "type": "pray", "position": { "x": 5, "y": 3 }, "size": { "width": 2, "height": 1 }, "collidable": true, "savePoint": true, "effect": "holy_particles" },
+        { "id": "bible_stand", "name": "圣经台", "type": "read", "position": { "x": 5, "y": 5 }, "size": { "width": 1, "height": 1 }, "collidable": true },
+        { "id": "bench_01", "name": "长椅", "type": "sit", "position": { "x": 2, "y": 2 }, "size": { "width": 2, "height": 1 }, "collidable": true },
+        { "id": "bench_02", "name": "长椅", "type": "sit", "position": { "x": 8, "y": 2 }, "size": { "width": 2, "height": 1 }, "collidable": true },
+        { "id": "bench_03", "name": "长椅", "type": "sit", "position": { "x": 2, "y": 6 }, "size": { "width": 2, "height": 1 }, "collidable": true },
+        { "id": "bench_04", "name": "长椅", "type": "sit", "position": { "x": 8, "y": 6 }, "size": { "width": 2, "height": 1 }, "collidable": true },
+        { "id": "bell_tower", "name": "钟楼", "type": "background", "position": { "x": 5, "y": 0 }, "size": { "width": 2, "height": 1 }, "collidable": false },
+        { "id": "confessional", "name": "忏悔室", "type": "dialogue_hidden", "position": { "x": 8, "y": 6 }, "size": { "width": 1, "height": 1 }, "collidable": true, "unlockCondition": "trust_80_or_later" }
+      ],
+      "lighting": {
+        "candle_01": { "position": { "x": 4, "y": 3 }, "radius": 2, "color": "#FFFF00", "intensity": 0.5, "flicker": true },
+        "candle_02": { "position": { "x": 6, "y": 3 }, "radius": 2, "color": "#FFFF00", "intensity": 0.5, "flicker": true },
+        "candle_03": { "position": { "x": 5, "y": 5 }, "radius": 2, "color": "#FFFF00", "intensity": 0.5, "flicker": true },
+        "stained_glass_light": { "type": "daylight", "position": { "x": 3, "y": 0 }, "radius": 4, "color": "#FF69B4", "intensity": 0.4, "activeHours": [6, 18] }
+      },
+      "specialEffects": ["holy_particles", "candle_flicker", "stained_glass_shadows"],
+      "ambientSound": "church_ambient",
+      "music": "church_organ"
+    },
+    {
+      "id": "tavern",
+      "name": "酒馆",
+      "description": "大熊经营的酒馆，接受任务、获取情报、休息",
+      "size": { "width": 10, "height": 6, "unit": "tiles" },
+      "pixelSize": { "width": 640, "height": 384 },
+      "npc": "daxiong",
+      "functions": ["quest", "info", "rest"],
+      "entrance": { "position": { "x": 5, "y": 1 }, "facing": "south", "outdoorPosition": { "x": 22, "y": 10 } },
+      "exit": { "position": { "x": 5, "y": 1 }, "facing": "north" },
+      "floor": { "type": "wood_dark", "pattern": "planks", "rug": { "position": { "x": 5, "y": 3 }, "size": { "width": 4, "height": 2 } } },
+      "walls": { "type": "wood", "color": "#8B4513" },
+      "objects": [
+        { "id": "bar_counter", "name": "吧台", "type": "dialogue", "position": { "x": 7, "y": 2 }, "size": { "width": 3, "height": 1 }, "collidable": true },
+        { "id": "table_01", "name": "餐桌", "type": "sit", "position": { "x": 2, "y": 2 }, "size": { "width": 1, "height": 1 }, "collidable": true },
+        { "id": "table_02", "name": "餐桌", "type": "sit", "position": { "x": 4, "y": 2 }, "size": { "width": 1, "height": 1 }, "collidable": true },
+        { "id": "table_03", "name": "餐桌", "type": "sit", "position": { "x": 8, "y": 4 }, "size": { "width": 1, "height": 1 }, "collidable": true },
+        { "id": "table_04", "name": "餐桌", "type": "sit", "position": { "x": 2, "y": 4 }, "size": { "width": 1, "height": 1 }, "collidable": true },
+        { "id": "stage", "name": "舞台", "type": "background", "position": { "x": 2, "y": 5 }, "size": { "width": 3, "height": 1 }, "collidable": false, "performanceAtNight": true },
+        { "id": "fireplace", "name": "壁炉", "type": "background", "position": { "x": 1, "y": 3 }, "size": { "width": 1, "height": 1 }, "collidable": true, "effect": "fire_animation" },
+        { "id": "notice_board", "name": "告示板", "type": "read", "position": { "x": 8, "y": 1 }, "size": { "width": 1, "height": 1 }, "collidable": false },
+        { "id": "barrel_01", "name": "酒桶", "type": "background", "position": { "x": 9, "y": 3 }, "size": { "width": 1, "height": 1 }, "collidable": false },
+        { "id": "barrel_02", "name": "酒桶", "type": "background", "position": { "x": 9, "y": 4 }, "size": { "width": 1, "height": 1 }, "collidable": false }
+      ],
+      "lighting": {
+        "fireplace_glow": { "position": { "x": 1, "y": 3 }, "radius": 4, "color": "#FF4500", "intensity": 0.7, "flicker": true },
+        "candle_table": { "position": { "x": 4, "y": 2 }, "radius": 2, "color": "#FFFF00", "intensity": 0.4, "flicker": true },
+        "window_light": { "position": { "x": 5, "y": 1 }, "radius": 4, "color": "#FFFFFF", "intensity": 0.5, "activeHours": [6, 18] }
+      },
+      "specialEffects": ["fire_animation", "bard_performance_night", "smoke_from_fireplace"],
+      "ambientSound": "tavern_ambient",
+      "music": "tavern_lively"
+    },
+    {
+      "id": "merchant_guild",
+      "name": "商人行会",
+      "description": "金铃的商行，买卖道具、情报交易",
+      "size": { "width": 8, "height": 6, "unit": "tiles" },
+      "pixelSize": { "width": 512, "height": 384 },
+      "npc": "jinling",
+      "functions": ["buy", "sell", "info"],
+      "entrance": { "position": { "x": 4, "y": 1 }, "facing": "south", "outdoorPosition": { "x": 22, "y": 12 } },
+      "exit": { "position": { "x": 4, "y": 1 }, "facing": "north" },
+      "floor": { "type": "wood_light", "pattern": "planks" },
+      "walls": { "type": "wood", "color": "#A0522D" },
+      "objects": [
+        { "id": "counter", "name": "柜台", "type": "trade", "position": { "x": 6, "y": 2 }, "size": { "width": 2, "height": 1 }, "collidable": true },
+        { "id": "shelf_01", "name": "货架", "type": "view", "position": { "x": 2, "y": 2 }, "size": { "width": 1, "height": 1 }, "collidable": false },
+        { "id": "shelf_02", "name": "货架", "type": "view", "position": { "x": 4, "y": 2 }, "size": { "width": 1, "height": 1 }, "collidable": false },
+        { "id": "shelf_03", "name": "货架", "type": "view", "position": { "x": 2, "y": 4 }, "size": { "width": 1, "height": 1 }, "collidable": false },
+        { "id": "shelf_04", "name": "货架", "type": "view", "position": { "x": 4, "y": 4 }, "size": { "width": 1, "height": 1 }, "collidable": false },
+        { "id": "map_table", "name": "地图桌", "type": "view", "position": { "x": 6, "y": 4 }, "size": { "width": 1, "height": 1 }, "collidable": true, "locked": true, "unlockCondition": "trust_60_or_later" },
+        { "id": "safe", "name": "保险箱", "type": "locked", "position": { "x": 7, "y": 4 }, "size": { "width": 1, "height": 1 }, "collidable": true, "questRequired": true, "questId": "jinling_secret" }
+      ],
+      "lighting": {
+        "counter_lamp": { "position": { "x": 6, "y": 2 }, "radius": 3, "color": "#FFFF00", "intensity": 0.6, "flicker": false },
+        "window_light": { "position": { "x": 4, "y": 1 }, "radius": 4, "color": "#FFFFFF", "intensity": 0.6, "activeHours": [6, 18] }
+      },
+      "specialEffects": ["gold_sparkle_counter"],
+      "ambientSound": "shop_ambient",
+      "music": "shop_calm"
+    },
+    {
+      "id": "school",
+      "name": "学校",
+      "description": "小安的学习场所，对话、小游戏、情感核心",
+      "size": { "width": 6, "height": 6, "unit": "tiles" },
+      "pixelSize": { "width": 384, "height": 384 },
+      "npc": "xiaoan",
+      "functions": ["dialogue", "mini_game", "story"],
+      "entrance": { "position": { "x": 3, "y": 1 }, "facing": "south", "outdoorPosition": { "x": 8, "y": 15 } },
+      "exit": { "position": { "x": 3, "y": 1 }, "facing": "north" },
+      "floor": { "type": "wood_light", "pattern": "planks", "rug": { "position": { "x": 3, "y": 4 }, "size": { "width": 3, "height": 2 } } },
+      "walls": { "type": "wood", "color": "#D2691E" },
+      "objects": [
+        { "id": "desk_01", "name": "课桌", "type": "sit", "position": { "x": 2, "y": 2 }, "size": { "width": 1, "height": 1 }, "collidable": true },
+        { "id": "desk_02", "name": "课桌", "type": "sit", "position": { "x": 4, "y": 2 }, "size": { "width": 1, "height": 1 }, "collidable": true },
+        { "id": "desk_03", "name": "课桌", "type": "sit", "position": { "x": 2, "y": 4 }, "size": { "width": 1, "height": 1 }, "collidable": true },
+        { "id": "desk_04", "name": "课桌", "type": "sit", "position": { "x": 4, "y": 4 }, "size": { "width": 1, "height": 1 }, "collidable": true },
+        { "id": "bookshelf", "name": "书架", "type": "read", "position": { "x": 5, "y": 2 }, "size": { "width": 1, "height": 1 }, "collidable": true },
+        { "id": "easel", "name": "画板", "type": "interact", "position": { "x": 5, "y": 4 }, "size": { "width": 1, "height": 1 }, "collidable": false },
+        { "id": "toy_box", "name": "玩具箱", "type": "open", "position": { "x": 5, "y": 5 }, "size": { "width": 1, "height": 1 }, "collidable": false },
+        { "id": "blackboard", "name": "黑板", "type": "background", "position": { "x": 3, "y": 0 }, "size": { "width": 2, "height": 1 }, "collidable": false }
+      ],
+      "lighting": {
+        "window_daylight": { "type": "daylight", "position": { "x": 3, "y": 1 }, "radius": 5, "color": "#FFFFFF", "intensity": 0.8, "activeHours": [6, 18] },
+        "candle": { "position": { "x": 3, "y": 3 }, "radius": 2, "color": "#FFFF00", "intensity": 0.4, "flicker": true }
+      },
+      "specialEffects": ["sunlight_patches", "children_drawings_update"],
+      "ambientSound": "school_ambient",
+      "music": "gentle_piano"
+    }
+  ],
+  "transitionSettings": {
+    "enterAnimation": { "type": "fade_in", "duration": 0.3, "color": "#000000" },
+    "leaveAnimation": { "type": "fade_out", "duration": 0.3, "color": "#000000" },
+    "doorOpenAnimation": { "type": "swing", "duration": 0.2, "direction": "inward" },
+    "cameraTransition": { "type": "smooth", "duration": 0.5, "easing": "ease_in_out" }
+  },
+  "indoorCameraSettings": {
+    "zoomLevel": 1.2,
+    "boundaryPadding": 1,
+    "followSpeed": 5,
+    "snapToGrid": false,
+    "clampToBounds": true
+  },
+  "globalSettings": {
+    "indoorSafeZone": true,
+    "noCombatInside": true,
+    "staminaRegenMultiplier": 1.5,
+    "allowResting": true
+  }
+}

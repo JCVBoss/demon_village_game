@@ -1,0 +1,218 @@
+{
+  "_meta": {
+    "document": "世界地图与区域关系设计",
+    "version": "v1.0",
+    "created": "2026-04-07",
+    "author": "AliceDesigner",
+    "issue": "#76 DS-021"
+  },
+  "world": {
+    "name": "黑潮纪元大陆",
+    "era": "黑潮纪元第 47 年",
+    "totalRegions": 5,
+    "exploredRegions": 2,
+    "description": "魔王苏醒 47 年后的大陆，人类王国节节败退，魔王城如同黑色太阳般矗立在大陆中心"
+  },
+  "regions": [
+    {
+      "id": "twilight_village",
+      "name": "暮色村",
+      "type": "village",
+      "position": { "x": 0, "y": 0 },
+      "size": { "width": 30, "height": 25, "unit": "tiles" },
+      "pixelSize": { "width": 1920, "height": 1600 },
+      "connections": ["mist_forest"],
+      "status": "human_controlled",
+      "explorable": true,
+      "description": "魔王城脚下的最后一个村庄，勇者的起点",
+      "buildings": [
+        "铁匠铺", "酒馆", "教堂", "商人行会", "学校", "守卫哨站", "陈默小屋", "白芷药园"
+      ],
+      "npcs": [
+        "陈默", "雷叔", "金铃", "白芷", "老约翰", "大熊", "影", "小安", "阿虎", "夜鸦"
+      ]
+    },
+    {
+      "id": "mist_forest",
+      "name": "迷雾森林",
+      "type": "forest",
+      "position": { "x": 0, "y": 1 },
+      "size": { "width": 40, "height": 30, "unit": "tiles" },
+      "pixelSize": { "width": 2560, "height": 1920 },
+      "connections": ["twilight_village"],
+      "status": "neutral",
+      "explorable": true,
+      "description": "村庄南方的神秘森林，魔王军潜伏地",
+      "features": [
+        "小径", "空地", "废弃营地", "蘑菇圈", "萤火虫聚集地"
+      ]
+    },
+    {
+      "id": "demon_castle",
+      "name": "魔王城",
+      "type": "castle",
+      "position": { "x": 0, "y": -5 },
+      "size": null,
+      "connections": [],
+      "status": "demon_headquarters",
+      "explorable": false,
+      "description": "魔王'暗影之主'的城堡，大陆中心的黑色太阳",
+      "note": "最终目的地，仅背景存在，真·结局专属可进入"
+    },
+    {
+      "id": "kingdom",
+      "name": "王国腹地",
+      "type": "kingdom",
+      "position": { "x": 0, "y": 5 },
+      "size": null,
+      "connections": [],
+      "status": "fallen",
+      "explorable": false,
+      "description": "已沦陷的人类王国，宗教裁判所所在地",
+      "note": "已沦陷，仅背景存在"
+    },
+    {
+      "id": "northern_wasteland",
+      "name": "北境荒原",
+      "type": "wasteland",
+      "position": { "x": 0, "y": -3 },
+      "size": null,
+      "connections": [],
+      "status": "corrupted",
+      "explorable": false,
+      "description": "被黑潮侵蚀的荒原，魔王城周围区域",
+      "note": "黑潮侵蚀区，世界边界"
+    }
+  ],
+  "playerStart": {
+    "region": "twilight_village",
+    "position": { "x": 15, "y": 12 },
+    "note": "村庄中心广场附近，勇者醒来位置"
+  },
+  "boundaries": {
+    "north": {
+      "description": "魔王城方向，黑潮侵蚀，不可通行",
+      "visual": "黑色波纹渐变",
+      "collision": true
+    },
+    "south": {
+      "description": "王国腹地，已沦陷，不可通行",
+      "visual": "灰色渐变",
+      "collision": true
+    },
+    "east": {
+      "description": "世界边界，不可探索",
+      "visual": "模糊渐变",
+      "collision": true
+    },
+    "west": {
+      "description": "世界边界，不可探索",
+      "visual": "模糊渐变",
+      "collision": true
+    }
+  },
+  "demonArmyAttack": {
+    "timeline": [
+      {
+        "day": 1,
+        "phase": "侦察期",
+        "event": "魔王军侦察兵在森林外围活动"
+      },
+      {
+        "day": 7,
+        "phase": "侦察期末",
+        "event": "村民开始察觉异常"
+      },
+      {
+        "day": 8,
+        "phase": "包围",
+        "event": "森林入口被封锁"
+      },
+      {
+        "day": 9,
+        "phase": "最后通牒",
+        "event": "夜鸦收到进攻指令"
+      },
+      {
+        "day": 10,
+        "phase": "总攻",
+        "event": "三路进攻，最终决战"
+      }
+    ],
+    "attackRoutes": [
+      {
+        "route": "西门",
+        "type": "佯攻",
+        "target": "铁匠铺区",
+        "force": "小队"
+      },
+      {
+        "route": "南门",
+        "type": "主攻",
+        "target": "村庄中心",
+        "force": "主力"
+      },
+      {
+        "route": "东门",
+        "type": "佯攻",
+        "target": "商人行会区",
+        "force": "小队"
+      }
+    ]
+  },
+  "scale": {
+    "tileSize": {
+      "pixels": 64,
+      "meters": 2,
+      "description": "1 瓦片 = 64x64 像素 = 约 2 米×2 米"
+    },
+    "playerSpeed": {
+      "tilesPerSecond": 5,
+      "metersPerSecond": 10,
+      "description": "玩家正常行走速度"
+    },
+    "regionDistances": [
+      {
+        "from": "暮色村中心",
+        "to": "森林入口",
+        "tiles": 15,
+        "walkTimeSeconds": 3,
+        "note": "游戏内实时移动"
+      },
+      {
+        "from": "暮色村",
+        "to": "魔王城",
+        "tiles": 500,
+        "walkTimeDays": 10,
+        "note": "背景设定，不可实际移动"
+      },
+      {
+        "from": "暮色村",
+        "to": "王国腹地",
+        "tiles": 750,
+        "walkTimeDays": 15,
+        "note": "背景设定，不可实际移动"
+      }
+    ]
+  },
+  "pendingDecisions": [
+    {
+      "question": "森林深处是否有隐藏区域？",
+      "options": ["是", "否"],
+      "recommendation": "是（预留二周目内容）",
+      "status": "待决策"
+    },
+    {
+      "question": "是否添加其他可探索村庄？",
+      "options": ["是", "否"],
+      "recommendation": "否（保持聚焦）",
+      "status": "待决策"
+    },
+    {
+      "question": "魔王城是否可在特定结局进入？",
+      "options": ["是", "否"],
+      "recommendation": "是（真·结局专属）",
+      "status": "待决策"
+    }
+  ]
+}

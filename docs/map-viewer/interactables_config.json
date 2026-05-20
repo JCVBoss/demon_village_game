@@ -1,0 +1,184 @@
+{
+  "_meta": {
+    "document": "可交互物体清单",
+    "version": "v1.0",
+    "created": "2026-04-07",
+    "author": "AliceDesigner",
+    "issue": "#75 DS-020"
+  },
+  "interactables": {
+    "npcs": [
+      {
+        "id": "chenmo",
+        "name": "陈默",
+        "position": { "x": 5, "y": 5 },
+        "interactionType": "dialogue",
+        "triggerDistance": 2,
+        "trustSystem": true,
+        "dialogueTree": "dialogues/chenmo.json",
+        "unlockCondition": "day_3_or_later"
+      },
+      {
+        "id": "leishu",
+        "name": "雷叔",
+        "position": { "x": 5, "y": 10 },
+        "interactionType": "dialogue_craft",
+        "triggerDistance": 2,
+        "trustSystem": true,
+        "services": ["craft_weapon", "craft_armor", "repair"]
+      },
+      {
+        "id": "jinling",
+        "name": "金铃",
+        "position": { "x": 22, "y": 12 },
+        "interactionType": "dialogue_trade",
+        "triggerDistance": 2,
+        "trustSystem": true,
+        "services": ["buy", "sell", "info"]
+      },
+      {
+        "id": "baizhi",
+        "name": "白芷",
+        "position": { "x": 5, "y": 15 },
+        "interactionType": "dialogue_heal",
+        "triggerDistance": 2,
+        "trustSystem": true,
+        "services": ["heal", "buy_potion"]
+      },
+      {
+        "id": "john",
+        "name": "老约翰",
+        "position": { "x": 15, "y": 10 },
+        "interactionType": "dialogue_prophecy",
+        "triggerDistance": 2,
+        "trustSystem": true,
+        "services": ["prophecy", "save_point"]
+      },
+      {
+        "id": "daxiong",
+        "name": "大熊",
+        "position": { "x": 22, "y": 10 },
+        "interactionType": "dialogue_quest",
+        "triggerDistance": 2,
+        "trustSystem": true,
+        "services": ["quest", "info", "rest"]
+      },
+      {
+        "id": "ying",
+        "name": "影",
+        "position": { "x": 25, "y": 15 },
+        "interactionType": "dialogue_hidden",
+        "triggerDistance": 2,
+        "trustSystem": true,
+        "unlockCondition": "day_5_or_later_and_night"
+      },
+      {
+        "id": "xiaoan",
+        "name": "小安",
+        "position": { "x": 8, "y": 15 },
+        "interactionType": "dialogue_play",
+        "triggerDistance": 2,
+        "trustSystem": true,
+        "services": ["mini_game", "story"]
+      },
+      {
+        "id": "ahu",
+        "name": "阿虎",
+        "position": { "x": 20, "y": 18 },
+        "interactionType": "dialogue_tutorial",
+        "triggerDistance": 2,
+        "trustSystem": true,
+        "services": ["combat_tutorial", "info"]
+      },
+      {
+        "id": "yeya",
+        "name": "夜鸦",
+        "position": { "x": 25, "y": 5 },
+        "interactionType": "dialogue_spy",
+        "triggerDistance": 2,
+        "trustSystem": true,
+        "unlockCondition": "night",
+        "storyReveal": "day_7_or_later"
+      }
+    ],
+    "collectibles": {
+      "village": [
+        { "id": "herb_garden_01", "type": "herb", "position": { "x": 5, "y": 16 }, "yield": [1, 3], "respawnHours": 24 },
+        { "id": "herb_garden_02", "type": "herb", "position": { "x": 6, "y": 16 }, "yield": [1, 3], "respawnHours": 24 },
+        { "id": "herb_garden_03", "type": "herb", "position": { "x": 7, "y": 16 }, "yield": [1, 3], "respawnHours": 24 },
+        { "id": "flower_bed_01", "type": "flower", "position": { "x": 14, "y": 11 }, "yield": [1, 2], "respawnHours": 12 },
+        { "id": "flower_bed_02", "type": "flower", "position": { "x": 16, "y": 11 }, "yield": [1, 2], "respawnHours": 12 },
+        { "id": "fruit_tree_01", "type": "apple", "position": { "x": 7, "y": 14 }, "yield": [1, 3], "respawnHours": 48 }
+      ],
+      "forest": [
+        { "id": "forest_herb_01", "type": "herb", "position": { "x": 12, "y": 3 }, "yield": [1, 3], "respawnHours": 24 },
+        { "id": "forest_herb_02", "type": "herb", "position": { "x": 15, "y": 5 }, "yield": [1, 3], "respawnHours": 24 },
+        { "id": "forest_herb_03", "type": "herb", "position": { "x": 18, "y": 8 }, "yield": [1, 3], "respawnHours": 24 },
+        { "id": "mushroom_01", "type": "glowing_mushroom", "position": { "x": 10, "y": 5 }, "yield": [1, 2], "respawnHours": 48, "glowing": true },
+        { "id": "mushroom_02", "type": "glowing_mushroom", "position": { "x": 11, "y": 5 }, "yield": [1, 2], "respawnHours": 48, "glowing": true },
+        { "id": "firefly_flower_01", "type": "flower", "position": { "x": 25, "y": 15 }, "yield": [1, 3], "respawnHours": 12 }
+      ]
+    },
+    "containers": {
+      "village": [
+        { "id": "chest_blacksmith", "type": "chest", "position": { "x": 5, "y": 9 }, "locked": false, "contents": [{ "item": "iron_ore", "count": [2, 5] }], "requirePermission": "leishu" },
+        { "id": "chest_tavern", "type": "chest", "position": { "x": 22, "y": 9 }, "locked": false, "contents": [{ "item": "food", "count": [3, 5] }], "requirePermission": "daxiong" },
+        { "id": "chest_merchant", "type": "chest", "position": { "x": 22, "y": 11 }, "locked": false, "contents": [{ "item": "gold", "count": [10, 50] }], "requirePermission": "jinling" },
+        { "id": "chest_school", "type": "cabinet", "position": { "x": 7, "y": 14 }, "locked": false, "contents": [{ "item": "book", "count": [1, 3] }], "requirePermission": "xiaoan" },
+        { "id": "chest_church", "type": "cabinet", "position": { "x": 15, "y": 9 }, "locked": false, "contents": [{ "item": "holy_water", "count": [1, 2] }], "requirePermission": "john" },
+        { "id": "well_square", "type": "well", "position": { "x": 15, "y": 12 }, "locked": false, "contents": [{ "item": "gold", "count": [1, 10] }], "respawnHours": 24 },
+        { "id": "warehouse_locked", "type": "warehouse", "position": { "x": 20, "y": 5 }, "locked": true, "keyRequired": "warehouse_key", "contents": [{ "item": "plot_item", "count": 1 }], "unlockCondition": "day_5_or_later" }
+      ],
+      "forest": [
+        { "id": "chest_ancient_tree", "type": "chest", "position": { "x": 25, "y": 5 }, "locked": true, "keyRequired": "ancient_tree_key", "contents": [{ "item": "prophecy_fragment", "count": 1 }] },
+        { "id": "chest_camp", "type": "chest", "position": { "x": 28, "y": 12 }, "locked": false, "contents": [{ "item": "adventurer_relic", "count": [2, 5] }], "enemyGuarded": true, "unlockDay": 8 },
+        { "id": "backpack_camp", "type": "backpack", "position": { "x": 27, "y": 11 }, "locked": false, "contents": [{ "item": "random_equipment", "count": [1, 3] }] }
+      ]
+    },
+    "mechanisms": {
+      "village": [
+        { "id": "gate_barrier", "type": "lift_gate", "position": { "x": 15, "y": 20 }, "autoTrigger": { "day": 8 }, "effect": "block_forest_entrance" },
+        { "id": "church_bell", "type": "bell", "position": { "x": 15, "y": 8 }, "clickTrigger": true, "effect": "notify_villagers" },
+        { "id": "square_fountain", "type": "fountain", "position": { "x": 15, "y": 12 }, "clickTrigger": true, "effect": "toggle_water" }
+      ],
+      "forest": [
+        { "id": "wooden_bridge", "type": "bridge", "position": { "x": 20, "y": 15 }, "autoTrigger": "approach", "effect": "enable_crossing" },
+        { "id": "ancient_tree_secret", "type": "hidden_door", "position": { "x": 25, "y": 5 }, "condition": "day_5_and_trust_john", "effect": "reveal_prophecy" }
+      ]
+    },
+    "decorations": {
+      "village": [
+        { "id": "bench_01", "type": "sit", "position": { "x": 14, "y": 11 }, "effect": "rest", "recoverStamina": 10 },
+        { "id": "bench_02", "type": "sit", "position": { "x": 21, "y": 9 }, "effect": "rest", "recoverStamina": 10 },
+        { "id": "street_light_01", "type": "light", "position": { "x": 10, "y": 10 }, "autoToggle": "night", "effect": "illuminate" },
+        { "id": "sign_blacksmith", "type": "read", "position": { "x": 4, "y": 10 }, "text": "铁匠铺 - 雷叔" },
+        { "id": "sign_tavern", "type": "read", "position": { "x": 21, "y": 10 }, "text": "酒馆 - 大熊" }
+      ],
+      "forest": [
+        { "id": "mushroom_circle", "type": "view", "position": { "x": 10, "y": 5 }, "glowAtNight": true, "magicEffect": true },
+        { "id": "firefly_clearing", "type": "view", "position": { "x": 25, "y": 15 }, "glowAtNight": true, "romanticScene": true },
+        { "id": "campfire_ruins", "type": "investigate", "position": { "x": 28, "y": 12 }, "effect": "get_intel" }
+      ]
+    },
+    "plotObjects": [
+      { "id": "player_wake", "position": { "x": 15, "y": 12 }, "trigger": "game_start", "event": "chapter_1_start" },
+      { "id": "warehouse_plot", "position": { "x": 20, "y": 5 }, "trigger": "day_5_and_key", "event": "warehouse_enter" },
+      { "id": "chenmo_cabin_plot", "position": { "x": 5, "y": 5 }, "trigger": "day_3", "event": "chenmo_story" },
+      { "id": "school_plot", "position": { "x": 8, "y": 15 }, "trigger": "daytime", "event": "xiaoan_story" },
+      { "id": "barracks_plot", "position": { "x": 20, "y": 18 }, "trigger": "day_8", "event": "ahu_injured" },
+      { "id": "mushroom_circle_plot", "position": { "x": 10, "y": 5 }, "trigger": "full_moon_night", "event": "magic_event" },
+      { "id": "ancient_trees_plot", "position": { "x": 25, "y": 5 }, "trigger": "day_5_and_trust_john", "event": "prophecy_reveal" },
+      { "id": "camp_battle", "position": { "x": 28, "y": 12 }, "trigger": "day_10", "event": "final_battle_start" }
+    ]
+  },
+  "interactionSettings": {
+    "highlightOnHover": true,
+    "highlightColor": "#FFFF00",
+    "showPromptText": true,
+    "promptTemplate": "按 {key} {action}",
+    "promptKey": "E",
+    "interactionSound": true,
+    "interactionAnimation": true,
+    "maxInteractionDistance": 2.5
+  }
+}
