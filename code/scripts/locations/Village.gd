@@ -876,6 +876,8 @@ func _spawn_villagers_from_config() -> void:
 		if not villager:
 			continue
 		
+		# 设置NPCID - 这行是关键！
+		villager.villager_id = npc_id
 		villager.name = npc_id
 		villager.position = pos
 		villager.z_index = 10  # NPC在建筑上方
