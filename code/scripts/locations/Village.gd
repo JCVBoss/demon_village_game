@@ -680,7 +680,7 @@ func get_config_map_size() -> Vector2i:
 func tile_to_pixel(tile_x: int, tile_y: int) -> Vector2:
 	"""瓦片坐标转像素坐标"""
 	var tile_size = get_config_tile_size()
-	return Vector2(tile_x * tile_size, tile_y * tile_size)
+	return Vector2(float(tile_x) * float(tile_size), float(tile_y) * float(tile_size))
 
 
 # ==================== 配置驱动的地图生成 ====================
@@ -764,7 +764,7 @@ func _spawn_buildings_from_config() -> void:
 		if building_id.is_empty():
 			continue
 		
-		# 获取位置
+		# 获取瓦片位置并转换为像素位置
 		var pos = building.get("position", {})
 		var tile_x = pos.get("x", 0)
 		var tile_y = pos.get("y", 0)
@@ -787,7 +787,7 @@ func _spawn_buildings_from_config() -> void:
 		
 		# 应用偏移
 		var offset = building_data.get("offset", [0, 0])
-		var final_pos = pixel_pos + Vector2(offset[0], offset[1])
+		var final_pos = pixel_pos + Vector2(float(offset[0]), float(offset[1]))
 		
 		var building_sprite = Sprite2D.new()
 		building_sprite.name = building_id
@@ -797,7 +797,7 @@ func _spawn_buildings_from_config() -> void:
 		
 		buildings_container.add_child(building_sprite)
 		spawned_count += 1
-		print("[Village] 生成建筑: %s at %s" % [building_id, final_pos])
+		print("[Village] 生成建筑: %s at (tile %d,%d -> pixel %s)" % [building_id, tile_x, tile_y, str(final_pos)])
 	
 	print("[Village] 建筑生成完成: %d/%d" % [spawned_count, buildings.size()])
 
@@ -815,7 +815,7 @@ func _spawn_decorations_from_config() -> void:
 		if deco_type.is_empty():
 			continue
 		
-		# 获取位置
+		# 获取瓦片位置并转换为像素位置
 		var pos = deco_cfg.get("position", {})
 		var tile_x = pos.get("x", 0)
 		var tile_y = pos.get("y", 0)
@@ -845,7 +845,7 @@ func _spawn_decorations_from_config() -> void:
 			var collision = CollisionShape2D.new()
 			var shape = RectangleShape2D.new()
 			var size = resource_data.get("size", [32, 32])
-			shape.size = Vector2(size[0], size[1])
+			shape.size = Vector2(float(size[0]), float(size[1]))
 			collision.shape = shape
 			decoration.add_child(collision)
 		else:
@@ -856,6 +856,7 @@ func _spawn_decorations_from_config() -> void:
 		decoration.position = pixel_pos
 		objects_container.add_child(decoration)
 		spawned_count += 1
+		print("[Village] 生成装饰: %s at (tile %d,%d -> pixel %s)" % [deco_type, tile_x, tile_y, str(pixel_pos)])
 	
 	print("[Village] 装饰物生成完成: %d 个 (配置驱动)" % spawned_count)
 
