@@ -1,5 +1,6 @@
 ## Village - 村庄主场景
 ## 星露谷物语风格地图：Y-sorting 渲染，建筑使用独立 Sprite
+## JSON配置驱动，自动从 village_map_config.json 加载布局
 extends Node2D
 
 # ==================== 信号 ====================
@@ -7,6 +8,7 @@ signal villager_selected(villager_id: String)
 
 # ==================== 导出变量 ====================
 @export var village_name: String = "暮色村"
+@export var map_config_path: String = "res://resources/maps/village_map_config.json"
 
 # ==================== 节点引用 ====================
 # TileMap 图层 (按设计文档 z-index 规范)
@@ -37,6 +39,7 @@ signal villager_selected(villager_id: String)
 var is_paused: bool = false
 var daily_interactions: int = 0
 var daily_trust_changes: Dictionary = {}
+var map_config: Dictionary = {}
 
 ## 时间段
 enum TimeOfDay { DAY, TWILIGHT, NIGHT }
@@ -44,25 +47,6 @@ var current_time: TimeOfDay = TimeOfDay.DAY
 
 # ==================== 配置 ====================
 const VillagerScene = preload("res://scenes/characters/Villager.tscn")
-
-# 村民位置配置 (ID -> 位置) - 对齐设计文档 NPC 活动范围
-const VILLAGER_POSITIONS: Dictionary = {
-	"chenmo": Vector2(352, 352),    # 陈默小屋前
-	"leishu": Vector2(224, 544),    # 铁匠铺前
-	"jinling": Vector2(1344, 704),  # 商人行会前
-	"baizhi": Vector2(352, 1024),   # 药园中
-	"john": Vector2(960, 640),      # 教堂前/广场
-	"daxiong": Vector2(1344, 544),  # 酒馆前
-	"ying": Vector2(1632, 1024),    # 影的住所前
-	"xiaoan": Vector2(448, 864),    # 学校前
-	"ahu": Vector2(1312, 1184),     # 守卫营房前
-	"yeya": Vector2(1632, 352)      # 观察点/废弃仓库附近
-}
-
-# 地图尺寸配置 (16px 瓦片 = 1920x1600px 像素)
-const MAP_WIDTH: int = 120
-const MAP_HEIGHT: int = 100
-const TILE_SIZE: int = 16
 
 # TileSet 源索引 (与 VillageTileset.tres 一致)
 const SOURCE_GRASS: int = 0
@@ -74,48 +58,52 @@ const TRIGGER_CONFIG_PATH: String = "res://resources/events/village_triggers.jso
 
 
 func _ready() -> void:
-	print("[Village] 进入村庄: %s (Y-sorting 模式)" % village_name)
-
+	print("[Village] 进入村庄: %s (Y-sorting 模式, JSON配置驱动)" % village_name)
+	
+	# 加载地图配置
+	if not load_map_config():
+		push_error("[Village] 无法加载地图配置，使用默认值")
+	
 	# 连接游戏管理器信号
 	_connect_game_manager_signals()
-
+	
 	# 连接对话管理器信号
 	_connect_dialogue_signals()
-
+	
 	# 连接信任系统信号
 	_connect_trust_signals()
-
+	
 	# 连接UI信号
 	_connect_ui_signals()
-
+	
 	# 连接美术风格切换信号
 	_connect_art_style_signals()
-
-	# 生成地面和道路 (TileMap)
-	_generate_ground_layer()
-	_generate_roads_layer()
+	
+	# 从配置生成地图
+	_generate_ground_layer_from_config()
+	_generate_roads_layer_from_config()
 	_generate_borders_layer()
 	_generate_decorations_layer()
-
+	
 	# 从美术风格系统生成建筑和装饰物
-	_spawn_buildings_from_style()
-	_spawn_decorations_from_style()
-
-	# 生成村民
-	_spawn_villagers()
-
+	_spawn_buildings_from_config()
+	_spawn_decorations_from_config()
+	
+	# 从配置生成村民
+	_spawn_villagers_from_config()
+	
 	# 初始化事件触发系统
 	_init_event_trigger_system()
-
+	
 	# 更新 UI
 	_update_ui()
-
+	
 	# 初始化时间光照
 	_update_time_overlay()
-
+	
 	# 检查每日事件
 	EventManager.check_events(GameManager.current_day)
-
+	
 	print("[Village] 地图初始化完成 - 当前风格: %s" % ArtStyleManager.current_style)
 
 
@@ -278,16 +266,16 @@ func _spawn_decorations_from_style() -> void:
 func _on_art_style_changed(new_style: String) -> void:
 	"""美术风格切换时的回调"""
 	print("[Village] 风格切换到: %s，刷新建筑和装饰物..." % new_style)
-
+	
 	# 清除现有的建筑和装饰物
 	for child in buildings_container.get_children():
 		child.queue_free()
 	for child in objects_container.get_children():
 		child.queue_free()
-
-	# 重新生成
-	_spawn_buildings_from_style()
-	_spawn_decorations_from_style()
+	
+	# 重新生成（从配置）
+	_spawn_buildings_from_config()
+	_spawn_decorations_from_config()
 
 
 # ==================== 事件触发系统 ====================
@@ -750,4 +738,252 @@ func _spawn_villagers_after_load() -> void:
 	if villagers_container:
 		for child in villagers_container.get_children():
 			child.queue_free()
-	_spawn_villagers()
+	_spawn_villagers_from_config()
+
+
+# ==================== 配置加载 ====================
+
+func load_map_config() -> bool:
+	"""从JSON文件加载地图配置"""
+	if not ResourceLoader.exists(map_config_path):
+		push_error("[Village] 地图配置文件不存在: %s" % map_config_path)
+		return false
+	
+	var file = FileAccess.open(map_config_path, FileAccess.READ)
+	if file == null:
+		push_error("[Village] 无法打开地图配置: %s" % map_config_path)
+		return false
+	
+	var json_text = file.get_as_text()
+	file.close()
+	
+	var json = JSON.new()
+	var error = json.parse(json_text)
+	if error != OK:
+		push_error("[Village] JSON 解析错误: %s" % json.get_error_message())
+		return false
+	
+	map_config = json.data
+	print("[Village] 地图配置加载完成: %s" % map_config.get("map_name", "Unknown"))
+	return true
+
+
+func get_config_tile_size() -> int:
+	"""获取配置的瓦片大小（游戏内使用）"""
+	return map_config.get("game_tile_size", 16)
+
+
+func get_config_map_size() -> Vector2i:
+	"""获取配置的地图尺寸（瓦片数）"""
+	return Vector2i(
+		map_config.get("map_width", 30),
+		map_config.get("map_height", 25)
+	)
+
+
+func tile_to_pixel(tile_x: int, tile_y: int) -> Vector2:
+	"""瓦片坐标转像素坐标"""
+	var tile_size = get_config_tile_size()
+	return Vector2(tile_x * tile_size, tile_y * tile_size)
+
+
+# ==================== 配置驱动的地图生成 ====================
+
+func _generate_ground_layer_from_config() -> void:
+	"""从配置生成草地层"""
+	if not ground_layer:
+		return
+	
+	var map_size = get_config_map_size()
+	var tile_size = get_config_tile_size()
+	
+	# 重置图层大小
+	ground_layer.clear()
+	
+	for x in range(map_size.x):
+		for y in range(map_size.y):
+			# 村庄中心（广场周围）用明亮草地变体 (0-1)
+			var center_x = map_size.x / 2
+			var center_y = map_size.y / 2
+			var dist_from_center = abs(x - center_x) + abs(y - center_y)
+			var tile_variant: int
+			
+			if dist_from_center < 10:
+				tile_variant = randi() % 2  # 0-1 明亮
+			elif dist_from_center < 20:
+				tile_variant = randi() % 4  # 0-3 混合
+			else:
+				# 边缘用深色变体 (2-3)
+				tile_variant = 2 + randi() % 2
+			
+			ground_layer.set_cell(Vector2i(x, y), SOURCE_GRASS, Vector2i(tile_variant, 0))
+	
+	print("[Village] 草地层生成完成 (配置驱动): %dx%d tiles" % [map_size.x, map_size.y])
+
+
+func _generate_roads_layer_from_config() -> void:
+	"""从配置生成道路层"""
+	if not roads_layer:
+		print("[Village] ERROR: roads_layer is null!")
+		return
+	
+	roads_layer.clear()
+	
+	# 使用全部 4x4 = 16 种道路变体
+	var road_variants = []
+	for rx in range(4):
+		for ry in range(4):
+			road_variants.append(Vector2i(rx, ry))
+	
+	var road_square = Vector2i(1, 0)  # 广场用较宽变体
+	
+	var roads = map_config.get("roads", [])
+	for road in roads:
+		var road_type = road.get("type", "stone")
+		var width = road.get("width", 2)
+		var x_start = road.get("x_start", 0)
+		var x_end = road.get("x_end", 0)
+		var y_start = road.get("y_start", 0)
+		var y_end = road.get("y_end", 0)
+		
+		# 绘制道路
+		for x in range(x_start, x_end + 1):
+			for y in range(y_start, y_end + 1):
+				var variant = road_variants[randi() % road_variants.size()]
+				roads_layer.set_cell(Vector2i(x, y), SOURCE_ROADS, variant)
+	
+	print("[Village] 道路系统生成完成 (配置驱动): %d 条道路" % roads.size())
+
+
+func _spawn_buildings_from_config() -> void:
+	"""从配置和美术风格系统生成所有建筑 Sprite"""
+	print("[Village] 从配置生成建筑...")
+	
+	var buildings = map_config.get("buildings", [])
+	var tile_size = get_config_tile_size()
+	
+	var spawned_count = 0
+	for building in buildings:
+		var building_id = building.get("id", "")
+		if building_id.is_empty():
+			continue
+		
+		# 获取位置
+		var pos = building.get("position", {})
+		var tile_x = pos.get("x", 0)
+		var tile_y = pos.get("y", 0)
+		var pixel_pos = tile_to_pixel(tile_x, tile_y)
+		
+		# 从美术风格系统获取资源
+		var building_data = ArtStyleManager.get_resource_data("building", building_id)
+		if building_data.is_empty():
+			print("[Village] 跳过建筑 %s: 资源数据为空" % building_id)
+			continue
+		
+		var texture_path = building_data.get("full_path", "")
+		if texture_path.is_empty() or not ResourceLoader.exists(texture_path):
+			print("[Village] 跳过建筑 %s: 纹理不存在 %s" % [building_id, texture_path])
+			continue
+		
+		var texture = load(texture_path)
+		if not texture:
+			continue
+		
+		# 应用偏移
+		var offset = building_data.get("offset", [0, 0])
+		var final_pos = pixel_pos + Vector2(offset[0], offset[1])
+		
+		var building_sprite = Sprite2D.new()
+		building_sprite.name = building_id
+		building_sprite.position = final_pos
+		building_sprite.texture = texture
+		building_sprite.z_index = 5  # 建筑在 Y-sort 中正确排序
+		
+		buildings_container.add_child(building_sprite)
+		spawned_count += 1
+		print("[Village] 生成建筑: %s at %s" % [building_id, final_pos])
+	
+	print("[Village] 建筑生成完成: %d/%d" % [spawned_count, buildings.size()])
+
+
+func _spawn_decorations_from_config() -> void:
+	"""从配置和美术风格系统生成装饰物 Sprite"""
+	print("[Village] 从配置生成装饰物...")
+	
+	var decorations = map_config.get("decorations", [])
+	var tile_size = get_config_tile_size()
+	
+	var spawned_count = 0
+	for deco_cfg in decorations:
+		var deco_type = deco_cfg.get("type", "")
+		if deco_type.is_empty():
+			continue
+		
+		# 获取位置
+		var pos = deco_cfg.get("position", {})
+		var tile_x = pos.get("x", 0)
+		var tile_y = pos.get("y", 0)
+		var pixel_pos = tile_to_pixel(tile_x, tile_y)
+		var has_collision = deco_cfg.get("collision", false)
+		
+		# 从美术风格系统获取资源
+		var resource_data = ArtStyleManager.get_resource_data("decoration", deco_type)
+		if resource_data.is_empty():
+			continue
+		
+		var texture_path = resource_data.get("full_path", "")
+		if texture_path.is_empty() or not ResourceLoader.exists(texture_path):
+			continue
+		
+		var texture = load(texture_path)
+		if not texture:
+			continue
+		
+		var decoration: Node2D
+		if has_collision:
+			decoration = StaticBody2D.new()
+			var sprite = Sprite2D.new()
+			sprite.texture = texture
+			decoration.add_child(sprite)
+			
+			var collision = CollisionShape2D.new()
+			var shape = RectangleShape2D.new()
+			var size = resource_data.get("size", [32, 32])
+			shape.size = Vector2(size[0], size[1])
+			collision.shape = shape
+			decoration.add_child(collision)
+		else:
+			decoration = Sprite2D.new()
+			decoration.texture = texture
+		
+		decoration.name = "%s_%d" % [deco_type, spawned_count]
+		decoration.position = pixel_pos
+		objects_container.add_child(decoration)
+		spawned_count += 1
+	
+	print("[Village] 装饰物生成完成: %d 个 (配置驱动)" % spawned_count)
+
+
+func _spawn_villagers_from_config() -> void:
+	"""从配置生成村民"""
+	print("[Village] 从配置生成村民...")
+	
+	var npc_positions = map_config.get("npc_positions", {})
+	
+	for npc_id in npc_positions:
+		var pos_data = npc_positions[npc_id]
+		var pos = Vector2(pos_data.get("x", 0), pos_data.get("y", 0))
+		
+		# 加载村民场景
+		var villager = VillagerScene.instantiate()
+		if not villager:
+			continue
+		
+		villager.name = npc_id
+		villager.position = pos
+		villager.z_index = 10  # NPC在建筑上方
+		
+		villagers_container.add_child(villager)
+		print("[Village] 生成村民: %s at %s" % [npc_id, pos])
+	
+	print("[Village] 村民生成完成 (配置驱动)")
