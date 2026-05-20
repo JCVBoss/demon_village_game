@@ -300,161 +300,71 @@ func _on_trigger_activated(trigger_id: String, trigger_data: Dictionary) -> void
 			print("[Village] 提示: %s" % message)
 
 
-# ==================== 地图生成 (TileMap 仅用于地面) ====================
 
-func _generate_ground_layer() -> void:
-	"""生成草地层 - 按区域使用不同变体（中心明亮，边缘渐暗）"""
-	if not ground_layer:
-		return
-
-	for x in range(MAP_WIDTH):
-		for y in range(MAP_HEIGHT):
-			var tile_variant: int
-
-			# 村庄中心（广场周围）用明亮草地变体 (0-1)
-			var dist_from_center = abs(x - 60) + abs(y - 48)
-			if dist_from_center < 30:
-				tile_variant = randi() % 2  # 0-1 明亮
-			elif dist_from_center < 55:
-				tile_variant = randi() % 4  # 0-3 混合
-			else:
-				# 边缘用深色变体 (2-3)
-				tile_variant = 2 + randi() % 2
-
-			ground_layer.set_cell(Vector2i(x, y), SOURCE_GRASS, Vector2i(tile_variant, 0))
-
-	print("[Village] 草地层生成完成: %dx%d tiles (区域渐变)" % [MAP_WIDTH, MAP_HEIGHT])
-
-
-func _generate_roads_layer() -> void:
-	"""生成道路层 - 十字主干道 + 广场 + 支路 + 村南门"""
-	if not roads_layer:
-		print("[Village] ERROR: roads_layer is null!")
-		return
-
-	# 使用全部 4x4 = 16 种道路变体
-	var road_variants = []
-	for rx in range(4):
-		for ry in range(4):
-			road_variants.append(Vector2i(rx, ry))
-
-	var road_square = Vector2i(1, 0)  # 广场用较宽变体
-
-	# ===== 东西向主干道 (12 瓦片宽) =====
-	for x in range(16, 105):
-		for y in range(40, 52):
-			var variant = road_variants[randi() % road_variants.size()]
-			roads_layer.set_cell(Vector2i(x, y), SOURCE_ROADS, variant)
-
-	# ===== 南北向主干道 (12 瓦片宽) =====
-	for y in range(20, 81):
-		for x in range(56, 68):
-			var variant = road_variants[randi() % road_variants.size()]
-			roads_layer.set_cell(Vector2i(x, y), SOURCE_ROADS, variant)
-
-	# ===== 中央广场区域 =====
-	for x in range(48, 73):
-		for y in range(36, 57):
-			roads_layer.set_cell(Vector2i(x, y), SOURCE_ROADS, road_square)
-
-	# ===== 村南门（缩小为通道，非巨大方块） =====
-	for x in range(54, 66):
-		for y in range(82, 92):
-			roads_layer.set_cell(Vector2i(x, y), SOURCE_ROADS, road_square)
-
-	# ===== 支路连接 =====
-	# 铁匠铺支路 (向西)
-	for x in range(4, 17):
-		for y in range(42, 50):
-			var variant = road_variants[randi() % road_variants.size()]
-			roads_layer.set_cell(Vector2i(x, y), SOURCE_ROADS, variant)
-
-	# 酒馆/商人行会支路 (向东)
-	for x in range(104, 117):
-		for y in range(42, 50):
-			var variant = road_variants[randi() % road_variants.size()]
-			roads_layer.set_cell(Vector2i(x, y), SOURCE_ROADS, variant)
-
-	# 学校支路 (向西南)
-	for x in range(24, 36):
-		for y in range(52, 60):
-			var variant = road_variants[randi() % road_variants.size()]
-			roads_layer.set_cell(Vector2i(x, y), SOURCE_ROADS, variant)
-
-	# 药园支路 (向西)
-	for x in range(4, 20):
-		for y in range(60, 68):
-			var variant = road_variants[randi() % road_variants.size()]
-			roads_layer.set_cell(Vector2i(x, y), SOURCE_ROADS, variant)
-
-	# 影的住所支路 (向东)
-	for x in range(104, 117):
-		for y in range(60, 68):
-			var variant = road_variants[randi() % road_variants.size()]
-			roads_layer.set_cell(Vector2i(x, y), SOURCE_ROADS, variant)
-
-	# 废弃仓库支路 (向东北)
-	for x in range(96, 117):
-		for y in range(20, 28):
-			var variant = road_variants[randi() % road_variants.size()]
-			roads_layer.set_cell(Vector2i(x, y), SOURCE_ROADS, variant)
-
-	print("[Village] 道路系统生成完成")
 
 
 func _generate_borders_layer() -> void:
 	"""生成边界层 - 按照设计文档 (树木边界)"""
 	if not borders_layer:
 		return
-
+	
+	var map_size = get_config_map_size()
 	var tree_tile = Vector2i(0, 1)  # 松树/边界树 (OpenRPG 瓦片)
-
+	
 	# ===== 北边界 =====
-	# 行 0-7，密集树木（黑潮方向）
-	for y in range(0, 8):
-		for x in range(MAP_WIDTH):
+	# 行 0-2，密集树木（黑潮方向）
+	for y in range(0, 3):
+		for x in range(map_size.x):
 			borders_layer.set_cell(Vector2i(x, y), SOURCE_GRASS, tree_tile)
-
+	
 	# ===== 西边界 =====
-	# 列 0-7，树木边界
-	for x in range(0, 8):
-		for y in range(8, MAP_HEIGHT):
+	# 列 0-2，树木边界
+	for x in range(0, 3):
+		for y in range(3, map_size.y):
 			borders_layer.set_cell(Vector2i(x, y), SOURCE_GRASS, tree_tile)
-
+	
 	# ===== 东边界 =====
-	# 列 112-119，树木边界
-	for x in range(MAP_WIDTH - 8, MAP_WIDTH):
-		for y in range(8, MAP_HEIGHT):
+	# 列 map_size.x-3 到 map_size.x-1，树木边界
+	for x in range(map_size.x - 3, map_size.x):
+		for y in range(3, map_size.y):
 			borders_layer.set_cell(Vector2i(x, y), SOURCE_GRASS, tree_tile)
-
+	
 	# ===== 南边界两侧 =====
 	# 村南门两侧的边界（中间是道路出口）
-	# 左侧 x=0-48, 右侧 x=72-119
-	for x in range(0, 49):
-		for y in range(MAP_HEIGHT - 8, MAP_HEIGHT):
+	# 左侧 x=0 到 map_size.x/2-3，右侧 x=map_size.x/2+3 到 map_size.x-1
+	var center_x = map_size.x / 2
+	for x in range(0, int(center_x) - 3):
+		for y in range(map_size.y - 3, map_size.y):
 			borders_layer.set_cell(Vector2i(x, y), SOURCE_GRASS, tree_tile)
-	for x in range(72, MAP_WIDTH):
-		for y in range(MAP_HEIGHT - 8, MAP_HEIGHT):
+	for x in range(int(center_x) + 3, map_size.x):
+		for y in range(map_size.y - 3, map_size.y):
 			borders_layer.set_cell(Vector2i(x, y), SOURCE_GRASS, tree_tile)
-
-	print("[Village] 边界生成完成")
+	
+	print("[Village] 边界生成完成 (配置驱动)")
 
 
 func _generate_decorations_layer() -> void:
 	"""生成地面装饰层 - 按照设计文档"""
 	if not ground_decoration_layer:
 		return
-
+	
+	# 从配置中获取装饰信息
+	var decorations = map_config.get("decorations", [])
+	
 	# 添加一些花朵装饰在广场周围
 	var flower_tile = Vector2i(2, 0)
+	var map_size = get_config_map_size()
+	var center_x = map_size.x / 2
+	var center_y = map_size.y / 2
+	
 	# 广场周围的花朵
-	for x in range(44, 76, 4):
-		ground_decoration_layer.set_cell(Vector2i(x, 32), SOURCE_GRASS, flower_tile)
-		ground_decoration_layer.set_cell(Vector2i(x, 60), SOURCE_GRASS, flower_tile)
-	for y in range(32, 60, 4):
-		ground_decoration_layer.set_cell(Vector2i(44, y), SOURCE_GRASS, flower_tile)
-		ground_decoration_layer.set_cell(Vector2i(76, y), SOURCE_GRASS, flower_tile)
-
+	for x in range(int(center_x) - 6, int(center_x) + 7, 3):
+		ground_decoration_layer.set_cell(Vector2i(x, int(center_y) - 4), SOURCE_GRASS, flower_tile)
+		ground_decoration_layer.set_cell(Vector2i(x, int(center_y) + 4), SOURCE_GRASS, flower_tile)
+	for y in range(int(center_y) - 4, int(center_y) + 5, 3):
+		ground_decoration_layer.set_cell(Vector2i(int(center_x) - 6, y), SOURCE_GRASS, flower_tile)
+		ground_decoration_layer.set_cell(Vector2i(int(center_x) + 6, y), SOURCE_GRASS, flower_tile)
+	
 	print("[Village] 地面装饰层生成完成")
 
 
@@ -488,20 +398,6 @@ func spawn_decoration(decoration_id: String, pos: Vector2, sprite_path: String, 
 	decoration.position = pos
 	objects_container.add_child(decoration)
 	print("[Village] 装饰物生成: %s at %s" % [decoration_id, pos])
-
-
-# ==================== 村民生成 ====================
-
-func _spawn_villagers() -> void:
-	for villager_id in VILLAGER_POSITIONS:
-		var villager = VillagerScene.instantiate()
-		villager.villager_id = villager_id
-		villager.position = VILLAGER_POSITIONS[villager_id]
-		villager.dialogue_started.connect(_on_villager_dialogue_started)
-		villager.dialogue_ended.connect(_on_villager_dialogue_ended)
-		villagers_container.add_child(villager)
-
-	print("[Village] 已生成 %d 位村民" % VILLAGER_POSITIONS.size())
 
 
 # ==================== 对话系统回调 ====================
@@ -983,7 +879,13 @@ func _spawn_villagers_from_config() -> void:
 		villager.position = pos
 		villager.z_index = 10  # NPC在建筑上方
 		
+		# 连接信号
+		if villager.has_method("dialogue_started"):
+			villager.dialogue_started.connect(_on_villager_dialogue_started)
+		if villager.has_method("dialogue_ended"):
+			villager.dialogue_ended.connect(_on_villager_dialogue_ended)
+		
 		villagers_container.add_child(villager)
 		print("[Village] 生成村民: %s at %s" % [npc_id, pos])
 	
-	print("[Village] 村民生成完成 (配置驱动)")
+	print("[Village] 村民生成完成: %d 位 (配置驱动)" % npc_positions.size())
