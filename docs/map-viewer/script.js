@@ -23,15 +23,20 @@ class MapViewer {
     
     async loadMaps() {
         try {
-            const [village, forest, world] = await Promise.all([
+            const [village, forest, world, village_v2] = await Promise.all([
                 fetch('village_config.json').then(r => r.json()),
                 fetch('forest_config.json').then(r => r.json()),
-                fetch('world_config.json').then(r => r.json())
+                fetch('world_config.json').then(r => r.json()),
+                fetch('village_config_v2.json').then(r => r.json()).catch(() => null)
             ]);
             
             this.maps.village = village;
             this.maps.forest = forest;
             this.maps.world = world;
+            if (village_v2) {
+                this.maps.village_v2 = village_v2;
+                this.maps.village = village_v2;
+            }
         } catch (e) {
             console.error('加载地图失败:', e);
         }
@@ -55,6 +60,10 @@ class MapViewer {
     }
     
     selectMap(mapType) {
+        if (mapType === 'village' && !this.maps.village._meta || this.maps.village._meta.version < 'v2.0') {
+            this.maps.village = this.maps.village_v2 || this.maps.village;
+        }
+        
         this.currentMap = this.maps[mapType];
         if (!this.currentMap) return;
         
@@ -115,15 +124,22 @@ class MapViewer {
             });
         }
         
+        if (map.decorations) {
+            if (map.decorations.trees) {
+                map.decorations.trees.forEach(tree => {
+                    this.drawTree(tree);
+                });
+            }
+            if (map.decorations.props) {
+                map.decorations.props.forEach(prop => {
+                    this.drawProp(prop);
+                });
+            }
+        }
+        
         if (map.buildings) {
             map.buildings.forEach(building => {
                 this.drawBuilding(building);
-            });
-        }
-        
-        if (map.npcSpawnPoints) {
-            map.npcSpawnPoints.forEach(npc => {
-                this.drawNPC(npc);
             });
         }
         
@@ -133,12 +149,10 @@ class MapViewer {
             });
         }
         
-        if (map.decorations) {
-            if (map.decorations.trees) {
-                map.decorations.trees.forEach(tree => {
-                    this.drawTree(tree);
-                });
-            }
+        if (map.npcSpawnPoints) {
+            map.npcSpawnPoints.forEach(npc => {
+                this.drawNPC(npc);
+            });
         }
     }
     
@@ -210,17 +224,39 @@ class MapViewer {
         const w = building.size.width * this.tileSize;
         const h = building.size.height * this.tileSize;
         
-        this.ctx.fillStyle = building.enterable ? '#8b4513' : '#5a3010';
+        this.ctx.fillStyle = building.enterable ? '#a0522d' : '#654321';
         this.ctx.fillRect(x, y, w, h);
         
         this.ctx.strokeStyle = '#3d2817';
         this.ctx.lineWidth = 2;
         this.ctx.strokeRect(x, y, w, h);
         
+        this.ctx.fillStyle = building.enterable ? '#8b4513' : '#5a3010';
+        this.ctx.fillRect(x + 2, y + 2, w - 4, h/2 - 2);
+        
         this.ctx.fillStyle = '#fff';
-        this.ctx.font = '10px sans-serif';
+        this.ctx.font = 'bold 10px sans-serif';
         this.ctx.textAlign = 'center';
-        this.ctx.fillText(building.name, x + w/2, y + h/2 + 4);
+        this.ctx.fillText(building.name, x + w/2, y + h - 4);
+    }
+    
+    drawProp(prop) {
+        if (!prop.position) return;
+        
+        const x = prop.position.x * this.tileSize;
+        const y = prop.position.y * this.tileSize;
+        
+        this.ctx.font = '14px sans-serif';
+        this.ctx.textAlign = 'center';
+        
+        let emoji = '📍';
+        if (prop.type === 'street_light') emoji = '🏮';
+        if (prop.type === 'flower_bed') emoji = '🌷';
+        if (prop.type === 'bench') emoji = '🪑';
+        if (prop.type === 'well') emoji = '🪣';
+        if (prop.type === 'barrel') emoji = '🛢️';
+        
+        this.ctx.fillText(emoji, x + this.tileSize/2, y + this.tileSize/2 + 5);
     }
     
     drawNPC(npc) {
